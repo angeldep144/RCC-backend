@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -37,4 +38,21 @@ public class UserService {
 			throw new InvalidCredentialsException ();
 		}
 	}
+
+	public User createUser(User userInput) {
+
+		User checkUser = userRepo.findByUsername(userInput.getUsername());
+
+		if (checkUser != null) return null;
+
+		checkUser = userRepo.findByEmail(userInput.getEmail());
+
+		if (checkUser != null) return null;
+
+		userInput.setPassword(passwordEncoder.encode(userInput.getPassword()));
+
+		return userRepo.save(userInput);
+	}
+
+	public List<User> getUsers() {return userRepo.findAll();}
 }
