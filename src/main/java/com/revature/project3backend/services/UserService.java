@@ -12,7 +12,7 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 public class UserService {
-	private UserRepo userRepo;
+	private final UserRepo userRepo;
 	
 	private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder ();
 	
