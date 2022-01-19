@@ -37,4 +37,9 @@ public class UserService {
 			throw new InvalidCredentialsException ();
 		}
 	}
+
+	public User getUserByUserName(String username){
+
+		return null;
+	}
 }
