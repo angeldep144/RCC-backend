@@ -34,7 +34,7 @@ public class CartItemController {
 		return null;
 	}
 	
-	@PostMapping
+	@DeleteMapping
 	public ResponseEntity <JsonResponse> deleteCartItem (@RequestParam Integer cartItemId, HttpSession httpSession) throws InvalidValueException, UnauthorizedException {
 		if (httpSession.getAttribute ("user") == null) {
 			throw new UnauthorizedException ();

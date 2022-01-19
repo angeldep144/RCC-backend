@@ -28,7 +28,7 @@ public class UserService {
 		if (user == null) {
 			throw new InvalidCredentialsException ();
 		}
-		
+
 		if (passwordEncoder.matches (password, user.getPassword ())) {
 			return user;
 		}
@@ -39,7 +39,13 @@ public class UserService {
 	}
 
 	public User getUserByUserName(String username){
+		User user = userRepo.findByUsername(username);
 
-		return null;
+		if(user == null){
+			return null;
+		}else{
+			return user;
+		}
+
 	}
 }
