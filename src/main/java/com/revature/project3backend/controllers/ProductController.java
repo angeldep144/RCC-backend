@@ -43,7 +43,6 @@ public class ProductController {
 
 		Product product = this.productService.getProduct(id);
 
-
 		return ResponseEntity.ok(new JsonResponse("Got " + product.getName(), true, product));
 
 
