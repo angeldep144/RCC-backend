@@ -24,6 +24,13 @@ public class ProductController {
 		this.productService = productService;
 	}
 
+	/**
+	 * Gets a List of all products or gets a specific List of items based on the searchQuery argument.
+	 * @param searchQuery A String specifying a product or products
+	 * @param page The Page Number that the user is on
+	 * @return Returns a JsonResponse containing a message, status of success, and list of products.
+	 * @throws InvalidValueException Thrown when an invalid entry is made into the searchQuery or page value is not accepted
+	 */
 	@GetMapping
 	public ResponseEntity <JsonResponse> getProducts (@RequestParam String searchQuery, @RequestParam Integer page) throws InvalidValueException {
 
@@ -38,6 +45,12 @@ public class ProductController {
 		return ResponseEntity.ok(new JsonResponse("Got " + products.size(), true, products));
 	}
 
+	/**
+	 * Gets a Product based on the argument id.
+	 * @param id An Integer associated with a specific Product
+	 * @return Returns a Product associated with the argument id.
+	 * @throws InvalidValueException Thrown when the product does not exist or the id value is not accepted.
+	 */
 	@GetMapping("{id}")
 	public ResponseEntity <JsonResponse> getProduct (@PathVariable Integer id) throws InvalidValueException {
 
