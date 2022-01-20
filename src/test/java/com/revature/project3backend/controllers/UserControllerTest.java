@@ -7,9 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
@@ -29,24 +26,26 @@ class UserControllerTest {
     }
 
     @Test
-    void createUser() {
+    void createUserPostiive() {
         User expectedResult = new User(1, "first", "last", "email", "username", "password", null, null);
+        User input = new User("first", "last", "email", "username", "password");
 
+        Mockito.when(userService.createUser(input)).thenReturn(expectedResult);
 
-        Mockito.when(userService.createUser(expectedResult));
+        User actualResult = userService.createUser(input);
 
-        //User
-
+        assertEquals(expectedResult, actualResult);
     }
 
     @Test
-    void getUsers() {
+    void createUserNegative() {
 
-        List<User> expectedResult = new ArrayList<>();
-        expectedResult.add( new User(1, "first", "last", "email", "username", "password", null, null));
-        expectedResult.add( new User(2, "first2", "last2", "email2", "username2", "password2", null, null));
+        User input = new User("first", "last", "email", "username", "password");
 
-        //Mockito.when();
+        Mockito.when(userService.createUser(input)).thenReturn(null);
 
+        User actualResult = userService.createUser(input);
+
+        assertNull(actualResult);
     }
 }

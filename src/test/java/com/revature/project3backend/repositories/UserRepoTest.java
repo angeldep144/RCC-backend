@@ -29,18 +29,54 @@ class UserRepoTest {
     }
 
     @Test
-    void findByUsername() {
+    void findByUsernamePositive() {
+        List<CartItem> items = new ArrayList<>();
+        List<Transaction> transactions = new ArrayList<>();
+        //change the ids based on them in the database
+        User expected = new User(3,"Test", "User", "testuser@email.com", "TestUser", "pass123", items, transactions);
+        userRepo.save(expected);
+
+        User actual = this.userRepo.findByUsername("TestUser");
+
+        assertEquals(expected.toString(), actual.toString());
+    }
+
+    @Test
+    void findByUsernameNegative() {
         List<CartItem> items = new ArrayList<>();
         List<Transaction> transactions = new ArrayList<>();
 
         User expected = new User(1,"Test", "User", "testuser@email.com", "TestUser", "pass123", items, transactions);
+        userRepo.save(expected);
 
-        User actual = this.userRepo.findByUsername("TestUser");
+        User actual = this.userRepo.findByUsername("wrong username here");
 
-        assertEquals(expected, actual);
+        assertNull(actual);
     }
 
     @Test
-    void findByEmail() {
+    void findByEmailPositive() {
+        List<CartItem> items = new ArrayList<>();
+        List<Transaction> transactions = new ArrayList<>();
+        //change the ids based on them in the database
+        User expected = new User(1,"Test", "User", "testuser@email.com", "TestUser", "pass123", items, transactions);
+        userRepo.save(expected);
+
+        User actual = this.userRepo.findByEmail("testuser@email.com");
+
+        assertEquals(expected.toString(), actual.toString());
+    }
+
+    @Test
+    void findByEmailNegative() {
+        List<CartItem> items = new ArrayList<>();
+        List<Transaction> transactions = new ArrayList<>();
+
+        User expected = new User(1,"Test", "User", "testuser@email.com", "TestUser", "pass123", items, transactions);
+        userRepo.save(expected);
+
+        User actual = this.userRepo.findByEmail("fake email");
+
+        assertNull(actual);
     }
 }
