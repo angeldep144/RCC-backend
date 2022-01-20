@@ -22,6 +22,12 @@ public class UserController {
 		this.userService = userService;
 	}
 
+
+	/**
+	 * Creates a user with the given fields
+	 * @param body Is converted to an object from the given fields
+	 * @return
+	 */
 	@PostMapping
 	public ResponseEntity <JsonResponse> createUser (@RequestBody User body) {
 
@@ -38,7 +44,6 @@ public class UserController {
 		}
 
 		return ResponseEntity.ok (new JsonResponse ("Created user", true, null, "/login"));
-
 	}
 
 	@GetMapping
