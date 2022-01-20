@@ -44,14 +44,14 @@ public class UserService {
 		User checkUser = userRepo.findByUsername(userInput.getUsername());
 
 		if (checkUser != null) {
-			checkUser.setFirstName("bad user");
+			checkUser.setId(-1);
 			return checkUser;
 		}
 
 		checkUser = userRepo.findByEmail(userInput.getEmail());
 
 		if (checkUser != null) {
-			checkUser.setFirstName("bad email");
+			checkUser.setId(-2);
 			return checkUser;
 		}
 

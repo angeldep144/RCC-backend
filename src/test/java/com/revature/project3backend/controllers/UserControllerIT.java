@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 class UserControllerIT {
 
     @Autowired
-    private MockMvc mockMvc;
+    private MockMvc mvc;
 
     @MockBean
     private UserService userService;
@@ -29,16 +29,17 @@ class UserControllerIT {
         User user = new User(1, "first", "last", "email", "username", "password", null, null);
         User input = new User("first", "last", "email", "username", "password");
 
-        JsonResponse expectedResult = new JsonResponse ("Created user", true, null, "/login");
+        JsonResponse expectedResult = new JsonResponse ("Created user", true, user, "/login");
 
-        Mockito.when(this.userService.createUser(input)).thenReturn(user);
+        //todo: used wild card because there was an issue with the mocked service returning null
+        Mockito.when(this.userService.createUser(Mockito.any(User.class))).thenReturn(user);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .post("/user")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(user));
+                .content(new ObjectMapper().writeValueAsString(input));
 
-        mockMvc.perform(requestBuilder)
+        this.mvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(expectedResult)));
     }

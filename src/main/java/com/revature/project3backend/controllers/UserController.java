@@ -33,17 +33,17 @@ public class UserController {
 
 		User returnUser = this.userService.createUser(body);
 
-		if (returnUser.getFirstName().equals("bad user")) {
+		if (returnUser.getId() == -1) {
 			return ResponseEntity
 					.status(HttpStatus.BAD_REQUEST)
 					.body(new JsonResponse("Username is already taken please try another one", false, null));
-		}else if (returnUser.getFirstName().equals("bad email")) {
+		}else if (returnUser.getId() == -2) {
 			return ResponseEntity
 					.status(HttpStatus.BAD_REQUEST)
 					.body(new JsonResponse("Email is already registered", false, null));
 		}
 
-		return ResponseEntity.ok (new JsonResponse ("Created user", true, null, "/login"));
+		return ResponseEntity.ok (new JsonResponse ("Created user", true, returnUser, "/login"));
 	}
 
 	@GetMapping
