@@ -44,4 +44,4 @@ INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Produc
 
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VALUES ('Product 23', 'Description of product 23', 23.00, 1.00, 13, '')
 
-INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VALUES ('Product 24', 'Description of product 24', 24.00, 11.00, 13, '')
+INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VALUES ('Product 24', 'Description of product 24dddddd ddddddddd dddddddd ddddd ddddddd ddddddd dddddddddddd dddd ddd d d dd d d d dd d dd d dd d ', 24.00, 11.00, 13, '')
