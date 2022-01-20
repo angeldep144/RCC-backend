@@ -20,9 +20,10 @@ public class UserService {
 	public UserService (UserRepo userRepo) {
 		this.userRepo = userRepo;
 	}
-
+	
 	/**
 	 * Validates a user's credentials against what is in the database.
+	 *
 	 * @param username The user's username.
 	 * @param password The user's plaintext password.
 	 * @return The user's full object from the database if successful, null if not.
@@ -35,29 +36,43 @@ public class UserService {
 		if (user == null) {
 			throw new InvalidCredentialsException ();
 		}
-
+		
 		if (passwordEncoder.matches (password, user.getPassword ())) {
 			return user;
-		}
-		
-		else {
+		} else {
 			throw new InvalidCredentialsException ();
 		}
 	}
-
+	
 	/**
 	 * Returns a user given a username.
+	 *
 	 * @param username The username to be searched.
 	 * @return The User object from the database if it exists, null if not found.
 	 */
-	public User getUserByUserName(String username){
-		User user = userRepo.findByUsername(username);
-
-		if(user == null){
-			return null;
-		}else{
-			return user;
+	public User getUserByUserName (String username) {
+		User user = userRepo.findByUsername (username);
+		
+		return user;
+	}
+	
+	public User createUser (User userInput) {
+		User checkUser = userRepo.findByUsername (userInput.getUsername ());
+		
+		if (checkUser != null) {
+			checkUser.setFirstName ("bad user");
+			return checkUser;
 		}
-
+		
+		checkUser = userRepo.findByEmail (userInput.getEmail ());
+		
+		if (checkUser != null) {
+			checkUser.setFirstName ("bad email");
+			return checkUser;
+		}
+		
+		userInput.setPassword (passwordEncoder.encode (userInput.getPassword ()));
+		
+		return userRepo.save (userInput);
 	}
 }

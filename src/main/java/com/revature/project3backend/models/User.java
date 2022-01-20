@@ -39,4 +39,14 @@ public class User {
 	
 	@OneToMany (mappedBy = "buyer")
 	private List <Transaction> transactions;
+
+	public User(String firstname, String lastname, String email, String username, String password) {
+
+		this.firstName = firstname;
+		this.lastName = lastname;
+		this.email = email;
+		this.username = username;
+		this.password = password;
+
+	}
 }
