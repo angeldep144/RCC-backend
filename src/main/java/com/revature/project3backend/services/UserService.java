@@ -43,11 +43,17 @@ public class UserService {
 
 		User checkUser = userRepo.findByUsername(userInput.getUsername());
 
-		if (checkUser != null) return null;
+		if (checkUser != null) {
+			checkUser.setFirstName("bad user");
+			return checkUser;
+		}
 
 		checkUser = userRepo.findByEmail(userInput.getEmail());
 
-		if (checkUser != null) return null;
+		if (checkUser != null) {
+			checkUser.setFirstName("bad email");
+			return checkUser;
+		}
 
 		userInput.setPassword(passwordEncoder.encode(userInput.getPassword()));
 

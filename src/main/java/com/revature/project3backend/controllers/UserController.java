@@ -6,7 +6,6 @@ import com.revature.project3backend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,10 +27,14 @@ public class UserController {
 
 		User returnUser = this.userService.createUser(body);
 
-		if (returnUser == null) {
+		if (returnUser.getFirstName().equals("bad user")) {
 			return ResponseEntity
 					.status(HttpStatus.BAD_REQUEST)
-					.body(new JsonResponse("Error user already exists please try again", false, null));
+					.body(new JsonResponse("Username is already taken please try another one", false, null));
+		}else if (returnUser.getFirstName().equals("bad email")) {
+			return ResponseEntity
+					.status(HttpStatus.BAD_REQUEST)
+					.body(new JsonResponse("Email is already registered", false, null));
 		}
 
 		return ResponseEntity.ok (new JsonResponse ("Created user", true, null, "/login"));
