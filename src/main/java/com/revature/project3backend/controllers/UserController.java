@@ -33,11 +33,11 @@ public class UserController {
 
 		User returnUser = this.userService.createUser(body);
 
-		if (returnUser.getId() == -1) {
+		if (returnUser.getPassword().equals("bad user")) {
 			return ResponseEntity
 					.status(HttpStatus.BAD_REQUEST)
 					.body(new JsonResponse("Username is already taken please try another one", false, null));
-		}else if (returnUser.getId() == -2) {
+		}else if (returnUser.getPassword().equals("bad email")) {
 			return ResponseEntity
 					.status(HttpStatus.BAD_REQUEST)
 					.body(new JsonResponse("Email is already registered", false, null));
