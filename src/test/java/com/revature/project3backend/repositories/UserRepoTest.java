@@ -10,24 +10,28 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 class UserRepoTest {
-
-    @Autowired
-    UserRepo userRepo;
-
-    @Test
-    void findByUsername() {
-        List<CartItem> items = new ArrayList<>();
-        List<Transaction> transactions = new ArrayList<>();
-
-        User expected = new User(1,"Test", "User", "testuser@email.com", "TestUser", "pass123", items, transactions);
-
-        User actual = userRepo.findByUsername("TestUser");
-
-        assertEquals(expected.toString(), actual.toString());
-    }
+	
+	@Autowired
+	UserRepo userRepo;
+	
+	@Test
+	void findByUsername () {
+		List <CartItem> items = new ArrayList <> ();
+		List <Transaction> transactions = new ArrayList <> ();
+		
+		User expected = new User (1, "Test", "User", "testuser@email.com", "TestUser", "pass123", items, transactions);
+		
+		User actual = userRepo.findByUsername ("TestUser");
+		
+		assertEquals (expected.toString (), actual.toString ());
+	}
+	
+	@Test
+	void findByEmail () {
+		
+	}
 }

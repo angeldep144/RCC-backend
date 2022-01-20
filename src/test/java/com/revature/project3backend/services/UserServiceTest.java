@@ -1,11 +1,11 @@
 package com.revature.project3backend.services;
 
 import com.revature.project3backend.exceptions.InvalidCredentialsException;
+import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.models.CartItem;
 import com.revature.project3backend.models.Transaction;
 import com.revature.project3backend.models.User;
 import com.revature.project3backend.repositories.UserRepo;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class UserServiceTest {
-	
 	UserService userService;
 	UserRepo userRepo = Mockito.mock (UserRepo.class);
 	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder ();
@@ -116,5 +115,30 @@ class UserServiceTest {
 		User actual = userService.getUserByUserName (username);
 		
 		assertNull (actual);
+	}
+	
+	@Test
+	void createUserPositive () throws InvalidValueException {
+		User user = new User (1, "first", "last", "email", "username", "password", null, null);
+		
+		Mockito.when (this.userRepo.save (user)).thenReturn (user);
+		
+		User actualResult = this.userService.createUser (user);
+		User expectedResult = this.userRepo.save (user);
+		
+		assertEquals (expectedResult, actualResult);
+	}
+	
+	@Test
+	void createUserNegative () throws InvalidValueException {
+		User user = new User (1, "first", "last", "email", "username", "password", null, null);
+		
+		this.userRepo.save (user);
+		
+		Mockito.when (this.userRepo.save (user)).thenReturn (null);
+		
+		User actualResult = this.userService.createUser (user);
+		
+		assertNull (actualResult);
 	}
 }

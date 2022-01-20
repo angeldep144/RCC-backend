@@ -1,6 +1,7 @@
 package com.revature.project3backend.services;
 
 import com.revature.project3backend.exceptions.InvalidCredentialsException;
+import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.models.User;
 import com.revature.project3backend.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,19 +57,17 @@ public class UserService {
 		return user;
 	}
 	
-	public User createUser (User userInput) {
+	public User createUser (User userInput) throws InvalidValueException {
 		User checkUser = userRepo.findByUsername (userInput.getUsername ());
 		
 		if (checkUser != null) {
-			checkUser.setFirstName ("bad user");
-			return checkUser;
+			throw new InvalidValueException ("Username already in use");
 		}
 		
 		checkUser = userRepo.findByEmail (userInput.getEmail ());
 		
 		if (checkUser != null) {
-			checkUser.setFirstName ("bad email");
-			return checkUser;
+			throw new InvalidValueException ("Email already in use");
 		}
 		
 		userInput.setPassword (passwordEncoder.encode (userInput.getPassword ()));

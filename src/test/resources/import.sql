@@ -1,1 +1,1 @@
-INSERT INTO USER (FIRST_NAME, LAST_NAME, EMAIL, USERNAME, PASSWORD)values('Test', 'User', 'testuser@email.com', 'TestUser', 'pass123');
+INSERT INTO USERS (FIRST_NAME, LAST_NAME, EMAIL, USERNAME, PASSWORD)values('Test', 'User', 'testuser@email.com', 'TestUser', 'pass123');
