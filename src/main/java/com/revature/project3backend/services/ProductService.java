@@ -25,7 +25,7 @@ public class ProductService {
 	}
 	
 	public List <Product> getProducts (String searchQuery, Integer page) {
-		return this.productRepo.findByNameOrDescriptionIgnoreCaseContaining (searchQuery, searchQuery, PageRequest.of (page, postsPerPage, Sort.by ("name"))).getContent ();
+		return this.productRepo.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining (searchQuery, searchQuery, PageRequest.of (page, postsPerPage, Sort.by ("name"))).getContent ();
 	}
 	
 	public Product getProduct (Integer id) throws InvalidValueException {

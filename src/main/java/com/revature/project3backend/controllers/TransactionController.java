@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping ("transaction")
-@CrossOrigin (origins = "http://localhost:4200", allowCredentials = "true")
+@CrossOrigin (origins = "http://localhost:4200/", allowCredentials = "true")
 public class TransactionController {
 	@PostMapping
 	public ResponseEntity <JsonResponse> createTransaction (HttpSession httpSession) throws UnauthorizedException {
