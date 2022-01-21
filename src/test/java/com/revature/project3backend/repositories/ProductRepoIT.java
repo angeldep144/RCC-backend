@@ -1,6 +1,9 @@
 package com.revature.project3backend.repositories;
 
 import com.revature.project3backend.models.Product;
+import com.revature.project3backend.models.User;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +28,22 @@ class ProductRepoIT {
 	private final int postsPerPage = 20;
 	
 	@BeforeEach
-	void setUp () {
-		products.add (new Product (0, "Java I", "A beginner Java course", 10.00F, "", 8.00F, 5));
-		products.add (new Product (0, "Java II", "An intermediate Java course", 20.00F, "", 18.00F, 5));
-		products.add (new Product (0, "Python I", "A beginner Python course", 10.00F, "", 8.00F, 5));
-		products.add (new Product (0, "Python II", "An intermediate Python course", 20.00F, "", 18.00F, 5));
+	public void setUp () {
+		products.add (new Product (null, "Java I", "A beginner Java course", 10.00F, "", 8.00F, 5));
+		products.add (new Product (null, "Java II", "An intermediate Java course", 20.00F, "", 18.00F, 5));
+		products.add (new Product (null, "Python I", "A beginner Python course", 10.00F, "", 8.00F, 5));
+		products.add (new Product (null, "Python II", "An intermediate Python course", 20.00F, "", 18.00F, 5));
 		
-		for (int i = 0; i < products.size (); i++) {
-			productRepo.save (products.get (i));
+		for (Product product : products) {
+			productRepo.save (product);
 		}
+	}
+	
+	@AfterEach
+	public void tearDown () {
+		products.clear ();
+		
+		productRepo.deleteAll ();
 	}
 	
 	@Test
@@ -44,10 +54,6 @@ class ProductRepoIT {
 		expectedResult.add (products.get (3));
 		
 		List <Product> actualResult = productRepo.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining ("python", "python", PageRequest.of (0, postsPerPage, Sort.by ("name"))).getContent ();
-		
-		for (Product product : actualResult) {
-			product.setId (0);
-		}
 		
 		assertEquals (expectedResult, actualResult);
 	}
@@ -60,10 +66,6 @@ class ProductRepoIT {
 		expectedResult.add (products.get (2));
 		
 		List <Product> actualResult = productRepo.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining ("beginner", "beginner", PageRequest.of (0, postsPerPage, Sort.by ("name"))).getContent ();
-		
-		for (Product product : actualResult) {
-			product.setId (0);
-		}
 		
 		assertEquals (expectedResult, actualResult);
 	}

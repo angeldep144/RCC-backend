@@ -12,11 +12,11 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "users")
+@Table (name = "users")
 public class User {
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 	
 	@Column (nullable = false)
 	private String firstName;
@@ -39,14 +39,12 @@ public class User {
 	
 	@OneToMany (mappedBy = "buyer")
 	private List <Transaction> transactions;
-
-	public User(String firstname, String lastname, String email, String username, String password) {
-
+	
+	public User (String firstname, String lastname, String email, String username, String password) {
 		this.firstName = firstname;
 		this.lastName = lastname;
 		this.email = email;
 		this.username = username;
 		this.password = password;
-
 	}
 }
