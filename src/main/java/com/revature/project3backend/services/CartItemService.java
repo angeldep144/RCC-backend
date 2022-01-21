@@ -18,6 +18,6 @@ public class CartItemService {
 	}
 	
 	public void createCartItem (CartItem cartItem) {
-		
+		this.cartItemRepo.save(cartItem);
 	}
 }
