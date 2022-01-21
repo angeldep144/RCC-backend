@@ -26,7 +26,6 @@ public class UserRepoIT {
 		users.add (new User (null, "User", "3", "email3", "username3", "password", new ArrayList <> (), new ArrayList <> ()));
 		
 		for (User user : users) {
-			System.out.println (user.getUsername ());
 			userRepo.save (user);
 		}
 	}

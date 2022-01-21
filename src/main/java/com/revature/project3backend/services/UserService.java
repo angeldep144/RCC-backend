@@ -2,6 +2,7 @@ package com.revature.project3backend.services;
 
 import com.revature.project3backend.exceptions.InvalidCredentialsException;
 import com.revature.project3backend.exceptions.InvalidValueException;
+import com.revature.project3backend.models.CartItem;
 import com.revature.project3backend.models.User;
 import com.revature.project3backend.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,5 +83,11 @@ public class UserService {
 		userInput.setPassword (passwordEncoder.encode (userInput.getPassword ()));
 		
 		return userRepo.save (userInput);
+	}
+	
+	public void addToCart (User user, CartItem cartItem) {
+		user.getCart ().add (cartItem);
+		
+		userRepo.save (user);
 	}
 }

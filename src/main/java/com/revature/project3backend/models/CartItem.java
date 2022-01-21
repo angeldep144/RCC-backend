@@ -24,4 +24,10 @@ public class CartItem {
 	
 	@Column (nullable = false)
 	private Integer quantity;
+	
+	public CartItem (User buyer, Product product, Integer quantity) {
+		this.buyer = buyer;
+		this.product = product;
+		this.quantity = quantity;
+	}
 }
