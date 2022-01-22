@@ -24,13 +24,13 @@ INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('JavaSc
 
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('XML Guide', 'Description of product 13', 13.00, 13, 'https://pm1.narvii.com/6137/c9af0675847014548672b0099cb28d4508b1239d_hq.jpg')
 
-INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Jason''s Guide to JSON', 'Description of product 14', 14.00, 13, 'https://i.imgur.com/TQJmnEq.jpg')
+INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Jason''s Guide to JSON', 'Description of product 14', 14.00, 13, 'https://st.depositphotos.com/2398521/2608/i/950/depositphotos_26089317-stock-photo-cute-small-dog.jpg')
 
-INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('TypeScript for Beginners', 'Description of product 15', 15.00, 13, 'https://i.imgur.com/TQJmnEq.jpg')
+INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('TypeScript for Beginners', 'Description of product 15', 15.00, 13, 'https://st.depositphotos.com/2398521/2608/i/950/depositphotos_26089317-stock-photo-cute-small-dog.jpg')
 
-INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Advanced Python', 'Description of product 16', 16.00, 13, 'https://i.imgur.com/TQJmnEq.jpg')
+INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Advanced Python', 'Description of product 16', 16.00, 13, 'https://st.depositphotos.com/2398521/2608/i/950/depositphotos_26089317-stock-photo-cute-small-dog.jpg')
 
-INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Intermediate Python', 'Description of product 17', 17.00, 13, 'https://i.imgur.com/TQJmnEq.jpg')
+INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Intermediate Python', 'Description of product 17', 17.00, 13, 'https://st.depositphotos.com/2398521/2608/i/950/depositphotos_26089317-stock-photo-cute-small-dog.jpg')
 
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Beginner Python', 'Description of product 18', 18.00, 13, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTD71j3SQgIZtqMlQaqrpP6o1iv1ePUBZTANQ&usqp=CAU')
 
