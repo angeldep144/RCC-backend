@@ -53,6 +53,13 @@ public class CartItemController {
 			throw new InvalidValueException ("Invalid quantity");
 		}
 		
+		for (CartItem cartItem : user.getCart ()) {
+			//if product is already in cart
+			if (createCartItemBody.getProductId ().equals (cartItem.getProduct ().getId ())) {
+				throw new InvalidValueException ("Invalid product id");
+			}
+		}
+		
 		CartItem cartItem = new CartItem (user, productService.getProduct (createCartItemBody.getProductId ()), createCartItemBody.getQuantity ());
 		
 		cartItemService.createCartItem (cartItem);
