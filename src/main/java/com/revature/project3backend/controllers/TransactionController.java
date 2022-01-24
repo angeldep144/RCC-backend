@@ -33,7 +33,7 @@ public class TransactionController {
 			throw new UnauthorizedException();
 		}
 
-		if(transaction.getTotal()!=null) {
+		if(transaction.getTotal()==null) {
 			transaction.setTotal(transactionService.total(transaction));
 		}
 
