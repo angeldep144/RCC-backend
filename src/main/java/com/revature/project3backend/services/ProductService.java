@@ -14,7 +14,6 @@ import java.util.List;
 @Service
 @Transactional
 public class ProductService {
-	
 	private final ProductRepo productRepo;
 	
 	private final int postsPerPage = 20;
