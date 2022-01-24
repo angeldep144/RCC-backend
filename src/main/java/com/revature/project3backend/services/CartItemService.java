@@ -19,23 +19,25 @@ public class CartItemService {
 	}
 	
 	public void createCartItem (CartItem cartItem) {
-		this.cartItemRepo.save(cartItem);
+		this.cartItemRepo.save (cartItem);
 	}
-
+	
 	/**
 	 * Based on a user's unique user id, return their cart items
+	 *
 	 * @param UserId unique serial identifier for a given user
 	 * @return A list of all cart items for the given user
 	 */
-	public List<CartItem> getCartItems(Integer UserId) {
-		return this.cartItemRepo.findAllByBuyerId(UserId);
+	public List <CartItem> getCartItems (Integer UserId) {
+		return this.cartItemRepo.findAllByBuyerId (UserId);
 	}
-
+	
 	/**
 	 * Cart items are tracked by user but the id is unique throughout the whole system
+	 *
 	 * @param cartItemId The unique id assigned to the cart item
 	 */
-	public void deleteCartItem(Integer cartItemId) {
-		this.cartItemRepo.deleteById(cartItemId);
+	public void deleteCartItem (Integer cartItemId) {
+		this.cartItemRepo.deleteById (cartItemId);
 	}
 }
