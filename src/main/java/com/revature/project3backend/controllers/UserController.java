@@ -24,12 +24,13 @@ public class UserController {
 		this.userService = userService;
 		this.roleService = roleService;
 	}
-	
+
 	/**
-	 * Creates a user with the given fields
+	 * Create user just calls the userService createUser method and then returns with a response entity
 	 *
-	 * @param body Is converted to an object from the given fields
-	 * @return A ResponseEntity
+	 * @param body The body variable contains Strings (firstName, lastName, username, password, email)
+	 * @return A response entity that holds a Json response with the message, boolean, object, redirect.
+	 * @throws InvalidValueException is here because the userService can throw the exception to this method
 	 */
 	@PostMapping
 	public ResponseEntity <JsonResponse> createUser (@RequestBody User body) throws InvalidValueException {
