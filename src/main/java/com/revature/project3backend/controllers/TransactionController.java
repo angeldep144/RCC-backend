@@ -36,6 +36,7 @@ public class TransactionController {
 		if(transaction.getTotal()==null) {
 			transaction.setTotal(transactionService.total(transaction));
 		}
+		transactionService.createTransaction(transaction);
 
 		return ResponseEntity.ok(new JsonResponse("transaction complete", true, transaction));
 	}
