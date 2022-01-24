@@ -1,5 +1,6 @@
 package com.revature.project3backend.services;
 
+import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.models.CartItem;
 import com.revature.project3backend.repositories.CartItemRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,18 @@ public class CartItemService {
 	 */
 	public List <CartItem> getCartItems (Integer UserId) {
 		return this.cartItemRepo.findAllByBuyerId (UserId);
+	}
+	
+	public void updateCartItem (Integer cartItemId, Integer quantity) throws InvalidValueException {
+		CartItem cartItem = cartItemRepo.findById (cartItemId).orElse (null);
+		
+		if (cartItem == null) {
+			throw new InvalidValueException ("Invalid cart item id");
+		}
+		
+		cartItem.setQuantity (quantity);
+		
+		cartItemRepo.save (cartItem);
 	}
 	
 	/**
