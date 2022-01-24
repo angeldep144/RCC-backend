@@ -2,6 +2,7 @@ package com.revature.project3backend.controllers;
 
 import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.models.User;
+import com.revature.project3backend.models.UserRole;
 import com.revature.project3backend.services.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +30,9 @@ class UserControllerTest {
 	
 	@Test
 	void createUserPostiive () throws InvalidValueException {
-		User expectedResult = new User (1, "first", "last", "email", "username", "password", null, null);
+		UserRole role = new UserRole(1, "Admin");
+
+		User expectedResult = new User (1, "first", "last", "email", "username", "password", null, null, role);
 		User input = new User ("first", "last", "email", "username", "password");
 		
 		Mockito.when (userService.createUser (input)).thenReturn (expectedResult);

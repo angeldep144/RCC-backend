@@ -3,6 +3,7 @@ package com.revature.project3backend.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.project3backend.jsonmodels.JsonResponse;
 import com.revature.project3backend.models.User;
+import com.revature.project3backend.models.UserRole;
 import com.revature.project3backend.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -26,7 +27,10 @@ class UserControllerIT {
 
     @Test
     void createUserPositive() throws Exception {
-        User user = new User(1, "first", "last", "email", "username", "password", null, null);
+        UserRole role = new UserRole(1, "Admin");
+
+        User user = new User(1, "first", "last", "email"
+                , "username", "password", null, null, role);
         User input = new User("first", "last", "email", "username", "password");
 
         JsonResponse expectedResult = new JsonResponse ("Created user", true, user, "/login");

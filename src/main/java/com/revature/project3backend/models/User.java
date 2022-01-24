@@ -47,4 +47,7 @@ public class User {
 		this.username = username;
 		this.password = password;
 	}
+
+	@ManyToOne
+	private UserRole role;
 }
