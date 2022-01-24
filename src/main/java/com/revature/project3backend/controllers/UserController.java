@@ -27,6 +27,8 @@ public class UserController {
 	 */
 	@PostMapping
 	public ResponseEntity <JsonResponse> createUser (@RequestBody User body) throws InvalidValueException {
+		UserRole role = this.roleService.getRole("USER");
+		body.setRole(role);
 		User returnUser = this.userService.createUser (body);
 		
 		return ResponseEntity.ok (new JsonResponse ("Created user", true, returnUser, "/login"));

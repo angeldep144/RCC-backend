@@ -49,5 +49,6 @@ public class User {
 	}
 
 	@ManyToOne
+//TODO: set default role to USER
 	private UserRole role;
 }
