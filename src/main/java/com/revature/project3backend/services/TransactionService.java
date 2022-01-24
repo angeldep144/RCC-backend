@@ -45,7 +45,11 @@ public class TransactionService {
 		if(transaction.getTotal() == null) {
 			for (int i = 0; i < items.size(); i++) {
 				product = items.get(i).getProduct();
-				totalCost += product.getPrice() * items.get(i).getQuantity();
+				if(product.getSalePrice() == null) {
+					totalCost += product.getPrice() * items.get(i).getQuantity();
+				}
+				else
+					totalCost += product.getSalePrice() * items.get(i).getQuantity();
 			}
 		}
 
