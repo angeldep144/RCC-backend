@@ -6,6 +6,7 @@ import com.revature.project3backend.jsonmodels.JsonResponse;
 import com.revature.project3backend.models.Transaction;
 import com.revature.project3backend.models.User;
 import com.revature.project3backend.services.TransactionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,10 +19,12 @@ public class TransactionController {
 
 	private final TransactionService transactionService;
 
+	@Autowired
 	public TransactionController(TransactionService transactionService)
 	{
 		this.transactionService = transactionService;
 	}
+
 
 	@PostMapping
 	public ResponseEntity <JsonResponse> createTransaction (@RequestBody Transaction transaction) throws UnauthorizedException {
