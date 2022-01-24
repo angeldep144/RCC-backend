@@ -45,3 +45,7 @@ INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Produc
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VALUES ('Product 23', 'Description of product 23', 23.00, 1.00, 13, 'https://upload.wikimedia.org/wikipedia/en/b/bb/General_Iroh.jpg')
 
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VALUES ('Product 24', 'Description of product 24ddddddddddddddddddddddddddddsddddddd ddddddd dddddddddddd dddd ddd d d dd d d d dd d dd d dd d ', 24.00, 11.00, 13, 'https://static01.nyt.com/images/2021/10/26/science/21tb-tuskless/21tb-tuskless-videoSixteenByNineJumbo1600.jpg')
+
+INSERT INTO user_roles VALUES (DEFAULT, 'USER');
+
+INSERT INTO user_roles VALUES (DEFAULT, 'ADMIN');

@@ -3,6 +3,7 @@ package com.revature.project3backend.controllers;
 import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.models.User;
 import com.revature.project3backend.models.UserRole;
+import com.revature.project3backend.services.RoleService;
 import com.revature.project3backend.services.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,9 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class UserControllerTest {
 	private UserController userController;
 	private final UserService userService = Mockito.mock (UserService.class);
-	
+	private final RoleService roleService = Mockito.mock (RoleService.class);
+
 	public UserControllerTest () {
-		this.userController = new UserController (userService);
+		this.userController = new UserController (userService, roleService);
 	}
 	
 	@BeforeEach
