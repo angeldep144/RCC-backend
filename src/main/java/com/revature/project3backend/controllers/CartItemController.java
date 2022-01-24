@@ -66,28 +66,33 @@ public class CartItemController {
 		
 		userService.addToCart (user, cartItem);
 		
-		return ResponseEntity.ok (new JsonResponse ("Added to cart", true, user.getCart()));
+		return ResponseEntity.ok (new JsonResponse ("Added to cart", true));
 	}
 	
 	@GetMapping
-	public ResponseEntity <JsonResponse> getCartItems (HttpSession httpSession) throws UnauthorizedException {
-		if (httpSession.getAttribute ("user") == null) {
+	public ResponseEntity <JsonResponse> getCartItems (HttpSession httpSession) throws UnauthorizedException, InvalidValueException {
+		User user = (User) httpSession.getAttribute ("user");
+		if (user == null) {
 			throw new UnauthorizedException ();
 		}
+
+		List<CartItem> cartItems = cartItemService.getCartItems(user.getId());
+		if (cartItems == null) {
+			throw new InvalidValueException ("No cart items found for user.");
+		}
 		
-		//todo
-		
-		return null;
+		return ResponseEntity.ok (new JsonResponse ("Successfully retrieved cart items for "+user.getUsername()+".", true, cartItems));
 	}
 	
-	@DeleteMapping
-	public ResponseEntity <JsonResponse> deleteCartItem (@RequestParam Integer cartItemId, HttpSession httpSession) throws InvalidValueException, UnauthorizedException {
-		if (httpSession.getAttribute ("user") == null) {
+	@DeleteMapping ("{cartItemId}")
+	public ResponseEntity <JsonResponse> deleteCartItem (@PathVariable Integer cartItemId, HttpSession httpSession) throws InvalidValueException, UnauthorizedException {
+		User user = (User) httpSession.getAttribute ("user");
+		if (user == null) {
 			throw new UnauthorizedException ();
 		}
-		
-		//todo
-		
-		return null;
+
+		cartItemService.deleteCartItem(cartItemId);
+
+		return ResponseEntity.ok (new JsonResponse ("Deleted item from cart", true));
 	}
 }
