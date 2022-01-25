@@ -32,11 +32,11 @@ public class ProductController {
 	@GetMapping
 	public ResponseEntity <JsonResponse> getProducts (@RequestParam String searchQuery, @RequestParam Integer page) throws InvalidValueException {
 		if (searchQuery == null) {
-			throw new InvalidValueException ("searchQuery is bad");
+			throw new InvalidValueException ("Invalid search query");
 		}
 		
 		if (page == null) {
-			throw new InvalidValueException ("Page value not accepted");
+			throw new InvalidValueException ("Invalid page");
 		}
 		
 		List <Product> products = this.productService.getProducts (searchQuery, page);
