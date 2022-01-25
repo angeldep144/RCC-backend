@@ -51,7 +51,6 @@ public class ProductService {
 		return updatedProduct;
     }
 
-	public Product createProduct (Product product) {
 	public Product createProduct (Product product) throws InvalidValueException {
 		Product product2 = this.productRepo.save(product);
 
