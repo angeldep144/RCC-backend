@@ -10,6 +10,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -41,7 +43,8 @@ public class UserService {
 		
 		if (passwordEncoder.matches (password, user.getPassword ())) {
 			return user;
-		} else {
+		}
+		else {
 			throw new InvalidCredentialsException ();
 		}
 	}
@@ -53,9 +56,7 @@ public class UserService {
 	 * @return The User object from the database if it exists, null if not found.
 	 */
 	public User getUserByUserName (String username) {
-		User user = userRepo.findByUsername (username);
-		
-		return user;
+		return userRepo.findByUsername (username);
 	}
 	
 	public User createUser (User userInput) throws InvalidValueException {
@@ -78,6 +79,22 @@ public class UserService {
 	
 	public void addToCart (User user, CartItem cartItem) {
 		user.getCart ().add (cartItem);
+		
+		userRepo.save (user);
+	}
+	
+	public void removeFromCart (User user, int index) {
+		user.getCart ().remove (index);
+		
+		//todo delete cartitems that don't have a transaction?
+		
+		userRepo.save (user);
+	}
+	
+	public void clearCart (User user) {
+		user.setCart (new ArrayList <> ());
+		
+		//todo delete cartitems that don't have a transaction?
 		
 		userRepo.save (user);
 	}

@@ -4,7 +4,9 @@ import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.exceptions.UnauthorizedException;
 import com.revature.project3backend.jsonmodels.CreateCartItemBody;
 import com.revature.project3backend.jsonmodels.JsonResponse;
+import com.revature.project3backend.jsonmodels.UpdateCartItemBody;
 import com.revature.project3backend.models.CartItem;
+import com.revature.project3backend.models.Product;
 import com.revature.project3backend.models.User;
 import com.revature.project3backend.services.CartItemService;
 import com.revature.project3backend.services.ProductService;
@@ -32,33 +34,39 @@ public class CartItemController {
 	}
 	
 	@PostMapping
-	public ResponseEntity <JsonResponse> createCartItem (@RequestBody CreateCartItemBody createCartItemBody, HttpSession httpSession) throws InvalidValueException, UnauthorizedException {
+	public ResponseEntity <JsonResponse> createCartItem (@RequestBody CreateCartItemBody body, HttpSession httpSession) throws InvalidValueException, UnauthorizedException {
 		User user = (User) httpSession.getAttribute ("user");
 		
 		if (user == null) {
 			throw new UnauthorizedException ();
 		}
 		
-		if (createCartItemBody.getProductId () == null) {
+		if (body.getProductId () == null) {
 			throw new InvalidValueException ("Invalid product id");
 		}
 		
-		if (createCartItemBody.getQuantity () == null) {
+		if (body.getQuantity () == null) {
 			throw new InvalidValueException ("Invalid quantity");
 		}
 		
-		if (createCartItemBody.getQuantity () < 1) {
+		if (body.getQuantity () < 1) {
 			throw new InvalidValueException ("Invalid quantity");
 		}
 		
 		for (CartItem cartItem : user.getCart ()) {
 			//if product is already in cart
-			if (createCartItemBody.getProductId ().equals (cartItem.getProduct ().getId ())) {
+			if (body.getProductId ().equals (cartItem.getProduct ().getId ())) {
 				throw new InvalidValueException ("Invalid product id");
 			}
 		}
 		
-		CartItem cartItem = new CartItem (user, productService.getProduct (createCartItemBody.getProductId ()), createCartItemBody.getQuantity ());
+		Product product = productService.getProduct (body.getProductId ());
+		
+		if (product.getStock () - body.getQuantity () < 0) {
+			throw new InvalidValueException ("Invalid quantity");
+		}
+		
+		CartItem cartItem = new CartItem (user, product, body.getQuantity ());
 		
 		cartItemService.createCartItem (cartItem);
 		
@@ -75,9 +83,36 @@ public class CartItemController {
 			throw new UnauthorizedException ();
 		}
 		
-		List <CartItem> cartItems = cartItemService.getCartItems (user.getId ());
+		List <CartItem> cart = user.getCart ();
 		
-		return ResponseEntity.ok (new JsonResponse ("Got " + cartItems.size () + " cart items", true, cartItems));
+		return ResponseEntity.ok (new JsonResponse ("Got " + cart.size () + " cart items", true, cart));
+	}
+	
+	@PutMapping ("{cartItemId}")
+	public ResponseEntity <JsonResponse> updateCartItem (@PathVariable Integer cartItemId, @RequestBody UpdateCartItemBody body, HttpSession httpSession) throws InvalidValueException, UnauthorizedException {
+		User user = (User) httpSession.getAttribute ("user");
+		
+		if (user == null) {
+			throw new UnauthorizedException ();
+		}
+		
+		if (body.getQuantity () == null) {
+			throw new InvalidValueException ("Invalid quantity");
+		}
+		
+		for (int i = 0; i < user.getCart ().size (); i++) {
+			if (user.getCart ().get (i).getId ().equals (cartItemId)) {
+				if (user.getCart ().get (i).getProduct ().getStock () - body.getQuantity () < 0) {
+					throw new InvalidValueException ("Invalid quantity");
+				}
+				
+				cartItemService.updateCartItem (cartItemId, body.getQuantity ());
+				
+				return ResponseEntity.ok (new JsonResponse ("Updated cart item quantity", true));
+			}
+		}
+		
+		throw new InvalidValueException ("Invalid cart item id");
 	}
 	
 	@DeleteMapping ("{cartItemId}")
@@ -90,9 +125,9 @@ public class CartItemController {
 		
 		for (int i = 0; i < user.getCart ().size (); i++) {
 			if (user.getCart ().get (i).getId ().equals (cartItemId)) {
-				cartItemService.deleteCartItem (cartItemId);
+				userService.removeFromCart (user, i);
 				
-				return ResponseEntity.ok (new JsonResponse ("Deleted item from cart", true));
+				return ResponseEntity.ok (new JsonResponse ("Deleted cart item", true));
 			}
 		}
 		

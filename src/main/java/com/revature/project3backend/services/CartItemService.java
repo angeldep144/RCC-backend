@@ -1,6 +1,8 @@
 package com.revature.project3backend.services;
 
+import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.models.CartItem;
+import com.revature.project3backend.models.User;
 import com.revature.project3backend.repositories.CartItemRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,22 +24,15 @@ public class CartItemService {
 		this.cartItemRepo.save (cartItem);
 	}
 	
-	/**
-	 * Based on a user's unique user id, return their cart items
-	 *
-	 * @param UserId unique serial identifier for a given user
-	 * @return A list of all cart items for the given user
-	 */
-	public List <CartItem> getCartItems (Integer UserId) {
-		return this.cartItemRepo.findAllByBuyerId (UserId);
-	}
-	
-	/**
-	 * Cart items are tracked by user but the id is unique throughout the whole system
-	 *
-	 * @param cartItemId The unique id assigned to the cart item
-	 */
-	public void deleteCartItem (Integer cartItemId) {
-		this.cartItemRepo.deleteById (cartItemId);
+	public void updateCartItem (Integer cartItemId, Integer quantity) throws InvalidValueException {
+		CartItem cartItem = cartItemRepo.findById (cartItemId).orElse (null);
+		
+		if (cartItem == null) {
+			throw new InvalidValueException ("Invalid cart item id");
+		}
+		
+		cartItem.setQuantity (quantity);
+		
+		cartItemRepo.save (cartItem);
 	}
 }
