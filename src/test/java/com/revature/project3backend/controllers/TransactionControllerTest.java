@@ -18,10 +18,40 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class TransactionControllerTest {
-
     private TransactionController transactionController;
     private final TransactionService transactionService = Mockito.mock(TransactionService.class);
-
+	
+	@Test
+	void createTransaction () {
+		
+	}
+	
+	@Test
+	void createTransactionWhenNotLoggedIn () {
+		
+	}
+	
+	@Test
+	void createTransactionWhenCartIsEmpty () {
+		
+	}
+	
+	@Test
+	void getTransaction () {
+		
+	}
+	
+	@Test
+	void getTransactionWhenNotLoggedIn () {
+		
+	}
+	
+	@Test
+	void getTransactionWhenTransactionWasMadeByOtherUser () {
+		
+	}
+	
+	/*
     @BeforeEach
     void setUp () {
     }
@@ -104,4 +134,5 @@ class TransactionControllerTest {
         assertNull(actual);
 
     }
+    */
 }

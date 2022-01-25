@@ -19,14 +19,12 @@ class UserControllerTest {
 		this.userController = new UserController (userService);
 	}
 	
-	@BeforeEach
-	void setUp () {
+	@Test
+	void createUser () {
+		
 	}
 	
-	@AfterEach
-	void tearDown () {
-	}
-	
+	/*
 	@Test
 	void createUserPostiive () throws InvalidValueException {
 		User expectedResult = new User (1, "first", "last", "email", "username", "password", null, null);
@@ -37,16 +35,5 @@ class UserControllerTest {
 		User actualResult = userService.createUser (input);
 		
 		assertEquals (expectedResult, actualResult);
-	}
-	
-	@Test
-	void createUserNegative () throws InvalidValueException {
-		User input = new User ("first", "last", "email", "username", "password");
-		
-		Mockito.when (userService.createUser (input)).thenReturn (null);
-		
-		User actualResult = userService.createUser (input);
-		
-		assertNull (actualResult);
-	}
+	}*/
 }
