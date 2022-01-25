@@ -18,68 +18,65 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TransactionServiceTest {
-
-	TransactionRepo transactionRepo = Mockito.mock(TransactionRepo.class);
 	TransactionService transactionService;
-
-	public TransactionServiceTest(){ this.transactionService = new TransactionService(transactionRepo);}
-
+	TransactionRepo transactionRepo = Mockito.mock (TransactionRepo.class);
+	
+	public TransactionServiceTest () {
+		this.transactionService = new TransactionService (transactionRepo);
+	}
+	
 	@Test
 	void createTransaction () throws JsonProcessingException {
-		List<CartItem> items = new ArrayList<>();
-		List <Transaction> transactions = new ArrayList <> ();
-
-		Product product = new Product(1,"something","something",3000.00f,"image",null,1);
-
-		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", "pass123", items, null );
-		CartItem cartItem = new CartItem(1,user,product,1);
-		items.add(cartItem);
-		Transaction expectedResult = new Transaction(1 , user,"items",300.00f);
-		transactions.add(expectedResult);
-
-		Mockito.when(this.transactionRepo.save(expectedResult)).thenReturn(expectedResult);
-
-		Transaction actualResult = this.transactionService.createTransaction(expectedResult,items);
-		Mockito.verify(this.transactionRepo, Mockito.times(1)).save(expectedResult);
-
-		assertEquals(expectedResult, actualResult);
-
+		List <CartItem> items = new ArrayList <> ();
 		
+		Product product = new Product (1, "something", "something", 3000.00f, "image", null, 1);
+		
+		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", "pass123", items, null);
+		
+		CartItem cartItem = new CartItem (1, user, product, 1);
+		
+		items.add (cartItem);
+		
+		Transaction expectedResult = new Transaction (1, user, "[]", 300.00f);
+		
+		Mockito.when (transactionRepo.save (expectedResult)).thenReturn (expectedResult);
+		
+		assertEquals (expectedResult, transactionService.createTransaction (expectedResult, items));
+		
+		Mockito.verify (transactionRepo).save (expectedResult);
 	}
 	
 	@Test
 	void getTransaction () throws InvalidValueException {
-		List<CartItem> items = new ArrayList<>();
-		List <Transaction> transactions = new ArrayList <> ();
-
-		Product product = new Product(1,"something","something",3000.00f,"image",null,1);
-
-		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", "pass123", items, null );
-		CartItem cartItem = new CartItem(1,user,product,1);
-		items.add(cartItem);
-		Transaction expectedResult = new Transaction(1 , user,"items",300.00f);
-		transactions.add(expectedResult);
-
-		Mockito.when(this.transactionRepo.findById(expectedResult.getId())).thenReturn(Optional.of(expectedResult));
-
-		Transaction actualResult = this.transactionService.getTransaction(expectedResult.getId());
-		Mockito.verify(this.transactionRepo).findById(expectedResult.getId());
-
-		assertEquals(expectedResult, actualResult);
-
+		List <CartItem> items = new ArrayList <> ();
+				
+		Product product = new Product (1, "something", "something", 3000.00f, "image", null, 1);
 		
+		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", "pass123", items, null);
+		
+		CartItem cartItem = new CartItem (1, user, product, 1);
+		
+		items.add (cartItem);
+		
+		Transaction expectedResult = new Transaction (1, user, "items", 300.00f);
+		
+		Mockito.when (transactionRepo.findById (expectedResult.getId ())).thenReturn (Optional.of (expectedResult));
+		
+		assertEquals (expectedResult, transactionService.getTransaction (expectedResult.getId ()));
+		
+		Mockito.verify (transactionRepo).findById (expectedResult.getId ());
 	}
 	
 	@Test
-	void getTransactionWhenNotFound () throws InvalidValueException {
-
-		Integer transacionId = 4;
-
-		Mockito.when(this.transactionRepo.findById(transacionId)).thenReturn(Optional.ofNullable(null));
-		Mockito.verify(this.transactionRepo, Mockito.times(0)).findById(transacionId);
-
-
-		assertThrows (InvalidValueException.class, ()-> transactionService.getTransaction(2));
+	void getTransactionWhenNotFound () {
+		int id = 1;
 		
+		Mockito.when (transactionRepo.findById (id)).thenReturn (Optional.empty ());
+		
+		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> transactionService.getTransaction (id));
+		
+		Mockito.verify (transactionRepo).findById (id);
+		
+		assertEquals ("Error! Invalid transaction id", exception.getMessage ());
 	}
 }
