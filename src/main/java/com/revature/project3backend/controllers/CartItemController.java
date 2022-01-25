@@ -4,7 +4,7 @@ import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.exceptions.UnauthorizedException;
 import com.revature.project3backend.jsonmodels.CreateCartItemBody;
 import com.revature.project3backend.jsonmodels.JsonResponse;
-import com.revature.project3backend.jsonmodels.UpdateCartItem;
+import com.revature.project3backend.jsonmodels.UpdateCartItemBody;
 import com.revature.project3backend.models.CartItem;
 import com.revature.project3backend.models.Product;
 import com.revature.project3backend.models.User;
@@ -83,13 +83,13 @@ public class CartItemController {
 			throw new UnauthorizedException ();
 		}
 		
-		List <CartItem> cartItems = cartItemService.getCartItems (user.getId ());
+		List <CartItem> cart = user.getCart ();
 		
-		return ResponseEntity.ok (new JsonResponse ("Got " + cartItems.size () + " cart items", true, cartItems));
+		return ResponseEntity.ok (new JsonResponse ("Got " + cart.size () + " cart items", true, cart));
 	}
 	
 	@PutMapping ("{cartItemId}")
-	public ResponseEntity <JsonResponse> updateCartItem (@PathVariable Integer cartItemId, @RequestBody UpdateCartItem body, HttpSession httpSession) throws InvalidValueException, UnauthorizedException {
+	public ResponseEntity <JsonResponse> updateCartItem (@PathVariable Integer cartItemId, @RequestBody UpdateCartItemBody body, HttpSession httpSession) throws InvalidValueException, UnauthorizedException {
 		User user = (User) httpSession.getAttribute ("user");
 		
 		if (user == null) {
@@ -125,9 +125,9 @@ public class CartItemController {
 		
 		for (int i = 0; i < user.getCart ().size (); i++) {
 			if (user.getCart ().get (i).getId ().equals (cartItemId)) {
-				cartItemService.deleteCartItem (cartItemId);
+				userService.removeFromCart (user, i);
 				
-				return ResponseEntity.ok (new JsonResponse ("Deleted item from cart", true));
+				return ResponseEntity.ok (new JsonResponse ("Deleted cart item", true));
 			}
 		}
 		

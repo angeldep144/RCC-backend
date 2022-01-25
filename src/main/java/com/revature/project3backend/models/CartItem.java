@@ -17,12 +17,12 @@ public class CartItem {
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Integer id;
-
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	
 	@ManyToOne (optional = false)
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private User buyer;
 	
-	@OneToOne (optional = false)
+	@ManyToOne (optional = false)
 	private Product product;
 	
 	@Column (nullable = false)

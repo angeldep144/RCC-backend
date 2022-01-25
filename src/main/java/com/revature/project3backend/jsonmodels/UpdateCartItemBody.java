@@ -3,6 +3,6 @@ package com.revature.project3backend.jsonmodels;
 import lombok.Data;
 
 @Data
-public class UpdateCartItem {
+public class UpdateCartItemBody {
 	private Integer quantity;
 }

@@ -36,4 +36,16 @@ public class ProductService {
 		
 		return product;
 	}
+	
+	public void reduceStock (Product product, Integer quantity) throws InvalidValueException {
+		int newStock = product.getStock () - quantity;
+		
+		if (newStock < 0) {
+			throw new InvalidValueException ("Invalid quantity");
+		}
+		
+		product.setStock (newStock);
+		
+		productRepo.save (product);
+	}
 }
