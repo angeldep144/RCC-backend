@@ -1,3 +1,10 @@
+INSERT INTO user_roles VALUES (DEFAULT, 'USER');
+
+INSERT INTO user_roles VALUES (DEFAULT, 'ADMIN');
+
+INSERT INTO USERS (FIRST_NAME, LAST_NAME, EMAIL, USERNAME, PASSWORD, ROLE_ID)values('Admin', 'Istrator', 'adminUser@email.com', 'admin', '$2a$10$UCoYxwBAux02BsqnhaNRDeBAqcVsWWZTKB/lV3Qm8i8StQpXi62wi', 2);
+--pass1234
+
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Java I', 'Do you want to learn about Java? Start from the basics in this course for absolute Java beginners', 55.99, 10, 'https://i.ytimg.com/vi/r59xYe3Vyks/hqdefault.jpg')
 
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VALUES ('Java II', 'Do you know what a functional interface is? Then you''re ready for Java II!', 299.99, 190.99, 20, 'https://cosmolearning.org/images_dir/courses/809/profile-thumbnail-w300.jpg')

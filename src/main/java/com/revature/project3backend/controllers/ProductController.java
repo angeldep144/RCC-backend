@@ -7,6 +7,7 @@ import com.revature.project3backend.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -67,5 +68,17 @@ public class ProductController {
 		Product product = this.productService.getProduct (id);
 		
 		return ResponseEntity.ok (new JsonResponse ("Got product", true, product));
+	}
+
+	@PatchMapping
+	public ResponseEntity<JsonResponse> updateProduct(@RequestParam("name") String productName, @RequestParam("description") String productDescription,
+		  @RequestParam("price") Double price, @RequestParam(value = "salePrice", required = false) Double salePrice,
+		  @RequestParam(value = "file", required = false) MultipartFile file, @RequestParam(value = "stock", required = false) Integer stock,
+		  @RequestParam(value = "imageUrl", required = false) String imageUrl){
+		Product product = new Product(0, productName, productDescription, price.floatValue(), imageUrl, salePrice.floatValue(), stock);
+
+
+
+		return ResponseEntity.ok (new JsonResponse ("Got product updated ok.", true, product));
 	}
 }

@@ -4,6 +4,7 @@ import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.models.CartItem;
 import com.revature.project3backend.models.Product;
 import com.revature.project3backend.models.User;
+import com.revature.project3backend.models.UserRole;
 import com.revature.project3backend.repositories.CartItemRepo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,9 +35,9 @@ class CartItemServiceTest {
 		products.add (new Product (2, "Java II", "An intermediate Java course", 20.00F, "", 18.00F, 5));
 		products.add (new Product (3, "Python I", "A beginner Python course", 10.00F, "", 8.00F, 5));
 		products.add (new Product (4, "Python II", "An intermediate Python course", 20.00F, "", 18.00F, 5));
-		users.add (new User (1, "User", "1", "email1", "username13123", "password", new ArrayList <> (), new ArrayList <> ()));
-		users.add (new User (2, "User", "2", "email2", "username22425", "password", new ArrayList <> (), new ArrayList <> ()));
-		users.add (new User (3, "User", "3", "email3", "username32323", "password", new ArrayList <> (), new ArrayList <> ()));
+		users.add (new User (1, "User", "1", "email1", "username13123", "password", new ArrayList <> (), new ArrayList <> (), new UserRole (2, "USER")));
+		users.add (new User (2, "User", "2", "email2", "username22425", "password", new ArrayList <> (), new ArrayList <> (), new UserRole (2, "USER")));
+		users.add (new User (3, "User", "3", "email3", "username32323", "password", new ArrayList <> (), new ArrayList <> (), new UserRole (2, "USER")));
 	}
 	
 	@AfterEach

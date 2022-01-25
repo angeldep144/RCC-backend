@@ -47,4 +47,8 @@ public class User {
 		this.username = username;
 		this.password = password;
 	}
+
+	@ManyToOne
+//TODO: set default role to USER
+	private UserRole role;
 }

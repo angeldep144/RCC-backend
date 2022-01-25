@@ -74,7 +74,9 @@ class UserServiceTest {
 		List <CartItem> items = new ArrayList <> ();
 		List <Transaction> transactions = new ArrayList <> ();
 		String pass = "pass123";
-		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions);
+		UserRole role = new UserRole(1, "Admin");
+		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions, role);
+
 		String encryptedPass = passwordEncoder.encode (user.getPassword ());
 		user.setPassword (encryptedPass);
 		
@@ -95,7 +97,9 @@ class UserServiceTest {
 		List <CartItem> items = new ArrayList <> ();
 		List <Transaction> transactions = new ArrayList <> ();
 		String pass = "pass123";
-		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions);
+		UserRole role = new UserRole(1, "Admin");
+
+		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions, role);
 		String encryptedPass = passwordEncoder.encode (user.getPassword ());
 		user.setPassword (encryptedPass);
 		
@@ -116,7 +120,9 @@ class UserServiceTest {
 		List <CartItem> items = new ArrayList <> ();
 		List <Transaction> transactions = new ArrayList <> ();
 		String pass = "pass123";
-		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions);
+		UserRole role = new UserRole(1, "Admin");
+
+		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions, role);
 		String encryptedPass = passwordEncoder.encode (user.getPassword ());
 		user.setPassword (encryptedPass);
 		
@@ -137,7 +143,9 @@ class UserServiceTest {
 		String username = "rmace";
 		List <CartItem> items = new ArrayList <> ();
 		List <Transaction> transactions = new ArrayList <> ();
-		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", "pass123", items, transactions);
+		UserRole role = new UserRole(1, "Admin");
+
+		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", "pass123", items, transactions, role);
 		Mockito.when (userService.getUserByUserName (username)).thenReturn (user);
 		
 		User actual = userService.getUserByUserName (username);
@@ -151,7 +159,9 @@ class UserServiceTest {
 		String username = "rmace";
 		List <CartItem> items = new ArrayList <> ();
 		List <Transaction> transactions = new ArrayList <> ();
-		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", "pass123", items, transactions);
+		UserRole role = new UserRole(1, "Admin");
+
+		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", "pass123", items, transactions, role);
 		Mockito.when (userService.getUserByUserName (username)).thenReturn (null);
 		
 		User actual = userService.getUserByUserName (username);
@@ -161,7 +171,9 @@ class UserServiceTest {
 	
 	@Test
 	void createUserPositive () throws InvalidValueException {
-		User user = new User (1, "first", "last", "email", "username", "password", null, null);
+		UserRole role = new UserRole(1, "Admin");
+
+		User user = new User (1, "first", "last", "email", "username", "password", null, null, role);
 		
 		Mockito.when (this.userRepo.save (user)).thenReturn (user);
 		
@@ -173,8 +185,10 @@ class UserServiceTest {
 	
 	@Test
 	void createUserNegative () throws InvalidValueException {
-		User user = new User (1, "first", "last", "email", "username", "password", null, null);
+		UserRole role = new UserRole(1, "Admin");
 
+		User user = new User (1, "first", "last", "email", "username", "password", null, null, role);
+		
 		this.userRepo.save (user);
 
 		Mockito.when (this.userRepo.save (user)).thenReturn (null);

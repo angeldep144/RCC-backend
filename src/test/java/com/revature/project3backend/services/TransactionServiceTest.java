@@ -2,10 +2,7 @@ package com.revature.project3backend.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.revature.project3backend.exceptions.InvalidValueException;
-import com.revature.project3backend.models.CartItem;
-import com.revature.project3backend.models.Product;
-import com.revature.project3backend.models.Transaction;
-import com.revature.project3backend.models.User;
+import com.revature.project3backend.models.*;
 import com.revature.project3backend.repositories.TransactionRepo;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -31,7 +28,7 @@ class TransactionServiceTest {
 		
 		Product product = new Product (1, "something", "something", 3000.00f, "image", null, 1);
 		
-		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", "pass123", items, null);
+		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", "pass123", items, null, new UserRole (2, "USER"));
 		
 		CartItem cartItem = new CartItem (1, user, product, 1);
 		
@@ -52,7 +49,7 @@ class TransactionServiceTest {
 				
 		Product product = new Product (1, "something", "something", 3000.00f, "image", null, 1);
 		
-		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", "pass123", items, null);
+		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", "pass123", items, null, new UserRole (2, "USER"));
 		
 		CartItem cartItem = new CartItem (1, user, product, 1);
 		
