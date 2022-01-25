@@ -19,11 +19,23 @@ public class CartItemService {
 	public CartItemService (CartItemRepo cartItemRepo) {
 		this.cartItemRepo = cartItemRepo;
 	}
-	
+
+	/**
+	 * Create a cart item and save it to the database
+	 * 
+	 * @param cartItem The cart item to save to the database
+	 */
 	public void createCartItem (CartItem cartItem) {
 		this.cartItemRepo.save (cartItem);
 	}
-	
+
+	/**
+	 * Update a cart item's quantity
+	 *
+	 * @param cartItemId The id of the cart item to update
+	 * @param quantity The value to set the cart item's quantity to
+	 * @throws InvalidValueException thrown when cart item cannot be found with given id
+	 */
 	public void updateCartItem (Integer cartItemId, Integer quantity) throws InvalidValueException {
 		CartItem cartItem = cartItemRepo.findById (cartItemId).orElse (null);
 		
@@ -34,5 +46,14 @@ public class CartItemService {
 		cartItem.setQuantity (quantity);
 		
 		cartItemRepo.save (cartItem);
+	}
+	
+	/**
+	 * Delete a cart item from the database
+	 *
+	 * @param cartItemId The id of the cart item to delete
+	 */
+	public void deleteCartItem (Integer cartItemId) {
+		this.cartItemRepo.deleteById (cartItemId);
 	}
 }
