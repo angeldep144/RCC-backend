@@ -15,16 +15,6 @@ class ProductServiceTest {
 		this.productService = new ProductService (this.productRepo);
 	}
 	
-	@BeforeEach
-	void setUp () {
-		System.out.println ("before test");
-	}
-	
-	@AfterEach
-	void tearDown () {
-		System.out.println ("after test");
-	}
-	
 	@Test
 	void getProductsWithName () {
 		

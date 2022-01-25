@@ -27,8 +27,27 @@ public class UserController {
 	 */
 	@PostMapping
 	public ResponseEntity <JsonResponse> createUser (@RequestBody User body) throws InvalidValueException {
-		User returnUser = this.userService.createUser (body);
+		//validate user
 		
-		return ResponseEntity.ok (new JsonResponse ("Created user", true, returnUser, "/login"));
+		if (body.getFirstName () == null || body.getLastName () == null || body.getEmail () == null || body.getUsername () == null || body.getPassword () == null) {
+			throw new InvalidValueException ("Invalid user");
+		}
+		
+		if (body.getFirstName ().trim ().equals ("") || body.getLastName ().trim ().equals ("") || body.getEmail ().trim ().equals ("") || body.getUsername ().trim ().equals ("") || body.getPassword ().trim ().equals ("")) {
+			throw new InvalidValueException ("Invalid user");
+		}
+		
+		if (!body.getUsername ().matches ("^[\\w-]+$")) {
+			throw new InvalidValueException ("Invalid username");
+		}
+		
+		if (!body.getEmail ().matches ("^[\\w-\\.]+@[\\w-]+\\.[a-zA-z]+$")) {
+			throw new InvalidValueException ("Invalid email");
+		}
+		
+		//create user
+		User user = this.userService.createUser (body);
+		
+		return ResponseEntity.ok (new JsonResponse ("Created user", true, user, "/login"));
 	}
 }

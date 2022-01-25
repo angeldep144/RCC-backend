@@ -62,22 +62,25 @@ public class UserService {
 		return userRepo.findByUsername (username);
 	}
 	
-	public User createUser (User userInput) throws InvalidValueException {
-		User checkUser = userRepo.findByUsername (userInput.getUsername ());
+	public User createUser (User user) throws InvalidValueException {
+		User userWithUsername = userRepo.findByUsername (user.getUsername ());
 		
-		if (checkUser != null) {
+		//if user with username exists
+		if (userWithUsername != null) {
 			throw new InvalidValueException ("Username already in use");
 		}
 		
-		checkUser = userRepo.findByEmail (userInput.getEmail ());
+		User userWithEmail = userRepo.findByEmail (user.getEmail ());
 		
-		if (checkUser != null) {
+		//if user with email exists
+		if (userWithEmail != null) {
 			throw new InvalidValueException ("Email already in use");
 		}
 		
-		userInput.setPassword (passwordEncoder.encode (userInput.getPassword ()));
+		//encrypt password
+		user.setPassword (passwordEncoder.encode (user.getPassword ()));
 		
-		return userRepo.save (userInput);
+		return userRepo.save (user);
 	}
 	
 	public void addToCart (User user, CartItem cartItem) {

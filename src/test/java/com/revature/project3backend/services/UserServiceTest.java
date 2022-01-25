@@ -12,11 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceTest {
 	UserService userService;
@@ -40,7 +36,7 @@ class UserServiceTest {
 	}
 	
 	@Test
-	void loginuserWhenPasswordIsInvalid () {
+	void loginUserWhenPasswordIsInvalid () {
 		
 	}
 	
@@ -55,12 +51,12 @@ class UserServiceTest {
 	}
 	
 	@Test
-	void createUserWhenUsernameIsInUse () {
+	void createUserWhenUsernameIsTaken () {
 		
 	}
 	
 	@Test
-	void createUserWhenEmailIsInUse () {
+	void createUserWhenEmailIsTaken () {
 		
 	}
 	
