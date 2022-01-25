@@ -8,9 +8,7 @@ import com.revature.project3backend.models.Transaction;
 import com.revature.project3backend.models.User;
 import com.revature.project3backend.repositories.CartItemRepo;
 import com.revature.project3backend.repositories.UserRepo;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
