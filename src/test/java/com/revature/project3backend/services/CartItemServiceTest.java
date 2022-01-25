@@ -1,5 +1,7 @@
 package com.revature.project3backend.services;
 
+import com.revature.project3backend.exceptions.InvalidValueException;
+import com.revature.project3backend.models.CartItem;
 import com.revature.project3backend.models.Product;
 import com.revature.project3backend.models.User;
 import com.revature.project3backend.repositories.CartItemRepo;
@@ -10,6 +12,10 @@ import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CartItemServiceTest {
 	private final CartItemRepo cartItemRepo = Mockito.mock (CartItemRepo.class);
@@ -41,67 +47,34 @@ class CartItemServiceTest {
 	
 	@Test
 	void createCartItem () {
-		
+		CartItem cartItem = new CartItem (users.get (1), products.get (2), 4);
+		cartItemService.createCartItem (cartItem);
+		Mockito.verify (this.cartItemRepo, Mockito.times (1)).save (cartItem);
 	}
 	
 	@Test
-	void updateCartItem () {
-		
+	void updateCartItem () throws InvalidValueException {
+		Integer cartItemId = 1;
+		CartItem cartItem = new CartItem (1, users.get (0), products.get (1), 2);
+		Mockito.when (this.cartItemRepo.findById (cartItemId)).thenReturn (Optional.of (cartItem));
+		Integer quantity = 3;
+		cartItemService.updateCartItem (cartItemId, quantity);
+		assertEquals (quantity, cartItem.getQuantity ());
+		Mockito.verify (cartItemRepo, Mockito.times (1)).save (cartItem);
 	}
 	
 	@Test
 	void updateCartItemWhenNotFound () {
-		
+		Integer cartItemId = 5;
+		Mockito.when (this.cartItemRepo.findById (cartItemId)).thenReturn (Optional.empty ());
+		Integer quantity = 2;
+		assertThrows (InvalidValueException.class, () -> cartItemService.updateCartItem (cartItemId, quantity));
 	}
 	
 	@Test
 	void deleteCartItem () {
-		
+		Integer cartItemId = 2;
+		cartItemService.deleteCartItem (cartItemId);
+		Mockito.verify (cartItemRepo, Mockito.times (1)).deleteById (cartItemId);
 	}
-	
-	/*
-    @Test
-    void createCartItem() {
-        CartItem cartItem = new CartItem(users.get(1), products.get(2), 4);
-        cartItemService.createCartItem(cartItem);
-        Mockito.verify(this.cartItemRepo, Mockito.times(1)).save(cartItem);
-    }
-
-    @Test
-    void getCartItems() {
-//        Integer UserId = 1;
-//        List<CartItem> expectedResult = new ArrayList<>();
-//        expectedResult.add(new CartItem(users.get(0), products.get(1), 1));
-//        expectedResult.add(new CartItem(users.get(0), products.get(3), 2));
-//        Mockito.when(cartItemRepo.findAllByBuyerId(UserId)).thenReturn(expectedResult);
-//        List<CartItem> actualResult = cartItemService.getCartItems(UserId);
-//        assertEquals(expectedResult, actualResult);
-    }
-
-    @Test
-    void updateCartItem() throws InvalidValueException {
-        Integer cartItemId = 1;
-        CartItem cartItem = new CartItem(1, users.get(0), products.get(1), 2);
-        Mockito.when(this.cartItemRepo.findById(cartItemId)).thenReturn(Optional.of(cartItem));
-        Integer quantity = 3;
-        cartItemService.updateCartItem(cartItemId, quantity);
-        assertEquals(quantity, cartItem.getQuantity());
-        Mockito.verify(cartItemRepo, Mockito.times(1)).save(cartItem);
-    }
-
-    @Test
-    void updateCartItem_InvalidCartItem() throws InvalidValueException {
-        Integer cartItemId = 5;
-        Mockito.when(this.cartItemRepo.findById(cartItemId)).thenReturn(Optional.empty());
-        Integer quantity = 2;
-        assertThrows(InvalidValueException.class, () -> cartItemService.updateCartItem(cartItemId, quantity));
-    }
-
-    @Test
-    void deleteCartItem() {
-        Integer cartItemId = 2;
-        cartItemService.deleteCartItem(cartItemId);
-        Mockito.verify(cartItemRepo, Mockito.times(1)).deleteById(cartItemId);
-    }
-	 */
 }
