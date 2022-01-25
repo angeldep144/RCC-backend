@@ -1,6 +1,8 @@
 package com.revature.project3backend.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,14 +24,13 @@ public class Transaction {
 	@JsonProperty (access = JsonProperty.Access.WRITE_ONLY)
 	private User buyer;
 
-	@OneToMany
-	private List <CartItem> items;
+	@Column (length = 1000)
+	private String items;
 	
 	@Column (nullable = false)
 	private Float total;
 	
-	public Transaction (User buyer, List <CartItem> items) {
+	public Transaction (User buyer) {
 		this.buyer = buyer;
-		this.items = items;
 	}
 }

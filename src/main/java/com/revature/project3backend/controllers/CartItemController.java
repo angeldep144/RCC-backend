@@ -125,7 +125,7 @@ public class CartItemController {
 		
 		for (int i = 0; i < user.getCart ().size (); i++) {
 			if (user.getCart ().get (i).getId ().equals (cartItemId)) {
-				userService.removeFromCart (user, i);
+				userService.removeFromCart (user, user.getCart ().get (i));
 				
 				return ResponseEntity.ok (new JsonResponse ("Deleted cart item", true));
 			}

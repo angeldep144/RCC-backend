@@ -28,7 +28,7 @@ INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VAL
 
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Intermediate Python', 'Python for intermediate users', 24.99, 999, 'https://assets.datacamp.com/production/course_799/shields/original/shield_image_course_799_20200228-1-119xpm0?1582886778')
 
-INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VALUES ('Advanced Python', 'Python for advanced users', 39.99, 39.98, 20, 'https://media.geeksforgeeks.org/wp-content/cdn-uploads/20210917204112/Top-10-Advance-Python-Concepts-That-You-Must-Know.png')
+INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VALUES ('Advanced Python', 'Python for advanced users', 39.99, 39.98, 0, 'https://media.geeksforgeeks.org/wp-content/cdn-uploads/20210917204112/Top-10-Advance-Python-Concepts-That-You-Must-Know.png')
 
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('_PLACEHOLDER', 'LEARN NOW', 9999999.99, 999, 'https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png')
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('_PLACEHOLDER', 'LEARN NOW', 9999999.99, 999, 'https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png')

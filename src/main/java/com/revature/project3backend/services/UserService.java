@@ -4,6 +4,7 @@ import com.revature.project3backend.exceptions.InvalidCredentialsException;
 import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.models.CartItem;
 import com.revature.project3backend.models.User;
+import com.revature.project3backend.repositories.CartItemRepo;
 import com.revature.project3backend.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,12 +18,14 @@ import java.util.List;
 @Transactional
 public class UserService {
 	private final UserRepo userRepo;
+	private final CartItemRepo cartItemRepo;
 	
 	private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder ();
 	
 	@Autowired
-	public UserService (UserRepo userRepo) {
+	public UserService (UserRepo userRepo, CartItemRepo cartItemRepo) {
 		this.userRepo = userRepo;
+		this.cartItemRepo = cartItemRepo;
 	}
 	
 	/**
@@ -83,18 +86,20 @@ public class UserService {
 		userRepo.save (user);
 	}
 	
-	public void removeFromCart (User user, int index) {
-		user.getCart ().remove (index);
+	public void removeFromCart (User user, CartItem cartItem) {
+		user.getCart ().remove (cartItem);
 		
-		//todo delete cartitems that don't have a transaction?
+		cartItemRepo.delete (cartItem);
 		
 		userRepo.save (user);
 	}
 	
 	public void clearCart (User user) {
+		List <CartItem> cart = user.getCart ();
+		
 		user.setCart (new ArrayList <> ());
 		
-		//todo delete cartitems that don't have a transaction?
+		cartItemRepo.deleteAll (cart);
 		
 		userRepo.save (user);
 	}

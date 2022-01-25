@@ -5,6 +5,7 @@ import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.models.CartItem;
 import com.revature.project3backend.models.Transaction;
 import com.revature.project3backend.models.User;
+import com.revature.project3backend.repositories.CartItemRepo;
 import com.revature.project3backend.repositories.UserRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,11 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class UserServiceTest {
 	UserService userService;
 	UserRepo userRepo = Mockito.mock (UserRepo.class);
+	CartItemRepo cartItemRepo = Mockito.mock (CartItemRepo.class);
 	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder ();
 	
 	@BeforeEach
 	void before () {
-		userService = new UserService (userRepo);
+		userService = new UserService (userRepo, cartItemRepo);
 	}
 	
 	@Test
