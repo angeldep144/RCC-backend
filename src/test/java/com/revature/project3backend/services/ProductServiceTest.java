@@ -1,44 +1,61 @@
 package com.revature.project3backend.services;
 
-import com.revature.project3backend.exceptions.InvalidValueException;
-import com.revature.project3backend.models.Product;
 import com.revature.project3backend.repositories.ProductRepo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ProductServiceTest {
-
-    ProductRepo productRepo = Mockito.mock(ProductRepo.class);
-    ProductService productService;
-
-    public ProductServiceTest() {
-        this.productService = new ProductService(this.productRepo);
-    }
-
-    @BeforeEach
-    void setUp() {
-        System.out.println("before test");
-    }
-
-    @AfterEach
-    void tearDown() {
-        System.out.println("after test");
-    }
-
+	
+	ProductRepo productRepo = Mockito.mock (ProductRepo.class);
+	ProductService productService;
+	
+	public ProductServiceTest () {
+		this.productService = new ProductService (this.productRepo);
+	}
+	
+	@BeforeEach
+	void setUp () {
+		System.out.println ("before test");
+	}
+	
+	@AfterEach
+	void tearDown () {
+		System.out.println ("after test");
+	}
+	
+	@Test
+	void getProductsWithName () {
+		
+	}
+	
+	@Test
+	void getProductsWithDescription () {
+		
+	}
+	
+	@Test
+	void getProduct () {
+		
+	}
+	
+	@Test
+	void getProductWhenNotFound () {
+		
+	}
+	
+	@Test
+	void reduceStock () {
+		
+	}
+	
+	@Test
+	void reduceStockWhenStockWouldBeBelowZero () {
+		
+	}
+	
+	/*
     @Test
     void getProducts() {
 
@@ -273,4 +290,5 @@ class ProductServiceTest {
 
         assertEquals(expectedResult.getContent(), actualResult);
     }
+	 */
 }

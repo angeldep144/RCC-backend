@@ -30,6 +30,57 @@ class UserServiceTest {
 	}
 	
 	@Test
+	void loginUser () {
+		
+	}
+	
+	@Test
+	void loginUserWhenUsernameIsInvalid () {
+		
+	}
+	
+	@Test
+	void loginuserWhenPasswordIsInvalid () {
+		
+	}
+	
+	@Test
+	void getUserByUserName () {
+		
+	}
+	
+	@Test
+	void createUser () {
+		
+	}
+	
+	@Test
+	void createUserWhenUsernameIsInUse () {
+		
+	}
+	
+	@Test
+	void createUserWhenEmailIsInUse () {
+		
+	}
+	
+	@Test
+	void addToCart () {
+		
+	}
+	
+	@Test
+	void removeFromCart () {
+		
+	}
+	
+	@Test
+	void clearCart () {
+		
+	}
+	
+	/*
+	@Test
 	void loginValidUser () {
 		List <CartItem> items = new ArrayList <> ();
 		List <Transaction> transactions = new ArrayList <> ();
@@ -143,4 +194,5 @@ class UserServiceTest {
 		
 		assertNull (actualResult);
 	}
+	 */
 }
