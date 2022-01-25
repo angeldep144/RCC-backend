@@ -67,7 +67,9 @@ class ProductControllerTest {
 		
 		Mockito.verify (this.productService).getProduct (product.getId ());
 	}
-
+	
+	//todo admin page tests below
+	
 //    @Test
 //    void getProductPositive() throws InvalidValueException {
 //        Product expectedResult = new Product(1, "roomba", "description", 12.88f, "https://i.pcmag.com/imagery/reviews/01hmxcWyN13h1LfMglNxHGC-1.fit_scale.size_1028x578.v1589573902.jpg", 12.00f, 10);
