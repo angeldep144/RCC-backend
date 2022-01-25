@@ -38,9 +38,15 @@ public class ProductService {
 		return product;
 	}
 
-	public Product createProduct (Product product) {
+	public Product createProduct (Product product) throws InvalidValueException {
 		Product product2 = this.productRepo.save(product);
 
+		if((product2.getSalePrice()<0) || (product2.getPrice()<0)){
+			throw new InvalidValueException("Price cannot be less than 0");
+		}
+		if(product2.getSalePrice()>product2.getPrice()){
+			throw new InvalidValueException("Sales price cannot be greater than original price");
+		}
 		return product2;
 	}
 }
