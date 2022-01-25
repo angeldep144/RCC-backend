@@ -17,11 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +35,7 @@ class TransactionControllerIT {
     private MockMvc mvc;
 
     @MockBean
-    private TransactionService transactionService;
+    TransactionService transactionService;
 
     @MockBean
     private UserService userService;
@@ -44,21 +46,16 @@ class TransactionControllerIT {
     @MockBean
     private SessionController sessionController;
 
+    @MockBean
+    private MockHttpSession session;
+
     private final ObjectMapper json = new ObjectMapper ();
+
 
     @Test
     public void createTransactionPositive() throws Exception {
+
         User user = new User ("first", "last", "email", "username", "password");
-
-        User expectedUser = new User (1, "first", "last", "email", "username", "password", null, null);
-
-        Mockito.when(userService.createUser(user)).thenReturn(expectedUser);
-
-        CreateSessionBody createSessionBody = new CreateSessionBody ();
-        createSessionBody.setIdentifier ("username");
-        createSessionBody.setPassword ("password");
-
-        Mockito.when (userService.loginUser (createSessionBody.getIdentifier (), createSessionBody.getPassword ())).thenReturn (user);
 
         Product product = new Product(1, "roomba", "description", 12.88f, "https://i.pcmag.com/imagery/reviews/01hmxcWyN13h1LfMglNxHGC-1.fit_scale.size_1028x578.v1589573902.jpg", 12.00f, 10);
 
@@ -68,29 +65,30 @@ class TransactionControllerIT {
         items.add(new CartItem(user,product,1));
         items.add(new CartItem(user,product0,1));
 
-        /*
-        Transaction transaction = new Transaction(user,items);
-        Transaction expected = new Transaction(1,user,items,25.76f);
 
-        Mockito.when(transactionService.createTransaction(transaction)).thenReturn(expected);
+        Transaction transaction = new Transaction(user);
+        Transaction expected = new Transaction(1,user,items.toString(),25.76f);
 
-        Transaction actual = transactionService.createTransaction(transaction);
-        System.out.println("service"+actual);
+        Mockito.when(this.transactionService.createTransaction(transaction,items)).thenReturn(expected);
+
+        HttpSession httpSession = new MockHttpSession();
+        httpSession.setAttribute("user",user);
+
+        CreateSessionBody createSessionBody = new CreateSessionBody ();
+
+        createSessionBody.setIdentifier ("username");
+        createSessionBody.setPassword ("password");
 
 
-
-
-        RequestBuilder request = MockMvcRequestBuilders
-                .post("/transaction")
+        mvc.perform(MockMvcRequestBuilders.post("/transaction")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(transaction));
-        this.mvc.perform(request)
+                .session (new MockHttpSession ())
+                .content(json.writeValueAsString(createSessionBody)))
                 .andExpect (MockMvcResultMatchers.status ().isOk ())
-                .andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse("Created transaction", true, transactionService.createTransaction (new Transaction (user, items))))));
+                .andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse ("Created transaction", true, transactionService.createTransaction (new Transaction (user), items)))));
 
 
 
-         */
     }
 
 }
