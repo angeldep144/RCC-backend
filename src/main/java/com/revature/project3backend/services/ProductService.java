@@ -37,4 +37,10 @@ public class ProductService {
 		
 		return product;
 	}
+
+	public Product createProduct (Product product) {
+		Product product2 = this.productRepo.save(product);
+
+		return product2;
+	}
 }

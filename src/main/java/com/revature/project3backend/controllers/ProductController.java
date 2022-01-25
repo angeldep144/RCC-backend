@@ -70,4 +70,16 @@ public class ProductController {
 
 		return ResponseEntity.ok (new JsonResponse ("Got product updated ok.", true, product));
 	}
+
+	@PostMapping
+	public ResponseEntity<JsonResponse> createProduct(@RequestParam("name") String productName, @RequestParam("description") String productDescription,
+													  @RequestParam("price") Double price, @RequestParam(value = "salePrice", required = false) Double salePrice,
+													  @RequestParam(value = "file", required = false) MultipartFile file, @RequestParam(value = "stock", required = false) Integer stock,
+													  @RequestParam(value = "imageUrl", required = false) String imageUrl){
+		Product product = new Product(0, productName, productDescription, price.floatValue(), imageUrl, salePrice.floatValue(), stock);
+
+		this.productService.createProduct(product);
+
+		return ResponseEntity.ok (new JsonResponse ("Got product updated ok.", true, product));
+	}
 }
