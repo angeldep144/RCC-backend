@@ -1,4 +1,5 @@
 package com.revature.project3backend.controllers;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.models.CartItem;
 import com.revature.project3backend.models.Product;
@@ -31,8 +32,7 @@ class TransactionControllerTest {
 
 
     @Test
-    public void createTransactionPositive()
-    {
+    public void createTransactionPositive() throws JsonProcessingException {
         User user = new User ("first", "last", "email", "username", "password");
         Product product = new Product(1, "roomba", "description", 12.88f, "https://i.pcmag.com/imagery/reviews/01hmxcWyN13h1LfMglNxHGC-1.fit_scale.size_1028x578.v1589573902.jpg", 12.00f, 10);
 
@@ -42,25 +42,24 @@ class TransactionControllerTest {
         items.add(new CartItem(user,product,1));
         items.add(new CartItem(user,product0,1));
 
-        Transaction transaction = new Transaction(user,items);
-        Transaction expected = new Transaction(1,user,items,25.76f);
+        Transaction transaction = new Transaction(user);
+        Transaction expected = new Transaction(user);
 
-        Mockito.when(transactionService.createTransaction(transaction)).thenReturn(expected);
-        Transaction actual = transactionService.createTransaction(transaction);
+        Mockito.when(transactionService.createTransaction(transaction,items)).thenReturn(expected);
+        Transaction actual = transactionService.createTransaction(transaction,items);
 
         assertEquals(expected.toString(),actual.toString());
 
     }
 
     @Test
-    public void createTransactionNegative()
-    {
+    public void createTransactionNegative() throws JsonProcessingException {
         User user = new User ("first", "last", "email", "username", "password");
 
-        Transaction transaction = new Transaction(user,null);
+        Transaction transaction = new Transaction(user);
 
-        Mockito.when(transactionService.createTransaction(transaction)).thenReturn(null);
-        Transaction actual = transactionService.createTransaction(transaction);
+        Mockito.when(transactionService.createTransaction(transaction,null)).thenReturn(null);
+        Transaction actual = transactionService.createTransaction(transaction,null);
 
         assertNull(actual);
 
@@ -77,7 +76,7 @@ class TransactionControllerTest {
         items.add(new CartItem(user,product,1));
         items.add(new CartItem(user,product0,1));
 
-        Transaction expected = new Transaction(1,user,items,25.76f);
+        Transaction expected = new Transaction(user);
 
         Mockito.when(transactionService.getTransaction(1)).thenReturn(expected);
         Transaction actual = transactionService.getTransaction(1);
@@ -96,7 +95,7 @@ class TransactionControllerTest {
         items.add(new CartItem(user,product,1));
         items.add(new CartItem(user,product0,1));
 
-        Transaction expected = new Transaction(1,user,items,25.76f);
+        Transaction expected = new Transaction(user);
 
         Mockito.when(transactionService.getTransaction(1)).thenReturn(null);
         Transaction actual = transactionService.getTransaction(1);
