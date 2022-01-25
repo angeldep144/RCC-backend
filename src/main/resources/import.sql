@@ -1,3 +1,10 @@
+INSERT INTO user_roles VALUES (DEFAULT, 'USER');
+
+INSERT INTO user_roles VALUES (DEFAULT, 'ADMIN');
+
+INSERT INTO USERS (FIRST_NAME, LAST_NAME, EMAIL, USERNAME, PASSWORD, ROLE_ID)values('Admin', 'Istrator', 'adminUser@email.com', 'admin', '$2a$10$UCoYxwBAux02BsqnhaNRDeBAqcVsWWZTKB/lV3Qm8i8StQpXi62wi', 2);
+--pass1234
+
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Java I', 'Do you want to learn about Java? Start from the basics in this course for absolute Java beginners', 55.99, 10, 'https://i.ytimg.com/vi/r59xYe3Vyks/hqdefault.jpg')
 
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VALUES ('Java II', 'Do you know what a functional interface is? Then you''re ready for Java II!', 299.99, 190.99, 20, 'https://cosmolearning.org/images_dir/courses/809/profile-thumbnail-w300.jpg')
@@ -28,9 +35,7 @@ INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VAL
 
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Intermediate Python', 'Python for intermediate users', 24.99, 999, 'https://assets.datacamp.com/production/course_799/shields/original/shield_image_course_799_20200228-1-119xpm0?1582886778')
 
-INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VALUES ('Advanced Python', 'Python for advanced users', 39.99, 39.98, 20, 'https://media.geeksforgeeks.org/wp-content/cdn-uploads/20210917204112/Top-10-Advance-Python-Concepts-That-You-Must-Know.png')
-
-INSERT INTO USERS (FIRST_NAME, LAST_NAME, EMAIL, USERNAME, PASSWORD) VALUES ('Test', 'User', 'testuser@email.com', 'TestUser', '$2a$10$/JRGgFH1WYxpSmq.PeBzde2PkIFMqqpEFUijQWjTJC73drFAdzNvW')
+INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VALUES ('Advanced Python', 'Python for advanced users', 39.99, 39.98, 0, 'https://media.geeksforgeeks.org/wp-content/cdn-uploads/20210917204112/Top-10-Advance-Python-Concepts-That-You-Must-Know.png')
 
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('_PLACEHOLDER', 'LEARN NOW', 9999999.99, 999, 'https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png')
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('_PLACEHOLDER', 'LEARN NOW', 9999999.99, 999, 'https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png')

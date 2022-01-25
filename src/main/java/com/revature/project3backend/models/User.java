@@ -40,11 +40,15 @@ public class User {
 	@OneToMany (mappedBy = "buyer")
 	private List <Transaction> transactions;
 	
-	public User (String firstname, String lastname, String email, String username, String password) {
-		this.firstName = firstname;
-		this.lastName = lastname;
+	public User (String firstName, String lastName, String email, String username, String password) {
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.email = email;
 		this.username = username;
 		this.password = password;
 	}
+
+	@ManyToOne
+//TODO: set default role to USER
+	private UserRole role;
 }

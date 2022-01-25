@@ -4,6 +4,7 @@ import com.revature.project3backend.exceptions.InvalidCredentialsException;
 import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.models.CartItem;
 import com.revature.project3backend.models.User;
+import com.revature.project3backend.repositories.CartItemRepo;
 import com.revature.project3backend.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,12 +18,14 @@ import java.util.List;
 @Transactional
 public class UserService {
 	private final UserRepo userRepo;
-	
+	private final CartItemRepo cartItemRepo;
+
 	private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder ();
 	
 	@Autowired
-	public UserService (UserRepo userRepo) {
+	public UserService (UserRepo userRepo, CartItemRepo cartItemRepo) {
 		this.userRepo = userRepo;
+		this.cartItemRepo = cartItemRepo;
 	}
 	
 	/**
@@ -58,32 +61,35 @@ public class UserService {
 	public User getUserByUserName (String username) {
 		return userRepo.findByUsername (username);
 	}
-
+	
 	/**The createUser function takes in a user object then it does a username and email check where it will throw an
 	 * InvalidValueException with the custom message to let the front end know if either the username or email is not unique
 	 * then it encodes the password given and replaces it in the userInput object and then saves that object
 	 * with the updated password in the database then returns the new object from the database entry
 	 *
-	 * @param userInput A user object with the fields all as Strings (firstname, lastname, username, email, password)
+	 * @param user A user object with the fields all as Strings (firstname, lastname, username, email, password)
 	 * @return The user that is registered in the database entry
 	 * @throws InvalidValueException with a custom message to differentiate between unique email or username
 	 */
-	public User createUser (User userInput) throws InvalidValueException {
-		User checkUser = userRepo.findByUsername (userInput.getUsername ());
+	public User createUser (User user) throws InvalidValueException {
+		User userWithUsername = userRepo.findByUsername (user.getUsername ());
 		
-		if (checkUser != null) {
+		//if user with username exists
+		if (userWithUsername != null) {
 			throw new InvalidValueException ("Username already in use");
 		}
 		
-		checkUser = userRepo.findByEmail (userInput.getEmail ());
+		User userWithEmail = userRepo.findByEmail (user.getEmail ());
 		
-		if (checkUser != null) {
+		//if user with email exists
+		if (userWithEmail != null) {
 			throw new InvalidValueException ("Email already in use");
 		}
 		
-		userInput.setPassword (passwordEncoder.encode (userInput.getPassword ()));
+		//encrypt password
+		user.setPassword (passwordEncoder.encode (user.getPassword ()));
 		
-		return userRepo.save (userInput);
+		return userRepo.save (user);
 	}
 	
 	public void addToCart (User user, CartItem cartItem) {
@@ -92,18 +98,20 @@ public class UserService {
 		userRepo.save (user);
 	}
 	
-	public void removeFromCart (User user, int index) {
-		user.getCart ().remove (index);
+	public void removeFromCart (User user, CartItem cartItem) {
+		user.getCart ().remove (cartItem);
 		
-		//todo delete cartitems that don't have a transaction?
+		cartItemRepo.delete (cartItem);
 		
 		userRepo.save (user);
 	}
 	
 	public void clearCart (User user) {
+		List <CartItem> cart = user.getCart ();
+
 		user.setCart (new ArrayList <> ());
 		
-		//todo delete cartitems that don't have a transaction?
+		cartItemRepo.deleteAll (cart);
 		
 		userRepo.save (user);
 	}

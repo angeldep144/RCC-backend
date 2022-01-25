@@ -1,5 +1,7 @@
 package com.revature.project3backend.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.exceptions.UnauthorizedException;
 import com.revature.project3backend.jsonmodels.JsonResponse;
@@ -32,7 +34,7 @@ public class TransactionController {
 	}
 	
 	@PostMapping
-	public ResponseEntity <JsonResponse> createTransaction (HttpSession httpSession) throws UnauthorizedException, InvalidValueException {
+	public ResponseEntity <JsonResponse> createTransaction (HttpSession httpSession) throws UnauthorizedException, InvalidValueException, JsonProcessingException {
 		User user = (User) httpSession.getAttribute ("user");
 		
 		if (user == null) {
@@ -49,7 +51,7 @@ public class TransactionController {
 			productService.reduceStock (cartItem.getProduct (), cartItem.getQuantity ());
 		}
 		
-		ResponseEntity <JsonResponse> responseEntity = ResponseEntity.ok (new JsonResponse ("Created transaction", true, transactionService.createTransaction (new Transaction (user, cart))));
+		ResponseEntity <JsonResponse> responseEntity = ResponseEntity.ok (new JsonResponse ("Created transaction", true, transactionService.createTransaction (new Transaction (user), cart)));
 		
 		userService.clearCart (user);
 		

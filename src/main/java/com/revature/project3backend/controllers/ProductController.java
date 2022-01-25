@@ -4,39 +4,53 @@ import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.jsonmodels.JsonResponse;
 import com.revature.project3backend.models.Product;
 import com.revature.project3backend.services.ProductService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+/**
+ * The ProductController handles requests concerning products
+ */
 @RestController
 @RequestMapping ("product")
 @CrossOrigin (origins = "http://localhost:4200/", allowCredentials = "true")
 public class ProductController {
+	/**
+	 * The instance of ProductService to use
+	 */
 	private final ProductService productService;
+	Logger log = Logger.getLogger(ProductController.class);
 	
+	/**
+	 * This constructor is automatically called by Spring
+	 * 
+	 * @param productService The instance of ProductService to use
+	 */
 	@Autowired
 	public ProductController (ProductService productService) {
 		this.productService = productService;
 	}
 	
 	/**
-	 * Gets a List of all products or gets a specific List of items based on the searchQuery argument.
+	 * Gets products that match the given searchQuery
 	 *
-	 * @param searchQuery A String specifying a product or products
-	 * @param page        The Page Number that the user is on
-	 * @return Returns a JsonResponse containing a message, status of success, and list of products.
-	 * @throws InvalidValueException Thrown when an invalid entry is made into the searchQuery or page value is not accepted
+	 * @param searchQuery The query to use to search the products
+	 * @param page The page of products to get
+	 * @return A ResponseEntity used to create the HTTP response, contains the products found
+	 * @throws InvalidValueException Thrown when validation fails
 	 */
 	@GetMapping
 	public ResponseEntity <JsonResponse> getProducts (@RequestParam String searchQuery, @RequestParam Integer page) throws InvalidValueException {
 		if (searchQuery == null) {
-			throw new InvalidValueException ("searchQuery is bad");
+			throw new InvalidValueException ("Invalid search query");
 		}
 		
 		if (page == null) {
-			throw new InvalidValueException ("Page value not accepted");
+			throw new InvalidValueException ("Invalid page");
 		}
 		
 		List <Product> products = this.productService.getProducts (searchQuery, page);
@@ -45,16 +59,84 @@ public class ProductController {
 	}
 	
 	/**
-	 * Gets a Product based on the argument id.
+	 * Gets a product with a given id
 	 *
-	 * @param id An Integer associated with a specific Product
-	 * @return Returns a Product associated with the argument id.
-	 * @throws InvalidValueException Thrown when the product does not exist or the id value is not accepted.
+	 * @param id The id of the product to get
+	 * @return A ResponseEntity used to create the HTTP response, contains the products found
+	 * @throws InvalidValueException Thrown when validation fails
 	 */
 	@GetMapping ("{id}")
 	public ResponseEntity <JsonResponse> getProduct (@PathVariable Integer id) throws InvalidValueException {
 		Product product = this.productService.getProduct (id);
 		
 		return ResponseEntity.ok (new JsonResponse ("Got product", true, product));
+	}
+
+	/**
+	 * Updates an existing product with new information, if no file is provided the imageUrl will stay the same.
+	 * @param productName The product's name.
+	 * @param productDescription The product's description.
+	 * @param price The product's price.
+	 * @param salePrice The product's sale price, null means it's not on sale.
+	 * @param id The product's id.
+	 * @param file The file for the product's image.
+	 * @param stock The amount of stock for that product.
+	 * @param imageUrl The existing string for the product's image.
+	 * @return It returns a response containing the updated product.
+	 */
+	@PatchMapping
+	public ResponseEntity<JsonResponse> updateProduct(@RequestParam("name") String productName, @RequestParam("description") String productDescription,
+		  @RequestParam("price") Float price, @RequestParam(value = "salePrice", required = false) Float salePrice, @RequestParam(value = "id") Integer id,
+		  @RequestParam(value = "file", required = false) MultipartFile file, @RequestParam(value = "stock", required = false) Integer stock,
+		  @RequestParam(value = "imageUrl", required = false) String imageUrl) throws InvalidValueException {
+		Product product = null;
+
+			product = new Product(id, productName, productDescription, price, imageUrl, stock);
+			if(salePrice != null){
+				product.setSalePrice(salePrice);
+				if(product.getSalePrice() < 0){
+					product.setSalePrice(null);
+				}
+
+				//Error thrown if the sale price is higher than the normal price.
+				if(product.getPrice() < product.getSalePrice()){
+					throw new InvalidValueException("Sale price cannot be higher than normal price.");
+				}
+			}
+
+
+			//Error thrown if the price is negative.
+			if(product.getPrice() < 0){
+				throw new InvalidValueException("Price cannot be negative.");
+			}
+
+
+		product = this.productService.updateProduct(product, file);
+
+		return ResponseEntity.ok (new JsonResponse ("Product updated ok.", true, product));
+	}
+
+	/**
+	 * Takes form data from frontend and uses it create new product
+	 * @param productName name of product
+	 * @param productDescription description of product
+	 * @param price price of product
+	 * @param salePrice sale price of product
+	 * @param file multipart image file
+	 * @param stock number of items left
+	 * @param imageUrl link to image in AWS S3 bucket
+	 * @return ResponseEntity with message and status code, returns status code 400 when business logic fails in service layer
+	 * @throws InvalidValueException when business logic fails in service layer
+	 */
+	@PostMapping
+	public ResponseEntity<JsonResponse> createProduct(@RequestParam("name") String productName, @RequestParam("description") String productDescription,
+													  @RequestParam("price") Double price, @RequestParam(value = "salePrice", required = false) Double salePrice,
+													  @RequestParam(value = "file", required = false) MultipartFile file, @RequestParam(value = "stock", required = false) Integer stock,
+													  @RequestParam(value = "imageUrl", required = false) String imageUrl) throws InvalidValueException {
+		Product product = new Product(0, productName, productDescription, price.floatValue(), imageUrl, salePrice.floatValue(), stock);
+
+		this.productService.createProduct(product);
+
+		return ResponseEntity.ok (new JsonResponse ("Got product updated ok.", true, product));
 	}
 }
