@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -37,4 +38,16 @@ public class ProductService {
 		
 		return product;
 	}
+
+	/**
+	 * Updates the product information in the database
+	 * @param product The new product information.
+	 * @param file The new image for the product if desired.
+	 * @return The updated product.
+	 */
+    public Product updateProduct(Product product, MultipartFile file) {
+		Product updatedProduct = this.productRepo.save(product);
+
+		return updatedProduct;
+    }
 }

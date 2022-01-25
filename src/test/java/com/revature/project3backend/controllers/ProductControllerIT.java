@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.multipart.MultipartFile;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -68,4 +69,43 @@ public class ProductControllerIT {
 
     }
 
+    @Test
+    void updateProductSuccessful() throws Exception {
+        MultipartFile file = null;
+        Product product = new Product(1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, 13);
+
+        Mockito.when(this.productService.updateProduct(product, file)).thenReturn(product);
+
+        RequestBuilder request = MockMvcRequestBuilders
+                .patch("/product")
+                .param("id", product.getId().toString())
+                .param("name", product.getName())
+                .param("description", product.getDescription())
+                .param("price", product.getPrice().toString())
+                .contentType(MediaType.MULTIPART_FORM_DATA);
+
+        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk());
+       //        .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
+        //                .writeValueAsString(new JsonResponse ("Product updated ok.", true, product))));
+    }
+
+    @Test
+    void updateProductUnsuccessful() throws Exception {
+        MultipartFile file = null;
+        Product product = new Product(1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, 13);
+
+        Mockito.when(this.productService.updateProduct(product, file)).thenReturn(product);
+
+        RequestBuilder request = MockMvcRequestBuilders
+                .patch("/product")
+                .param("id", "1")
+                .param("name", "Dog Tricks")
+                .param("description", "Teach your dog new tricks.")
+                .param("price", "-1.99")
+                .contentType(MediaType.MULTIPART_FORM_DATA);
+
+        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk());
+                //.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
+                //        .writeValueAsString(new JsonResponse ("Product updated ok.", true, product))));
+    }
 }

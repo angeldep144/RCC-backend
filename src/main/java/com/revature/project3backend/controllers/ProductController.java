@@ -4,6 +4,7 @@ import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.jsonmodels.JsonResponse;
 import com.revature.project3backend.models.Product;
 import com.revature.project3backend.services.ProductService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.util.List;
 @CrossOrigin (origins = "http://localhost:4200/", allowCredentials = "true")
 public class ProductController {
 	private final ProductService productService;
+	Logger log = Logger.getLogger(ProductController.class);
 	
 	@Autowired
 	public ProductController (ProductService productService) {
@@ -59,15 +61,44 @@ public class ProductController {
 		return ResponseEntity.ok (new JsonResponse ("Got product", true, product));
 	}
 
+	/**
+	 * Updates an existing product with new information, if no file is provided the imageUrl will stay the same.
+	 * @param productName The product's name.
+	 * @param productDescription The product's description.
+	 * @param price The product's price.
+	 * @param salePrice The product's sale price, null means it's not on sale.
+	 * @param id The product's id.
+	 * @param file The file for the product's image.
+	 * @param stock The amount of stock for that product.
+	 * @param imageUrl The existing string for the product's image.
+	 * @return It returns a response containing the updated product.
+	 */
 	@PatchMapping
 	public ResponseEntity<JsonResponse> updateProduct(@RequestParam("name") String productName, @RequestParam("description") String productDescription,
-		  @RequestParam("price") Double price, @RequestParam(value = "salePrice", required = false) Double salePrice,
+		  @RequestParam("price") Double price, @RequestParam(value = "salePrice", required = false) Double salePrice, @RequestParam(value = "id") Integer id,
 		  @RequestParam(value = "file", required = false) MultipartFile file, @RequestParam(value = "stock", required = false) Integer stock,
 		  @RequestParam(value = "imageUrl", required = false) String imageUrl){
-		Product product = new Product(0, productName, productDescription, price.floatValue(), imageUrl, salePrice.floatValue(), stock);
+		Product product = null;
+		try {
+			product = new Product(id, productName, productDescription, price.floatValue(), imageUrl, stock);
+			if(salePrice != null){
+				product.setSalePrice(salePrice.floatValue());
+				if(product.getSalePrice() < 0){
+					product.setSalePrice(null);
+				}
+			}
 
+			//Error thrown if the price is negative.
+			if(product.getPrice() < 0){
+				throw new InvalidValueException("Price cannot be negative.");
+			}
 
+		}catch(Exception e){
+			log.error(e.getMessage());
+		}
 
-		return ResponseEntity.ok (new JsonResponse ("Got product updated ok.", true, product));
+		product = this.productService.updateProduct(product, file);
+
+		return ResponseEntity.ok (new JsonResponse ("Product updated ok.", true, product));
 	}
 }
