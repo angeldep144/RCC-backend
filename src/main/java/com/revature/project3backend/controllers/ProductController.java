@@ -10,24 +10,35 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * The ProductController handles requests concerning products
+ */
 @RestController
 @RequestMapping ("product")
 @CrossOrigin (origins = "http://localhost:4200/", allowCredentials = "true")
 public class ProductController {
+	/**
+	 * The instance of ProductService to use
+	 */
 	private final ProductService productService;
 	
+	/**
+	 * This constructor is automatically called by Spring
+	 * 
+	 * @param productService The instance of ProductService to use
+	 */
 	@Autowired
 	public ProductController (ProductService productService) {
 		this.productService = productService;
 	}
 	
 	/**
-	 * Gets a List of all products or gets a specific List of items based on the searchQuery argument.
+	 * Gets products that match the given searchQuery
 	 *
-	 * @param searchQuery A String specifying a product or products
-	 * @param page        The Page Number that the user is on
-	 * @return Returns a JsonResponse containing a message, status of success, and list of products.
-	 * @throws InvalidValueException Thrown when an invalid entry is made into the searchQuery or page value is not accepted
+	 * @param searchQuery The query to use to search the products
+	 * @param page The page of products to get
+	 * @return A ResponseEntity used to create the HTTP response, contains the products found
+	 * @throws InvalidValueException Thrown when validation fails
 	 */
 	@GetMapping
 	public ResponseEntity <JsonResponse> getProducts (@RequestParam String searchQuery, @RequestParam Integer page) throws InvalidValueException {
@@ -45,11 +56,11 @@ public class ProductController {
 	}
 	
 	/**
-	 * Gets a Product based on the argument id.
+	 * Gets a product with a given id
 	 *
-	 * @param id An Integer associated with a specific Product
-	 * @return Returns a Product associated with the argument id.
-	 * @throws InvalidValueException Thrown when the product does not exist or the id value is not accepted.
+	 * @param id The id of the product to get
+	 * @return A ResponseEntity used to create the HTTP response, contains the products found
+	 * @throws InvalidValueException Thrown when validation fails
 	 */
 	@GetMapping ("{id}")
 	public ResponseEntity <JsonResponse> getProduct (@PathVariable Integer id) throws InvalidValueException {

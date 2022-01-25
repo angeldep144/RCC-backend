@@ -38,9 +38,9 @@ class TransactionServiceTest {
 		transactions.add(expectedResult);
 
 		Mockito.when(this.transactionRepo.save(expectedResult)).thenReturn(expectedResult);
-		Mockito.verify(this.transactionRepo, Mockito.times(1)).save(expectedResult);
 
 		Transaction actualResult = this.transactionService.createTransaction(expectedResult,items);
+		Mockito.verify(this.transactionRepo, Mockito.times(1)).save(expectedResult);
 
 		assertEquals(expectedResult, actualResult);
 
@@ -61,9 +61,9 @@ class TransactionServiceTest {
 		transactions.add(expectedResult);
 
 		Mockito.when(this.transactionRepo.findById(expectedResult.getId())).thenReturn(Optional.of(expectedResult));
-		Mockito.verify(this.transactionRepo, Mockito.times(1)).findById(expectedResult.getId());
 
 		Transaction actualResult = this.transactionService.getTransaction(expectedResult.getId());
+		Mockito.verify(this.transactionRepo).findById(expectedResult.getId());
 
 		assertEquals(expectedResult, actualResult);
 
