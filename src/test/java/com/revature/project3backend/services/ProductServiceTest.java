@@ -284,7 +284,47 @@ class ProductServiceTest {
     }
 
     @Test
-    void createProductNegative() throws InvalidValueException {
+    void createProductPriceNegative() throws InvalidValueException {
+        Product newProduct = new Product(1, "roomba", "description", -12.88f, "https://i.pcmag.com/imagery/reviews/01hmxcWyN13h1LfMglNxHGC-1.fit_scale.size_1028x578.v1589573902.jpg", 12.00f, 10);
+        String expectedResult = "Error! Price cannot be less than 0";
+        String actualResult = null;
 
+        try {
+            productService.createProduct(newProduct);
+        }
+        catch(InvalidValueException e) {
+            actualResult = e.getMessage();
+        }
+        assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    void createProductSalePriceNegative() throws InvalidValueException {
+        Product newProduct = new Product(1, "roomba", "description", 12.88f, "https://i.pcmag.com/imagery/reviews/01hmxcWyN13h1LfMglNxHGC-1.fit_scale.size_1028x578.v1589573902.jpg", -12.00f, 10);
+        String expectedResult = "Error! Price cannot be less than 0";
+        String actualResult = null;
+
+        try {
+            productService.createProduct(newProduct);
+        }
+        catch(InvalidValueException e) {
+            actualResult = e.getMessage();
+        }
+        assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    void createProductPriceLessThanSalesPrice() throws InvalidValueException {
+        Product newProduct = new Product(1, "roomba", "description", .88f, "https://i.pcmag.com/imagery/reviews/01hmxcWyN13h1LfMglNxHGC-1.fit_scale.size_1028x578.v1589573902.jpg", 12.00f, 10);
+        String expectedResult = "Error! Sales price cannot be greater than original price";
+        String actualResult = null;
+
+        try {
+            productService.createProduct(newProduct);
+        }
+        catch(InvalidValueException e) {
+            actualResult = e.getMessage();
+        }
+        assertEquals(expectedResult, actualResult);
     }
 }
