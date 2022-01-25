@@ -57,7 +57,7 @@ public class CartItemController {
 	/**
 	 * Creates a cart item and then adds it to the user's cart
 	 * 
-	 * @param body The data to use to create the cart item
+	 * @param body The data to use to create the cart item, contains a product id and a quantity
 	 * @param httpSession The HTTP session of the user
 	 * @return A ResponseEntity used to create the HTTP response, contains the user's cart
 	 * @throws InvalidValueException Thrown when validation fails

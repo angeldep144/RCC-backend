@@ -12,17 +12,37 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
+/**
+ * The SessionController handles requests concerning sessions
+ */
 @RestController
 @RequestMapping ("session")
 @CrossOrigin (origins = "http://localhost:4200/", allowCredentials = "true")
 public class SessionController {
+	/**
+	 * The instance of UserService to use
+	 */
 	private final UserService userService;
 	
+	/**
+	 * This constructor is automatically called by Spring
+	 *
+	 * @param userService The instance of UserService to use
+	 */
 	@Autowired
 	public SessionController (UserService userService) {
 		this.userService = userService;
 	}
 	
+	/**
+	 * Creates a session for the user (logs them in)
+	 * 
+	 * @param body The data to use to log in the user, contains an identifier and a password
+	 * @param httpSession The HTTP session of the user
+	 * @return A ResponseEntity used to create the HTTP response
+	 * @throws InvalidCredentialsException Thrown when credentials are invalid
+	 * @throws InvalidValueException Thrown when validation fails
+	 */
 	@PostMapping
 	public ResponseEntity <JsonResponse> createSession (@RequestBody CreateSessionBody body, HttpSession httpSession) throws InvalidCredentialsException, InvalidValueException {
 		if (body.getIdentifier () == null || body.getPassword () == null) {
@@ -36,6 +56,12 @@ public class SessionController {
 		return ResponseEntity.ok (new JsonResponse ("Logged in", true, user, "/"));
 	}
 	
+	/**
+	 * Deletes the user's session (logs them out)
+	 * 
+	 * @param httpSession The HTTP session of the user
+	 * @return A ResponseEntity used to create the HTTP response
+	 */
 	@DeleteMapping
 	public ResponseEntity <JsonResponse> deleteSession (HttpSession httpSession) {
 		httpSession.invalidate ();
