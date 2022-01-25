@@ -102,6 +102,18 @@ public class ProductController {
 		return ResponseEntity.ok (new JsonResponse ("Product updated ok.", true, product));
 	}
 
+	/**
+	 * Takes form data from frontend and uses it create new product
+	 * @param productName name of product
+	 * @param productDescription description of product
+	 * @param price price of product
+	 * @param salePrice sale price of product
+	 * @param file multipart image file
+	 * @param stock number of items left
+	 * @param imageUrl link to image in AWS S3 bucket
+	 * @return ResponseEntity with message and status code, returns status code 400 when business logic fails in service layer
+	 * @throws InvalidValueException when business logic fails in service layer
+	 */
 	@PostMapping
 	public ResponseEntity<JsonResponse> createProduct(@RequestParam("name") String productName, @RequestParam("description") String productDescription,
 													  @RequestParam("price") Double price, @RequestParam(value = "salePrice", required = false) Double salePrice,

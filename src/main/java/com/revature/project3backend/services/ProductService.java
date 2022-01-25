@@ -51,6 +51,12 @@ public class ProductService {
 		return updatedProduct;
     }
 
+	/**
+	 * Method creates new product given new product information
+	 * @param product created from form data received from controller
+	 * @return newly created product
+	 * @throws InvalidValueException when price or sales price is less than 0, or sales price is greater than original price
+	 */
 	public Product createProduct (Product product) throws InvalidValueException {
 		Product product2 = this.productRepo.save(product);
 

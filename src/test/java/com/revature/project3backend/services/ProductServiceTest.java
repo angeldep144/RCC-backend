@@ -275,11 +275,16 @@ class ProductServiceTest {
     }
 
     @Test
-    void createProduct() throws InvalidValueException {
+    void createProductPositive() throws InvalidValueException {
         Product newProduct = new Product(1, "roomba", "description", 12.88f, "https://i.pcmag.com/imagery/reviews/01hmxcWyN13h1LfMglNxHGC-1.fit_scale.size_1028x578.v1589573902.jpg", 12.00f, 10);
 
         Mockito.when(productRepo.save(newProduct)).thenReturn(newProduct);
         Product actualResult = productService.createProduct(newProduct);
         assertEquals(newProduct, actualResult);
+    }
+
+    @Test
+    void createProductNegative() throws InvalidValueException {
+
     }
 }
