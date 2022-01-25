@@ -43,7 +43,8 @@ class TransactionControllerTest {
         items.add(new CartItem(user,product0,1));
 
         Transaction transaction = new Transaction(user);
-        Transaction expected = new Transaction(user);
+        Transaction expected = new Transaction(1,user,items.toString(),25.76f);
+        //System.out.println("expected "+expected);
 
         Mockito.when(transactionService.createTransaction(transaction,items)).thenReturn(expected);
         Transaction actual = transactionService.createTransaction(transaction,items);
