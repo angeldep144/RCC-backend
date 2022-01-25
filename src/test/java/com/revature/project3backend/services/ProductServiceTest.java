@@ -1,8 +1,6 @@
 package com.revature.project3backend.services;
 
 import com.revature.project3backend.repositories.ProductRepo;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

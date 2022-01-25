@@ -1,18 +1,11 @@
 package com.revature.project3backend.services;
 
-import com.revature.project3backend.exceptions.InvalidCredentialsException;
-import com.revature.project3backend.exceptions.InvalidValueException;
-import com.revature.project3backend.models.CartItem;
-import com.revature.project3backend.models.Transaction;
-import com.revature.project3backend.models.User;
 import com.revature.project3backend.repositories.CartItemRepo;
 import com.revature.project3backend.repositories.UserRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceTest {
 	UserService userService;
@@ -181,13 +174,13 @@ class UserServiceTest {
 	@Test
 	void createUserNegative () throws InvalidValueException {
 		User user = new User (1, "first", "last", "email", "username", "password", null, null);
-		
+
 		this.userRepo.save (user);
-		
+
 		Mockito.when (this.userRepo.save (user)).thenReturn (null);
-		
+
 		User actualResult = this.userService.createUser (user);
-		
+
 		assertNull (actualResult);
 	}
 	 */
