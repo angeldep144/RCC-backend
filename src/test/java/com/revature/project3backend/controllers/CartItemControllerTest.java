@@ -62,7 +62,93 @@ class CartItemControllerTest {
         users.clear();
         products.clear();
     }
-
+	
+	@Test
+	void createCartItem () {
+		
+	}
+	
+	@Test
+	void createCartItemWhenNotLoggedIn () {
+		
+	}
+	
+	@Test
+	void createCartItemWhenProductIdIsNull () {
+		
+	}
+	
+	@Test
+	void createCartItemWhenQuantityIsNull () {
+		
+	}
+	
+	@Test
+	void createCartItemWhenQuantityIsLessThanOne () {
+		
+	}
+	
+	@Test
+	void createCartItemWhenItemIsAlreadyInCart () {
+		
+	}
+	
+	@Test
+	void createCartItemWhenQuantityIsHigherThanStock () {
+		
+	}
+	
+	@Test
+	void getCartItems () {
+		
+	}
+	
+	@Test
+	void getCartItemsWhenNotLoggedIn () {
+		
+	}
+	
+	@Test
+	void updateCartItem () {
+		
+	}
+	
+	@Test
+	void updateCartItemWhenNotLoggedIn () {
+		
+	}
+	
+	@Test
+	void updateCartItemWhenQuantityIsNull () {
+		
+	}
+	
+	@Test
+	void updateCartItemWhenQuantityIsHigherThanStock () {
+		
+	}
+	
+	@Test
+	void updateCartItemWhenItemIsNotInCart () {
+		
+	}
+	
+	@Test
+	void deleteCartItem () {
+		
+	}
+	
+	@Test
+	void deleteCartItemWhenNotLoggedIn () {
+		
+	}
+	
+	@Test
+	void deleteCartItemWhenItemIsNotInCart () {
+		
+	}
+	
+	/*
     @Test
     void createCartItem() throws InvalidValueException, UnauthorizedException {
         CreateCartItemBody body = new CreateCartItemBody();
@@ -113,4 +199,5 @@ class CartItemControllerTest {
     @Test
     void deleteCartItem() {
     }
+    */
 }
