@@ -75,27 +75,30 @@ public class ProductController {
 	 */
 	@PatchMapping
 	public ResponseEntity<JsonResponse> updateProduct(@RequestParam("name") String productName, @RequestParam("description") String productDescription,
-		  @RequestParam("price") Double price, @RequestParam(value = "salePrice", required = false) Double salePrice, @RequestParam(value = "id") Integer id,
+		  @RequestParam("price") Float price, @RequestParam(value = "salePrice", required = false) Float salePrice, @RequestParam(value = "id") Integer id,
 		  @RequestParam(value = "file", required = false) MultipartFile file, @RequestParam(value = "stock", required = false) Integer stock,
-		  @RequestParam(value = "imageUrl", required = false) String imageUrl){
+		  @RequestParam(value = "imageUrl", required = false) String imageUrl) throws InvalidValueException {
 		Product product = null;
-		try {
-			product = new Product(id, productName, productDescription, price.floatValue(), imageUrl, stock);
+
+			product = new Product(id, productName, productDescription, price, imageUrl, stock);
 			if(salePrice != null){
-				product.setSalePrice(salePrice.floatValue());
+				product.setSalePrice(salePrice);
 				if(product.getSalePrice() < 0){
 					product.setSalePrice(null);
 				}
+
+				//Error thrown if the sale price is higher than the normal price.
+				if(product.getPrice() < product.getSalePrice()){
+					throw new InvalidValueException("Sale price cannot be higher than normal price.");
+				}
 			}
+
 
 			//Error thrown if the price is negative.
 			if(product.getPrice() < 0){
 				throw new InvalidValueException("Price cannot be negative.");
 			}
 
-		}catch(Exception e){
-			log.error(e.getMessage());
-		}
 
 		product = this.productService.updateProduct(product, file);
 

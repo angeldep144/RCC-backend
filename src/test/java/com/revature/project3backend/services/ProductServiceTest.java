@@ -273,4 +273,9 @@ class ProductServiceTest {
 
         assertEquals(expectedResult.getContent(), actualResult);
     }
+
+    @Test
+    void updateProduct() {
+
+    }
 }

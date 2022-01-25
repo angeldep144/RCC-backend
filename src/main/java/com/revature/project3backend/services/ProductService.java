@@ -3,6 +3,7 @@ package com.revature.project3backend.services;
 import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.models.Product;
 import com.revature.project3backend.repositories.ProductRepo;
+import com.revature.project3backend.utils.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -46,6 +47,10 @@ public class ProductService {
 	 * @return The updated product.
 	 */
     public Product updateProduct(Product product, MultipartFile file) {
+    	if(file != null){
+    		product.setImageUrl(FileUtil.uploadToS3(product, file));
+		}
+
 		Product updatedProduct = this.productRepo.save(product);
 
 		return updatedProduct;
