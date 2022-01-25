@@ -50,4 +50,10 @@ public class ProductService {
 
 		return updatedProduct;
     }
+
+	public Product createProduct (Product product) {
+		Product product2 = this.productRepo.save(product);
+
+		return product2;
+	}
 }
