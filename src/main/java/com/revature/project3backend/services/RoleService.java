@@ -6,9 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Locale;
 
 @Service
 @Transactional
+/**
+ * This service deals with user roles, such as ADMIN or USER.
+ */
 public class RoleService {
 
     private UserRoleRepo roleRepo;
@@ -18,7 +22,12 @@ public class RoleService {
         this.roleRepo = roleRepo;
     }
 
+    /**
+     * Returns the role object for a given role name.
+     * @param roleName The name of the role to search for, all names should be uppercase.
+     * @return The UserRole object that matches the name.
+     */
     public UserRole getRoleByName(String roleName) {
-        return this.roleRepo.findUserRoleByName(roleName);
+        return this.roleRepo.findUserRoleByName(roleName.toUpperCase());
     }
 }
