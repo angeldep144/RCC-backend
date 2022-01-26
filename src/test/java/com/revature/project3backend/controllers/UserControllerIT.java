@@ -18,12 +18,103 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(UserController.class)
 class UserControllerIT {
-
     @Autowired
     private MockMvc mvc;
 
     @MockBean
     private UserService userService;
+	
+	private final ObjectMapper json = new ObjectMapper ();
+	
+	@Test
+	void createUserWhenFirstNameIsNull () {
+		
+	}
+	
+	@Test
+	void createUserWhenLastNameIsNull () {
+		
+	}
+	
+	@Test
+	void createUserWhenEmailIsNull () {
+		
+	}
+	
+	@Test
+	void createUserWhenUsernameIsNull () {
+		
+	}
+	
+	@Test
+	void createUserWhenPasswordIsNull () {
+		
+	}
+	
+	@Test
+	void createUserWhenFirstNameIsEmpty () {
+		
+	}
+	
+	@Test
+	void createUserWhenLastNameIsEmpty () {
+		
+	}
+	
+	@Test
+	void createUserWhenEmailIsEmpty () {
+		
+	}
+	
+	@Test
+	void createUserWhenUsernameIsEmpty () {
+		
+	}
+	
+	@Test
+	void createUserWhenPasswordIsEmpty () {
+		
+	}
+	
+	@Test
+	void createUserWhenFirstNameIsWhitespace () {
+		
+	}
+	
+	@Test
+	void createUserWhenLastNameIsWhitespace () {
+		
+	}
+	
+	@Test
+	void createUserWhenEmailIsWhitespace () {
+		
+	}
+	
+	@Test
+	void createUserWhenUsernameIsWhitespace () {
+		
+	}
+	
+	@Test
+	void createUserWhenPasswordIsWhitespace () {
+		
+	}
+	
+	@Test
+	void createUserWhenUsernameIsInvalid () {
+		
+	}
+	
+	@Test
+	void createUserWhenEmailIsInvalid () {
+		
+	}
+	
+	@Test
+	void createUser () {
+		
+	}
 
 //    @Test
 //    void createUserPositive() throws Exception {
@@ -47,5 +138,4 @@ class UserControllerIT {
 //                .andExpect(MockMvcResultMatchers.status().isOk())
 //                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(expectedResult)));
 //    }
-
 }

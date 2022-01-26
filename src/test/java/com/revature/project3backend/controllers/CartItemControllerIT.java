@@ -30,7 +30,6 @@ import java.util.List;
 
 @WebMvcTest (CartItemController.class)
 class CartItemControllerIT {
-	
 	@Autowired
 	private MockMvc mvc;
 	

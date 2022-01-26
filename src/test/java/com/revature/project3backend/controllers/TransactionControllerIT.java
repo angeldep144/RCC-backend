@@ -36,22 +36,40 @@ class TransactionControllerIT {
 
     @MockBean
     TransactionService transactionService;
-
-    @MockBean
-    private UserService userService;
-
-    @MockBean
-    private ProductService productService;
-
-    @MockBean
-    private SessionController sessionController;
-
-    @MockBean
-    private MockHttpSession session;
-
-    private final ObjectMapper json = new ObjectMapper ();
-
-
+	
+	private final ObjectMapper json = new ObjectMapper ();
+	
+	@Test
+	void createTransaction () {
+		
+	}
+	
+	@Test
+	void createTransactionWhenNotLoggedIn () {
+		
+	}
+	
+	@Test
+	void createTransactionWhenCartIsEmpty () {
+		
+	}
+	
+	@Test
+	void getTransaction () {
+		
+	}
+	
+	@Test
+	void getTransactionWhenNotLoggedIn () {
+		
+	}
+	
+	@Test
+	void getTransactionWhenTransactionWasMadeByOtherUser () {
+		
+	}
+	
+	/*
     @Test
     public void createTransactionPositive() throws Exception {
 
@@ -90,5 +108,5 @@ class TransactionControllerIT {
 
 
     }
-
+	*/
 }
