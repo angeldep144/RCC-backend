@@ -14,14 +14,33 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * UserService contains the Service layer methods for users
+ */
 @Service
 @Transactional
 public class UserService {
+	/**
+	 * The instance of UserRepo to use
+	 */
 	private final UserRepo userRepo;
+	
+	/**
+	 * The instance of CartItemRepo to use
+	 */
 	private final CartItemRepo cartItemRepo;
 	
+	/**
+	 * The instance of BCryptPasswordEncoder to use to encrypt passwords
+	 */
 	private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder ();
 	
+	/**
+	 * This constructor is automatically called by Spring
+	 *
+	 * @param userRepo The instance of UserRepo to use
+	 * @param cartItemRepo The instance of CartItemRepo to use
+	 */
 	@Autowired
 	public UserService (UserRepo userRepo, CartItemRepo cartItemRepo) {
 		this.userRepo = userRepo;
@@ -29,12 +48,12 @@ public class UserService {
 	}
 	
 	/**
-	 * Validates a user's credentials against what is in the database.
+	 * Throws an error if the given username and password do not match with a user
 	 *
-	 * @param username The user's username.
-	 * @param password The user's plaintext password.
-	 * @return The user's full object from the database if successful, null if not.
-	 * @throws InvalidCredentialsException Throws an exception if the provided credentials do not match the info in the database.
+	 * @param username The username to log in with
+	 * @param password The password to log in with
+	 * @return The user that matches the given username and password
+	 * @throws InvalidCredentialsException Thrown when the username doesn't match a user or when the password is incorrect for the given username
 	 */
 	public User loginUser (String username, String password) throws InvalidCredentialsException {
 		User user = userRepo.findByUsername (username);
@@ -46,30 +65,17 @@ public class UserService {
 		
 		if (passwordEncoder.matches (password, user.getPassword ())) {
 			return user;
-		}
-		else {
+		} else {
 			throw new InvalidCredentialsException ();
 		}
 	}
 	
 	/**
-	 * Returns a user given a username.
+	 * Validates and then creates a user
 	 *
-	 * @param username The username to be searched.
-	 * @return The User object from the database if it exists, null if not found.
-	 */
-	public User getUserByUserName (String username) {
-		return userRepo.findByUsername (username);
-	}
-	
-	/**The createUser function takes in a user object then it does a username and email check where it will throw an
-	 * InvalidValueException with the custom message to let the front end know if either the username or email is not unique
-	 * then it encodes the password given and replaces it in the userInput object and then saves that object
-	 * with the updated password in the database then returns the new object from the database entry
-	 *
-	 * @param user A user object with the fields all as Strings (firstname, lastname, username, email, password)
-	 * @return The user that is registered in the database entry
-	 * @throws InvalidValueException with a custom message to differentiate between unique email or username
+	 * @param user The user to create
+	 * @return The created user
+	 * @throws InvalidValueException Thrown when validation fails
 	 */
 	public User createUser (User user) throws InvalidValueException {
 		User userWithUsername = userRepo.findByUsername (user.getUsername ());
@@ -92,12 +98,24 @@ public class UserService {
 		return userRepo.save (user);
 	}
 	
+	/**
+	 * Adds an item to the user's cart
+	 *
+	 * @param user The user who owns the cart that the cart item will be added to
+	 * @param cartItem The cart item to add to the user's cart
+	 */
 	public void addToCart (User user, CartItem cartItem) {
 		user.getCart ().add (cartItem);
 		
 		userRepo.save (user);
 	}
 	
+	/**
+	 * Removes an item from the user's cart
+	 *
+	 * @param user The user who owns the cart that the cart item will be removed from
+	 * @param cartItem The cart item to remove from the user's cart
+	 */
 	public void removeFromCart (User user, CartItem cartItem) {
 		user.getCart ().remove (cartItem);
 		
@@ -106,6 +124,11 @@ public class UserService {
 		userRepo.save (user);
 	}
 	
+	/**
+	 * Removes all items from the user's cart
+	 *
+	 * @param user The user who owns the cart that all cart items will be removed from
+	 */
 	public void clearCart (User user) {
 		List <CartItem> cart = user.getCart ();
 		

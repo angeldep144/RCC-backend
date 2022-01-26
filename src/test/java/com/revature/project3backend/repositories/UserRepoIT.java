@@ -40,23 +40,25 @@ public class UserRepoIT {
 		userRepo.deleteAll ();
 	}
 	
+	//todo test null username or email?
+	
 	@Test
-	void findByUsernamePositive () {
+	void findByUsername () {
 		assertEquals (users.get (0), userRepo.findByUsername (users.get (0).getUsername ()));
 	}
 	
 	@Test
-	void findByUsernameNegative () {
+	void findByUsernameWhenNotFound () {
 		assertNull (userRepo.findByUsername ("wrong username"));
 	}
 	
 	@Test
-	void findByEmailPositive () {
+	void findByEmail () {
 		assertEquals (users.get (0), userRepo.findByEmail (users.get (0).getEmail ()));
 	}
 	
 	@Test
-	void findByEmailNegative () {
+	void findByEmailWhenNotFound () {
 		assertNull (userRepo.findByEmail ("wrong email"));
 	}
 }

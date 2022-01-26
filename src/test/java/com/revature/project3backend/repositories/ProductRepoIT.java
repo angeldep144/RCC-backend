@@ -46,6 +46,8 @@ class ProductRepoIT {
 		productRepo.deleteAll ();
 	}
 	
+	//todo test null and empty search queries?
+	
 	@Test
 	void findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContainingWithNameInSearchQuery () {
 		List <Product> expectedResult = new ArrayList <> ();

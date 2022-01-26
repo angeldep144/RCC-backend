@@ -19,7 +19,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
- * The CartItemController handles requests concerning cart items
+ * CartItemController handles requests concerning cart items
  */
 @RestController
 @RequestMapping ("cartitem")
@@ -42,8 +42,8 @@ public class CartItemController {
 	
 	/**
 	 * This constructor is automatically called by Spring
-	 * 
-	 * @param cartItemService The instance of CartItemService to use 
+	 *
+	 * @param cartItemService The instance of CartItemService to use
 	 * @param productService The instance of ProductService to use
 	 * @param userService The instance of UserService to use
 	 */
@@ -56,7 +56,7 @@ public class CartItemController {
 	
 	/**
 	 * Creates a cart item and then adds it to the user's cart
-	 * 
+	 *
 	 * @param body The data to use to create the cart item, contains a product id and a quantity
 	 * @param httpSession The HTTP session of the user
 	 * @return A ResponseEntity used to create the HTTP response, contains the user's cart
@@ -107,7 +107,7 @@ public class CartItemController {
 	
 	/**
 	 * Gets the cart items in the user's cart
-	 * 
+	 *
 	 * @param httpSession The HTTP session of the user
 	 * @return A ResponseEntity used to create the HTTP response, contains the user's cart
 	 * @throws UnauthorizedException Thrown when the user is not logged in
@@ -127,7 +127,7 @@ public class CartItemController {
 	
 	/**
 	 * Updates the quantity of a cart item in a user's cart
-	 * 
+	 *
 	 * @param cartItemId The id of the cart item to update
 	 * @param body The data to use to update the cart item
 	 * @param httpSession The HTTP session of the user
@@ -164,7 +164,7 @@ public class CartItemController {
 	
 	/**
 	 * Removes a cart item from a user's cart and deletes it
-	 * 
+	 *
 	 * @param cartItemId The cart item to remove from the user's cart and delete
 	 * @param httpSession The HTTP session of the user
 	 * @return A ResponseEntity used to create the HTTP response

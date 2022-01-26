@@ -36,7 +36,7 @@ class ProductControllerTest {
 		
 		assertEquals (ResponseEntity.ok (new JsonResponse ("Got " + products.size () + " products", true, products)), productController.getProducts (query, page));
 		
-		Mockito.verify (this.productService).getProducts (query, page);
+		Mockito.verify (productService).getProducts (query, page);
 	}
 	
 	@Test
@@ -45,27 +45,27 @@ class ProductControllerTest {
 		
 		assertEquals ("Error! Invalid search query", exception.getMessage ());
 		
-		Mockito.verify (this.productService, Mockito.never ()).getProducts (Mockito.any (), Mockito.any ());
+		Mockito.verify (productService, Mockito.never ()).getProducts (Mockito.any (), Mockito.any ());
 	}
 	
 	@Test
 	void getProductsWhenPageIsNull () {
-		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.productController.getProducts ("", null));
+		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> productController.getProducts ("", null));
 		
 		assertEquals ("Error! Invalid page", exception.getMessage ());
 		
-		Mockito.verify (this.productService, Mockito.never ()).getProducts (Mockito.any (), Mockito.any ());
+		Mockito.verify (productService, Mockito.never ()).getProducts (Mockito.any (), Mockito.any ());
 	}
 	
 	@Test
 	void getProduct () throws InvalidValueException {
 		Product product = new Product (1, "roomba", "description", 12.88f, "https://i.pcmag.com/imagery/reviews/01hmxcWyN13h1LfMglNxHGC-1.fit_scale.size_1028x578.v1589573902.jpg", 12.00f, 10);
 		
-		Mockito.when (this.productService.getProduct (product.getId ())).thenReturn (product);
+		Mockito.when (productService.getProduct (product.getId ())).thenReturn (product);
 		
-		assertEquals (ResponseEntity.ok (new JsonResponse ("Got product", true, product)), this.productController.getProduct (product.getId ()));
+		assertEquals (ResponseEntity.ok (new JsonResponse ("Got product", true, product)), productController.getProduct (product.getId ()));
 		
-		Mockito.verify (this.productService).getProduct (product.getId ());
+		Mockito.verify (productService).getProduct (product.getId ());
 	}
 	
 	//todo admin page tests below
@@ -101,7 +101,7 @@ class ProductControllerTest {
 //        MultipartFile file = null;
 //        Product product = new Product(1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, 13);
 //
-//        Mockito.when(this.productService.updateProduct(product, file)).thenReturn(product);
+//        Mockito.when(productService.updateProduct(product, file)).thenReturn(product);
 //
 //        Product actual = this.productService.updateProduct(product, file);
 //

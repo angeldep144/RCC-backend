@@ -7,6 +7,13 @@ import lombok.Data;
  */
 @Data
 public class CreateCartItemBody {
+	/**
+	 * The id of the product that the cart item refers to
+	 */
 	private Integer productId;
+	
+	/**
+	 * The quantity of the product that the cart item refers to
+	 */
 	private Integer quantity;
 }
