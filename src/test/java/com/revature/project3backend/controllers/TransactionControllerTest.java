@@ -12,6 +12,7 @@ import com.revature.project3backend.services.ProductService;
 import com.revature.project3backend.services.TransactionService;
 import com.revature.project3backend.services.UserService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpSession;
@@ -19,159 +20,149 @@ import org.springframework.mock.web.MockHttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TransactionControllerTest {
-	private TransactionController transactionController;
-	private final TransactionService transactionService = Mockito.mock(TransactionService.class);
-	private final UserService userService = Mockito.mock(UserService.class);
-	private final ProductService productService = Mockito.mock(ProductService.class);
-
-	public TransactionControllerTest()
-	{
-		this.transactionController = new TransactionController(this.transactionService,this.userService,this.productService);
+	private final TransactionController transactionController;
+	
+	private final TransactionService transactionService = Mockito.mock (TransactionService.class);
+	private final UserService userService = Mockito.mock (UserService.class);
+	private final ProductService productService = Mockito.mock (ProductService.class);
+	
+	public TransactionControllerTest () {
+		this.transactionController = new TransactionController (this.transactionService, this.userService, this.productService);
 	}
-
+	
 	@Test
 	void createTransaction () throws JsonProcessingException, InvalidValueException, UnauthorizedException {
+		int stock = 10;
+		
 		User user = new User ("first", "last", "email", "username", "password");
-		User user0 = new User ("first", "last", "email", "username", "password");
-		user.setId(1);
-		//user0.setId(1);
-		user0.setCart(null);
-		Product product = new Product(1, "roomba", "description", 10f, "1.jpg", null, 10);
-		Product product0 = new Product(12, "roomba", "description", 10f, "2.jpg", null, 10);
-		List<CartItem> items = new ArrayList<>();
-
-		items.add(new CartItem(user0,product,1));
-		items.add(new CartItem(user0,product0,1));
-
-		Transaction transaction = new Transaction(user);
-		Transaction expectedCreate = new Transaction(1,user,items.toString(),20.0f);
-
-
-		MockHttpSession mockHttpSession = new MockHttpSession();
-		mockHttpSession.setAttribute("user",user);
-		//mockHttpSession.setAttribute("cartItem",user.getCart());
-
-		user.setCart(items);
-		Mockito.when(transactionService.createTransaction(transaction,items)).thenReturn(expectedCreate);
-		ResponseEntity <JsonResponse> expected = ResponseEntity.ok (new JsonResponse ("Created transaction", true, expectedCreate));
-
-		assertEquals(expected,transactionController.createTransaction(mockHttpSession));
-
+		
+		Product product = new Product (1, "roomba", "description", 10f, "1.jpg", null, stock);
+		Product product0 = new Product (12, "roomba", "description", 10f, "2.jpg", null, stock);
+		
+		List <CartItem> items = new ArrayList <> ();
+		
+		items.add (new CartItem (new User (), product, 1));
+		items.add (new CartItem (new User (), product0, 5));
+		
+		user.setCart (items);
+		
+		Transaction transaction = new Transaction (user);
+		Transaction expectedCreate = new Transaction (1, user, items.toString (), 20.0f);
+		
+		MockHttpSession mockHttpSession = new MockHttpSession ();
+		mockHttpSession.setAttribute ("user", user);
+		
+		Mockito.when (transactionService.createTransaction (transaction, items)).thenReturn (expectedCreate);
+		
+		assertEquals (ResponseEntity.ok (new JsonResponse ("Created transaction", true, expectedCreate)), transactionController.createTransaction (mockHttpSession));
+		
+		Mockito.verify (productService).reduceStock (product, items.get (0).getQuantity ());
+		Mockito.verify (productService).reduceStock (product0, items.get (1).getQuantity ());
+		
+		Mockito.verify (transactionService).createTransaction (transaction, items);
+		Mockito.verify (userService).clearCart (user);
 	}
-
+	
 	@Test
 	void createTransactionWhenNotLoggedIn () throws JsonProcessingException, InvalidValueException, UnauthorizedException {
-		User user = new User ("first", "last", "email", "username", "password");
 		MockHttpSession mockHttpSession = new MockHttpSession ();
-		mockHttpSession.setAttribute("user", null);
-		Product product = new Product(1, "roomba", "description", 10f, "1.jpg", null, 10);
-		List<CartItem> items = new ArrayList<>();
-
-		items.add(new CartItem(user,product,1));
-		user.setCart(items);
-
-		UnauthorizedException exception = assertThrows(UnauthorizedException.class,()->this.transactionController.createTransaction(mockHttpSession));
-
-		assertEquals("Error! Unauthorized",exception.getMessage());
-
-
+		
+		UnauthorizedException exception = assertThrows (UnauthorizedException.class, () -> this.transactionController.createTransaction (mockHttpSession));
+		
+		assertEquals ("Error! Unauthorized", exception.getMessage ());
+		
+		Mockito.verify (productService, Mockito.never ()).reduceStock (Mockito.any (), Mockito.any ());
+		
+		Mockito.verify (transactionService, Mockito.never ()).createTransaction (Mockito.any (), Mockito.any ());
+		Mockito.verify (userService, Mockito.never ()).clearCart (Mockito.any ());
 	}
-
+	
 	@Test
 	void createTransactionWhenCartIsEmpty () throws JsonProcessingException, InvalidValueException, UnauthorizedException {
-
-
 		User user = new User ("first", "last", "email", "username", "password");
+		
 		MockHttpSession mockHttpSession = new MockHttpSession ();
-		mockHttpSession.setAttribute("user", user);
-		List<CartItem> items = new ArrayList<>();
-
-		user.setCart(items);
-		InvalidValueException exception = assertThrows(InvalidValueException.class,()->this.transactionController.createTransaction(mockHttpSession));
-
-		assertEquals("Error! Invalid cart",exception.getMessage());
+		mockHttpSession.setAttribute ("user", user);
+		
+		user.setCart (new ArrayList <> ());
+		
+		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.transactionController.createTransaction (mockHttpSession));
+		
+		assertEquals ("Error! Invalid cart", exception.getMessage ());
+		
+		Mockito.verify (productService, Mockito.never ()).reduceStock (Mockito.any (), Mockito.any ());
+		
+		Mockito.verify (transactionService, Mockito.never ()).createTransaction (Mockito.any (), Mockito.any ());
+		Mockito.verify (userService, Mockito.never ()).clearCart (Mockito.any ());
 	}
-
+	
 	@Test
 	void getTransaction () throws JsonProcessingException, InvalidValueException, UnauthorizedException {
 		User user = new User ("first", "last", "email", "username", "password");
 		User user0 = new User ("first", "last", "email", "username", "password");
-		user.setId(1);
-		//user0.setId(1);
-		user0.setCart(null);
-		Product product = new Product(1, "roomba", "description", 10f, "1.jpg", null, 10);
-		Product product0 = new Product(12, "roomba", "description", 10f, "2.jpg", null, 10);
-		List<CartItem> items = new ArrayList<>();
-
-
-		items.add(new CartItem(user0,product,1));
-		items.add(new CartItem(user0,product0,1));
-
-		user.setCart(items);
-
-
-		Transaction transaction = new Transaction(user);
-		Transaction expectedCreate = new Transaction(1,user,items.toString(),20.0f);
-
-		MockHttpSession mockHttpSession = new MockHttpSession();
-		mockHttpSession.setAttribute("user",user);
-
-
-
-		Mockito.when(transactionService.createTransaction(transaction,items)).thenReturn(transaction);
-		Mockito.when(transactionService.getTransaction(transaction.getId())).thenReturn(transaction);
+		
+		user.setId (1);
+		
+		user0.setCart (null);
+		
+		Product product = new Product (1, "roomba", "description", 10f, "1.jpg", null, 10);
+		Product product0 = new Product (12, "roomba", "description", 10f, "2.jpg", null, 10);
+		
+		List <CartItem> items = new ArrayList <> ();
+		
+		items.add (new CartItem (user0, product, 1));
+		items.add (new CartItem (user0, product0, 1));
+		
+		user.setCart (items);
+		
+		Transaction transaction = new Transaction (user);
+		
+		MockHttpSession mockHttpSession = new MockHttpSession ();
+		mockHttpSession.setAttribute ("user", user);
+		
+		Mockito.when (transactionService.getTransaction (transaction.getId ())).thenReturn (transaction);
+		
 		ResponseEntity <JsonResponse> expected = ResponseEntity.ok (new JsonResponse ("Got transaction", true, transaction));
-
-		assertEquals(expected,transactionController.getTransaction(transaction.getId(),mockHttpSession));
-
-
-
-
+		
+		assertEquals (expected, transactionController.getTransaction (transaction.getId (), mockHttpSession));
+		
+		Mockito.verify (transactionService).getTransaction (transaction.getId ());
 	}
-
+	
 	@Test
 	void getTransactionWhenNotLoggedIn () throws InvalidValueException, UnauthorizedException, JsonProcessingException {
-
-		User user = new User ("first", "last", "email", "username", "password");
-		Product product = new Product(1, "roomba", "description", 10f, "1.jpg", null, 10);
-		Product product0 = new Product(12, "roomba", "description", 10f, "2.jpg", null, 10);
-
 		MockHttpSession mockHttpSession = new MockHttpSession ();
-		mockHttpSession.setAttribute("user", null);
-		List<CartItem> items = new ArrayList<>();
-		items.add(new CartItem(user,product,1));
-		items.add(new CartItem(user,product0,1));
-
-		Transaction expected = new Transaction(1,user,items.toString(),20.0f);
-
-		user.setCart(items);
-		UnauthorizedException exception = assertThrows(UnauthorizedException.class,()->this.transactionController.getTransaction(expected.getId(),mockHttpSession));
-
-		assertEquals("Error! Unauthorized",exception.getMessage());
-
-
+		
+		UnauthorizedException exception = assertThrows (UnauthorizedException.class, () -> this.transactionController.getTransaction (1, mockHttpSession));
+		
+		assertEquals ("Error! Unauthorized", exception.getMessage ());
+		
+		Mockito.verify (transactionService, Mockito.never ()).getTransaction (Mockito.any ());
 	}
-
+	
 	@Test
 	void getTransactionWhenTransactionWasMadeByOtherUser () throws InvalidValueException, UnauthorizedException {
-
-
-		User user0 = new User ("first0", "last0", "email0", "username0", "password0");
+		int transactionId = 1;
+		
 		User user = new User ("first", "last", "email", "username", "password");
+		User user0 = new User ("first0", "last0", "email0", "username0", "password0");
+		
+		user.setId (1);
+		user0.setId (2);
+		
 		MockHttpSession mockHttpSession = new MockHttpSession ();
-		mockHttpSession.setAttribute("buyer", user0);
-		List<CartItem> items = new ArrayList<>();
-		user.setCart(items);
-		user.setId(1);
-		user0.setId(2);
-
-		UnauthorizedException exception = assertThrows(UnauthorizedException.class,()->this.transactionController.getTransaction(1,mockHttpSession));
-
-		assertEquals("Error! Unauthorized",exception.getMessage());
-
+		mockHttpSession.setAttribute ("user", user0);
+		
+		Mockito.when (transactionService.getTransaction (transactionId)).thenReturn (new Transaction (user));
+		
+		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.transactionController.getTransaction (transactionId, mockHttpSession));
+		
+		assertEquals ("Error! Invalid transaction id", exception.getMessage ());
+		
+		Mockito.verify (transactionService).getTransaction (transactionId);
 	}
-
 }
