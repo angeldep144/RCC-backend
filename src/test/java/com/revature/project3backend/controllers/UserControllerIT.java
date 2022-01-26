@@ -1,20 +1,17 @@
 package com.revature.project3backend.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.jsonmodels.JsonResponse;
 import com.revature.project3backend.models.User;
-import com.revature.project3backend.models.UserRole;
 import com.revature.project3backend.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(UserController.class)
 class UserControllerIT {
@@ -27,8 +24,14 @@ class UserControllerIT {
 	private final ObjectMapper json = new ObjectMapper ();
 	
 	@Test
-	void createUserWhenFirstNameIsNull () {
-		
+	void createUserWhenFirstNameIsNull () throws Exception {
+		User user = new User(null,"last","email@.com","username", "password");
+		JsonResponse expectedResult = new JsonResponse(new InvalidValueException("Invalid user") );
+		Mockito.when(this.userService.createUser(user)).thenReturn(null);
+
+		mvc.perform(MockMvcRequestBuilders.post("/user")
+				.contentType())
+
 	}
 	
 	@Test
