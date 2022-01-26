@@ -3,6 +3,7 @@ package com.revature.project3backend.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.project3backend.exceptions.InvalidValueException;
+import com.revature.project3backend.jsonmodels.CreateSessionBody;
 import com.revature.project3backend.jsonmodels.JsonResponse;
 import com.revature.project3backend.models.Product;
 import com.revature.project3backend.services.ProductService;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -36,18 +38,22 @@ public class ProductControllerIT {
 	private final ObjectMapper json = new ObjectMapper ();
 	
 	@Test
-	void getProducts () {
+	void getProducts () throws Exception {
+		List <Product> products = new ArrayList <> ();
 		
-	}
-	
-	@Test
-	void getProductsWhenSearchQueryIsNull () {
+		products.add (new Product (1, "roomba", "description", 12.88f, "https://i.pcmag.com/imagery/reviews/01hmxcWyN13h1LfMglNxHGC-1.fit_scale.size_1028x578.v1589573902.jpg", 12.00f, 10));
+		products.add (new Product (2, "roomba", "description", 12.88f, "https://i.pcmag.com/imagery/reviews/01hmxcWyN13h1LfMglNxHGC-1.fit_scale.size_1028x578.v1589573902.jpg", 12.00f, 10));
 		
-	}
-	
-	@Test
-	void getProductsWhenPageIsNull () {
+		String searchQuery = "roomba";
+		int page = 0;
 		
+		Mockito.when (productService.getProducts (searchQuery, page)).thenReturn (products);
+		
+		mvc.perform (MockMvcRequestBuilders.get ("/product?searchQuery=" + searchQuery + "&page=" + page))
+			.andExpect (MockMvcResultMatchers.status ().isOk ())
+			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse ("Got " + products.size () + " products", true, products))));
+		
+		Mockito.verify (productService).getProducts (searchQuery, page);
 	}
 	
 	@Test
