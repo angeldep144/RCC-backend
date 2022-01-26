@@ -41,7 +41,7 @@ public class TransactionService {
 	
 	/**
 	 * Create a transaction
-	 * 
+	 *
 	 * @param transaction The transaction to create
 	 * @param items The cart items used in the transaction
 	 * @return The created Transaction
@@ -64,7 +64,7 @@ public class TransactionService {
 	
 	/**
 	 * Gets a transaction given its id
-	 * 
+	 *
 	 * @param transactionId The id to use to get the transaction
 	 * @return The found transaction
 	 * @throws InvalidValueException Thrown when validation fails
