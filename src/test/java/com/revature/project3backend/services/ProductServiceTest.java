@@ -217,4 +217,75 @@ class ProductServiceTest {
 
 		assertEquals(expectedResult, actualResult);
 	}
+
+	@Test
+	void updateProductWithFilePositive() throws InvalidValueException {
+		Product product = new Product (1, "name", "description", 10F, null, null, null);
+
+		Mockito.mockStatic(FileUtil.class);
+		Mockito.when(FileUtil.uploadToS3(product, this.mf)).thenReturn("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
+		Mockito.when(productRepo.save(product)).thenReturn(product);
+
+		Product actualResult = productService.updateProduct(product, this.mf);
+		product.setImageUrl("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
+
+		assertEquals(product, actualResult);
+	}
+
+	@Test
+	void updateProductWithoutFilePositive() throws InvalidValueException {
+		Product product = new Product (1, "name", "description", 10F, null, null, null);
+
+		Mockito.mockStatic(FileUtil.class);
+		Mockito.when(FileUtil.uploadToS3(product, null)).thenReturn("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
+		Mockito.when(productRepo.save(product)).thenReturn(product);
+
+		Product actualResult = productService.updateProduct(product, null);
+
+		assertEquals(product, actualResult);
+	}
+
+	@Test
+	void updateProductWithoutNameNegative() throws InvalidValueException {
+		Product product = new Product (1, null, "description", 10F, null, null, null);
+
+		Mockito.mockStatic(FileUtil.class);
+		Mockito.when(FileUtil.uploadToS3(product, null)).thenReturn("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
+		Mockito.when(productRepo.save(product)).thenReturn(product);
+
+		String expectedResult = "Error! No product name";
+
+		String actualResult = new String();
+
+		try {
+			productService.updateProduct(product, this.mf);
+		} catch (InvalidValueException e) {
+			actualResult = e.getMessage();
+		}
+
+		assertEquals(expectedResult, actualResult);
+	}
+
+	@Test
+	void updateProductWithoutDescriptionNegative() throws InvalidValueException {
+		Product product = new Product (1, "name", null, 10F, null, null, null);
+
+		Mockito.mockStatic(FileUtil.class);
+		Mockito.when(FileUtil.uploadToS3(product, null)).thenReturn("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
+		Mockito.when(productRepo.save(product)).thenReturn(product);
+
+		String expectedResult = "Error! No product description";
+
+		String actualResult = new String();
+
+		try {
+			productService.updateProduct(product, this.mf);
+		} catch (InvalidValueException e) {
+			actualResult = e.getMessage();
+		}
+
+		assertEquals(expectedResult, actualResult);
+	}
+
+
 }

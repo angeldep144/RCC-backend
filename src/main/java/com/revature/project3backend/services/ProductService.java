@@ -71,9 +71,7 @@ public class ProductService {
 			product.setImageUrl (FileUtil.uploadToS3 (product, file));
 		}
 		
-		Product updatedProduct = this.productRepo.save (product);
-		
-		return updatedProduct;
+		return this.productRepo.save (product);
 	}
 	
 	/**
