@@ -4,14 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.jsonmodels.JsonResponse;
 import com.revature.project3backend.models.User;
+import com.revature.project3backend.services.RoleService;
 import com.revature.project3backend.services.UserService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(UserController.class)
 class UserControllerIT {
@@ -21,124 +23,201 @@ class UserControllerIT {
     @MockBean
     private UserService userService;
 	
+	@MockBean
+	private RoleService roleService;
+	
 	private final ObjectMapper json = new ObjectMapper ();
+	
+	//we are passing a string directly because we can't json.write a User object because the password won't get written due to the @JsonAccess on the password field in User
 	
 	@Test
 	void createUserWhenFirstNameIsNull () throws Exception {
-		User user = new User(null,"last","email@.com","username", "password");
-		JsonResponse expectedResult = new JsonResponse(new InvalidValueException("Invalid user") );
-		Mockito.when(this.userService.createUser(user)).thenReturn(null);
 
-		mvc.perform(MockMvcRequestBuilders.post("/user")
-				.contentType())
+		mvc.perform (MockMvcRequestBuilders.post ("/user")
+			.contentType (MediaType.APPLICATION_JSON)
+			.content ("{\"lastName\": \"Smith\",\"email\": \"johnsmith@example.com\",\"username\": \"johnsmith\",\"password\": \"password\"}"))
+			
+			.andExpect (MockMvcResultMatchers.status ().isBadRequest ())
+			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new InvalidValueException ("Invalid user")))));
 
 	}
 	
 	@Test
-	void createUserWhenLastNameIsNull () {
-		
+	void createUserWhenLastNameIsNull () throws Exception {
+		mvc.perform (MockMvcRequestBuilders.post ("/user")
+			.contentType (MediaType.APPLICATION_JSON)
+			.content ("{\"firstName\": \"John\",\"email\": \"johnsmith@example.com\",\"username\": \"johnsmith\",\"password\": \"password\"}"))
+			
+			.andExpect (MockMvcResultMatchers.status ().isBadRequest ())
+			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new InvalidValueException ("Invalid user")))));
 	}
 	
 	@Test
-	void createUserWhenEmailIsNull () {
-		
+	void createUserWhenEmailIsNull () throws Exception {
+		mvc.perform (MockMvcRequestBuilders.post ("/user")
+			.contentType (MediaType.APPLICATION_JSON)
+			.content ("{\"firstName\": \"John\",\"lastName\": \"Smith\",\"username\": \"johnsmith\",\"password\": \"password\"}"))
+			
+			.andExpect (MockMvcResultMatchers.status ().isBadRequest ())
+			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new InvalidValueException ("Invalid user")))));
 	}
 	
 	@Test
-	void createUserWhenUsernameIsNull () {
-		
+	void createUserWhenUsernameIsNull () throws Exception {
+		mvc.perform (MockMvcRequestBuilders.post ("/user")
+			.contentType (MediaType.APPLICATION_JSON)
+			.content ("{\"firstName\": \"John\",\"lastName\": \"Smith\",\"email\": \"johnsmith@example.com\",\"password\": \"password\"}"))
+			
+			.andExpect (MockMvcResultMatchers.status ().isBadRequest ())
+			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new InvalidValueException ("Invalid user")))));
 	}
 	
 	@Test
-	void createUserWhenPasswordIsNull () {
-		
+	void createUserWhenPasswordIsNull () throws Exception {
+		mvc.perform (MockMvcRequestBuilders.post ("/user")
+			.contentType (MediaType.APPLICATION_JSON)
+			.content ("{\"firstName\": \"John\",\"lastName\": \"Smith\",\"email\": \"johnsmith@example.com\",\"username\": \"johnsmith\"}"))
+			
+			.andExpect (MockMvcResultMatchers.status ().isBadRequest ())
+			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new InvalidValueException ("Invalid user")))));
 	}
 	
 	@Test
-	void createUserWhenFirstNameIsEmpty () {
-		
+	void createUserWhenFirstNameIsEmpty () throws Exception {
+		mvc.perform (MockMvcRequestBuilders.post ("/user")
+			.contentType (MediaType.APPLICATION_JSON)
+			.content ("{\"firstName\": \"\",\"lastName\": \"Smith\",\"email\": \"johnsmith@example.com\",\"username\": \"johnsmith\",\"password\": \"password\"}"))
+			
+			.andExpect (MockMvcResultMatchers.status ().isBadRequest ())
+			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new InvalidValueException ("Invalid user")))));
 	}
 	
 	@Test
-	void createUserWhenLastNameIsEmpty () {
-		
+	void createUserWhenLastNameIsEmpty () throws Exception {
+		mvc.perform (MockMvcRequestBuilders.post ("/user")
+			.contentType (MediaType.APPLICATION_JSON)
+			.content ("{\"firstName\": \"John\",\"lastName\": \"\",\"email\": \"johnsmith@example.com\",\"username\": \"johnsmith\",\"password\": \"password\"}"))
+			
+			.andExpect (MockMvcResultMatchers.status ().isBadRequest ())
+			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new InvalidValueException ("Invalid user")))));
 	}
 	
 	@Test
-	void createUserWhenEmailIsEmpty () {
-		
+	void createUserWhenEmailIsEmpty () throws Exception {
+		mvc.perform (MockMvcRequestBuilders.post ("/user")
+			.contentType (MediaType.APPLICATION_JSON)
+			.content ("{\"firstName\": \"John\",\"lastName\": \"Smith\",\"email\": \"\",\"username\": \"johnsmith\",\"password\": \"password\"}"))
+			
+			.andExpect (MockMvcResultMatchers.status ().isBadRequest ())
+			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new InvalidValueException ("Invalid user")))));
 	}
 	
 	@Test
-	void createUserWhenUsernameIsEmpty () {
-		
+	void createUserWhenUsernameIsEmpty () throws Exception {
+		mvc.perform (MockMvcRequestBuilders.post ("/user")
+			.contentType (MediaType.APPLICATION_JSON)
+			.content ("{\"firstName\": \"John\",\"lastName\": \"Smith\",\"email\": \"johnsmith@example.com\",\"username\": \"\",\"password\": \"password\"}"))
+			
+			.andExpect (MockMvcResultMatchers.status ().isBadRequest ())
+			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new InvalidValueException ("Invalid user")))));
 	}
 	
 	@Test
-	void createUserWhenPasswordIsEmpty () {
-		
+	void createUserWhenPasswordIsEmpty () throws Exception {
+		mvc.perform (MockMvcRequestBuilders.post ("/user")
+			.contentType (MediaType.APPLICATION_JSON)
+			.content ("{\"firstName\": \"John\",\"lastName\": \"Smith\",\"email\": \"johnsmith@example.com\",\"username\": \"johnsmith\",\"password\": \"\"}"))
+			
+			.andExpect (MockMvcResultMatchers.status ().isBadRequest ())
+			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new InvalidValueException ("Invalid user")))));
 	}
 	
 	@Test
-	void createUserWhenFirstNameIsWhitespace () {
-		
+	void createUserWhenFirstNameIsWhitespace () throws Exception {
+		mvc.perform (MockMvcRequestBuilders.post ("/user")
+			.contentType (MediaType.APPLICATION_JSON)
+			.content ("{\"firstName\": \"           \",\"lastName\": \"Smith\",\"email\": \"johnsmith@example.com\",\"username\": \"johnsmith\",\"password\": \"password\"}"))
+			
+			.andExpect (MockMvcResultMatchers.status ().isBadRequest ())
+			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new InvalidValueException ("Invalid user")))));
 	}
 	
 	@Test
-	void createUserWhenLastNameIsWhitespace () {
-		
+	void createUserWhenLastNameIsWhitespace () throws Exception {
+		mvc.perform (MockMvcRequestBuilders.post ("/user")
+			.contentType (MediaType.APPLICATION_JSON)
+			.content ("{\"firstName\": \"John\",\"lastName\": \"               \",\"email\": \"johnsmith@example.com\",\"username\": \"johnsmith\",\"password\": \"password\"}"))
+			
+			.andExpect (MockMvcResultMatchers.status ().isBadRequest ())
+			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new InvalidValueException ("Invalid user")))));
 	}
 	
 	@Test
-	void createUserWhenEmailIsWhitespace () {
-		
+	void createUserWhenEmailIsWhitespace () throws Exception {
+		mvc.perform (MockMvcRequestBuilders.post ("/user")
+			.contentType (MediaType.APPLICATION_JSON)
+			.content ("{\"firstName\": \"John\",\"lastName\": \"Smith\",\"email\": \"          \",\"username\": \"johnsmith\",\"password\": \"password\"}"))
+			
+			.andExpect (MockMvcResultMatchers.status ().isBadRequest ())
+			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new InvalidValueException ("Invalid user")))));
 	}
 	
 	@Test
-	void createUserWhenUsernameIsWhitespace () {
-		
+	void createUserWhenUsernameIsWhitespace () throws Exception {
+		mvc.perform (MockMvcRequestBuilders.post ("/user")
+			.contentType (MediaType.APPLICATION_JSON)
+			.content ("{\"firstName\": \"John\",\"lastName\": \"Smith\",\"email\": \"johnsmith@example.com\",\"username\": \"         \",\"password\": \"password\"}"))
+			
+			.andExpect (MockMvcResultMatchers.status ().isBadRequest ())
+			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new InvalidValueException ("Invalid user")))));
 	}
 	
 	@Test
-	void createUserWhenPasswordIsWhitespace () {
-		
+	void createUserWhenPasswordIsWhitespace () throws Exception {
+		mvc.perform (MockMvcRequestBuilders.post ("/user")
+			.contentType (MediaType.APPLICATION_JSON)
+			.content ("{\"firstName\": \"John\",\"lastName\": \"Smith\",\"email\": \"johnsmith@example.com\",\"username\": \"johnsmith\",\"password\": \"        \"}"))
+			
+			.andExpect (MockMvcResultMatchers.status ().isBadRequest ())
+			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new InvalidValueException ("Invalid user")))));
 	}
 	
 	@Test
-	void createUserWhenUsernameIsInvalid () {
-		
+	void createUserWhenUsernameIsInvalid () throws Exception {
+		mvc.perform (MockMvcRequestBuilders.post ("/user")
+			.contentType (MediaType.APPLICATION_JSON)
+			.content ("{\"firstName\": \"John\",\"lastName\": \"Smith\",\"email\": \"johnsmith@example.com\",\"username\": \"@.-/\",\"password\": \"password\"}"))
+			
+			.andExpect (MockMvcResultMatchers.status ().isBadRequest ())
+			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new InvalidValueException ("Invalid username")))));
 	}
 	
 	@Test
-	void createUserWhenEmailIsInvalid () {
-		
+	void createUserWhenEmailIsInvalid () throws Exception {
+		mvc.perform (MockMvcRequestBuilders.post ("/user")
+			.contentType (MediaType.APPLICATION_JSON)
+			.content ("{\"firstName\": \"John\",\"lastName\": \"Smith\",\"email\": \"not valid email\",\"username\": \"johnsmith\",\"password\": \"password\"}"))
+			
+			.andExpect (MockMvcResultMatchers.status ().isBadRequest ())
+			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new InvalidValueException ("Invalid email")))));
 	}
 	
 	@Test
-	void createUser () {
+	void createUser () throws Exception {
+		User user = new User ();
 		
+		user.setId (1);
+		user.setFirstName ("John");
+		user.setLastName ("Smith");
+		user.setEmail ("johnsmith@example.com");
+		user.setUsername ("johnsmith");
+		user.setPassword ("password");
+		
+		mvc.perform (MockMvcRequestBuilders.post ("/user")
+			.contentType (MediaType.APPLICATION_JSON)
+			.content ("{\"firstName\": \"John\",\"lastName\": \"Smith\",\"email\": \"johnsmith@example.com\",\"username\": \"johnsmith\",\"password\": \"password\"}"))
+			
+			.andExpect (MockMvcResultMatchers.status ().isOk ())
+			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse ("Created user", true, null, "/login"))));
 	}
-
-//    @Test
-//    void createUserPositive() throws Exception {
-//        UserRole role = new UserRole(1, "Admin");
-//
-//        User user = new User(1, "first", "last", "email"
-//                , "username", "password", null, null, role);
-//        User input = new User("first", "last", "email", "username", "password");
-//
-//        JsonResponse expectedResult = new JsonResponse ("Created user", true, user, "/login");
-//
-//        //todo: used wild card because there was an issue with the mocked service returning null
-//        Mockito.when(this.userService.createUser(Mockito.any(User.class))).thenReturn(user);
-//
-//        RequestBuilder requestBuilder = MockMvcRequestBuilders
-//                .post("/user")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(new ObjectMapper().writeValueAsString(input));
-//
-//        this.mvc.perform(requestBuilder)
-//                .andExpect(MockMvcResultMatchers.status().isOk())
-//                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(expectedResult)));
-//    }
 }
