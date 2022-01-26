@@ -24,11 +24,21 @@ public class ProductService {
 	public ProductService (ProductRepo productRepo) {
 		this.productRepo = productRepo;
 	}
-	
+
+	/**
+	 * @param searchQuery String/characters to query products by name or description
+	 * @param page number of products to dsiplay per page
+	 * @return returns a list of all products that fit the criteria
+	 */
 	public List <Product> getProducts (String searchQuery, Integer page) {
 		return this.productRepo.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining (searchQuery, searchQuery, PageRequest.of (page, postsPerPage, Sort.by ("name"))).getContent ();
 	}
-	
+
+	/**
+	 * @param id ID of product to find
+	 * @return returns found Product
+	 * @throws InvalidValueException throws when validations fail
+	 */
 	public Product getProduct (Integer id) throws InvalidValueException {
 		Product product = this.productRepo.findById (id).orElse (null);
 		
@@ -38,7 +48,12 @@ public class ProductService {
 		
 		return product;
 	}
-	
+
+	/**
+	 * @param product Product to find stocks
+	 * @param quantity Quantity to reduce stock by
+	 * @throws InvalidValueException throws when validation fails
+	 */
 	public void reduceStock (Product product, Integer quantity) throws InvalidValueException {
 		int newStock = product.getStock () - quantity;
 		

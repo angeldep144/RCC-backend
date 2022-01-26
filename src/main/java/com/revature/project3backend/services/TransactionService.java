@@ -6,9 +6,7 @@ import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.models.CartItem;
 import com.revature.project3backend.models.Product;
 import com.revature.project3backend.models.Transaction;
-import com.revature.project3backend.models.User;
 import com.revature.project3backend.repositories.TransactionRepo;
-import com.revature.project3backend.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +24,13 @@ public class TransactionService {
 	public TransactionService (TransactionRepo transactionRepo) {
 		this.transactionRepo = transactionRepo;
 	}
-	
+
+	/**
+	 * @param transaction Grabs transaction filled with user , and cart items
+	 * @param items gets products to sum up the total
+	 * @return returns completed Transaction is returned
+	 * @throws JsonProcessingException throws when error when parsing
+	 */
 	public Transaction createTransaction (Transaction transaction, List <CartItem> items) throws JsonProcessingException {
 		float total = 0f;
 		
@@ -41,7 +45,12 @@ public class TransactionService {
 		
 		return transactionRepo.save (transaction);
 	}
-	
+
+	/**
+	 * @param transactionId Grabs transaction ID to find by
+	 * @return returns the transaction that was found by ID
+	 * @throws InvalidValueException throws when validations fail
+	 */
 	public Transaction getTransaction (Integer transactionId) throws InvalidValueException {
 		Transaction transaction = transactionRepo.findById (transactionId).orElse (null);
 		

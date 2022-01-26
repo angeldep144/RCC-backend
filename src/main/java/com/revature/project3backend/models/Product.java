@@ -6,6 +6,10 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+/**
+ *  Product model for displaying products to be added to a users cart.
+ *  contains ID, product name, product description, product price, product imageUrl, sales price, product stock amount
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

@@ -1,6 +1,5 @@
 package com.revature.project3backend.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,6 +7,10 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+/**
+ * Cart items are product items that are linked to a user's cart.
+ * contains ID, User object, Product object, and Quantity amount
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

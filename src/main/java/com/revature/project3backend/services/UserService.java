@@ -81,13 +81,21 @@ public class UserService {
 		
 		return userRepo.save (user);
 	}
-	
+
+	/**
+	 * @param user Grabs user to find by
+	 * @param cartItem Selects product to add to users cart
+	 */
 	public void addToCart (User user, CartItem cartItem) {
 		user.getCart ().add (cartItem);
 		
 		userRepo.save (user);
 	}
-	
+
+	/**
+	 * @param user Grabs user to find by
+	 * @param cartItem Selects product to remove from users cart
+	 */
 	public void removeFromCart (User user, CartItem cartItem) {
 		user.getCart ().remove (cartItem);
 		
@@ -95,7 +103,10 @@ public class UserService {
 		
 		userRepo.save (user);
 	}
-	
+
+	/**
+	 * @param user Grabs the user to findby, then clears that users cart
+	 */
 	public void clearCart (User user) {
 		List <CartItem> cart = user.getCart ();
 		
