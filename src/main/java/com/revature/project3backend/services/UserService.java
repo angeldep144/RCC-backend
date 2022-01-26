@@ -52,16 +52,6 @@ public class UserService {
 		}
 	}
 	
-	/**
-	 * Returns a user given a username.
-	 *
-	 * @param username The username to be searched.
-	 * @return The User object from the database if it exists, null if not found.
-	 */
-	public User getUserByUserName (String username) {
-		return userRepo.findByUsername (username);
-	}
-	
 	/**The createUser function takes in a user object then it does a username and email check where it will throw an
 	 * InvalidValueException with the custom message to let the front end know if either the username or email is not unique
 	 * then it encodes the password given and replaces it in the userInput object and then saves that object
@@ -91,13 +81,21 @@ public class UserService {
 		
 		return userRepo.save (user);
 	}
-	
+
+	/**
+	 * @param user Grabs user to find by
+	 * @param cartItem Selects product to add to users cart
+	 */
 	public void addToCart (User user, CartItem cartItem) {
 		user.getCart ().add (cartItem);
 		
 		userRepo.save (user);
 	}
-	
+
+	/**
+	 * @param user Grabs user to find by
+	 * @param cartItem Selects product to remove from users cart
+	 */
 	public void removeFromCart (User user, CartItem cartItem) {
 		user.getCart ().remove (cartItem);
 		
@@ -105,7 +103,10 @@ public class UserService {
 		
 		userRepo.save (user);
 	}
-	
+
+	/**
+	 * @param user Grabs the user to findby, then clears that users cart
+	 */
 	public void clearCart (User user) {
 		List <CartItem> cart = user.getCart ();
 
