@@ -35,9 +35,9 @@ public class SessionControllerIT {
 		createSessionBody.setPassword ("password");
 		
 		mvc.perform (MockMvcRequestBuilders.post ("/session")
-				.contentType (MediaType.APPLICATION_JSON)
-				.session (new MockHttpSession ())
-				.content (json.writeValueAsString (createSessionBody)))
+			.contentType (MediaType.APPLICATION_JSON)
+			.session (new MockHttpSession ())
+			.content (json.writeValueAsString (createSessionBody)))
 			
 			.andExpect (MockMvcResultMatchers.status ().isBadRequest ())
 			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new InvalidValueException ("Invalid credentials")))));
@@ -50,9 +50,9 @@ public class SessionControllerIT {
 		createSessionBody.setIdentifier ("identifier");
 		
 		mvc.perform (MockMvcRequestBuilders.post ("/session")
-				.contentType (MediaType.APPLICATION_JSON)
-				.session (new MockHttpSession ())
-				.content (json.writeValueAsString (createSessionBody)))
+			.contentType (MediaType.APPLICATION_JSON)
+			.session (new MockHttpSession ())
+			.content (json.writeValueAsString (createSessionBody)))
 			
 			.andExpect (MockMvcResultMatchers.status ().isBadRequest ())
 			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new InvalidValueException ("Invalid credentials")))));
@@ -70,9 +70,9 @@ public class SessionControllerIT {
 		Mockito.when (userService.loginUser (createSessionBody.getIdentifier (), createSessionBody.getPassword ())).thenReturn (user);
 		
 		mvc.perform (MockMvcRequestBuilders.post ("/session")
-				.contentType (MediaType.APPLICATION_JSON)
-				.session (new MockHttpSession ())
-				.content (json.writeValueAsString (createSessionBody)))
+			.contentType (MediaType.APPLICATION_JSON)
+			.session (new MockHttpSession ())
+			.content (json.writeValueAsString (createSessionBody)))
 			
 			.andExpect (MockMvcResultMatchers.status ().isOk ())
 			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse ("Logged in", true, user, "/"))));
@@ -86,9 +86,9 @@ public class SessionControllerIT {
 		createSessionBody.setPassword ("password");
 		
 		mvc.perform (MockMvcRequestBuilders.delete ("/session")
-				.contentType (MediaType.APPLICATION_JSON)
-				.session (new MockHttpSession ())
-				.content (json.writeValueAsString (createSessionBody)))
+			.contentType (MediaType.APPLICATION_JSON)
+			.session (new MockHttpSession ())
+			.content (json.writeValueAsString (createSessionBody)))
 			
 			.andExpect (MockMvcResultMatchers.status ().isOk ())
 			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse ("Logged out", true, null, "/login"))));
