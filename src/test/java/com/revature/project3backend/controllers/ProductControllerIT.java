@@ -57,97 +57,21 @@ public class ProductControllerIT {
 	}
 	
 	@Test
-	void getProduct () {
-		
-	}
-	
-	/*
-	@Test
-	void getProducts () throws InvalidValueException {
-		List <Product> products = new ArrayList <> ();
-		
-		products.add (new Product (1, "roomba", "description", 12.88f, "https://i.pcmag.com/imagery/reviews/01hmxcWyN13h1LfMglNxHGC-1.fit_scale.size_1028x578.v1589573902.jpg", 12.00f, 10));
-		products.add (new Product (2, "roomba", "description", 12.88f, "https://i.pcmag.com/imagery/reviews/01hmxcWyN13h1LfMglNxHGC-1.fit_scale.size_1028x578.v1589573902.jpg", 12.00f, 10));
-		
-		String query = "";
-		int page = 0;
-		
-		Mockito.when (productService.getProducts (query, page)).thenReturn (products);
-		
-		assertEquals (ResponseEntity.ok (new JsonResponse ("Got " + products.size () + " products", true, products)), productController.getProducts (query, page));
-		
-		Mockito.verify (this.productService).getProducts (query, page);
-	}
-	
-	@Test
-	void getProductsWhenSearchQueryIsNull () throws InvalidValueException {
-		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.productController.getProducts (null, 1));
-		
-		assertEquals ("Error! Invalid search query", exception.getMessage ());
-		
-		Mockito.verify (this.productService, Mockito.never ()).getProducts (Mockito.any (), Mockito.any ());
-	}
-	
-	@Test
-	void getProductsWhenPageIsNull () {
-		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.productController.getProducts ("", null));
-		
-		assertEquals ("Error! Invalid page", exception.getMessage ());
-		
-		Mockito.verify (this.productService, Mockito.never ()).getProducts (Mockito.any (), Mockito.any ());
-	}
-	
-	@Test
-	void getProduct () throws InvalidValueException {
+	void getProduct () throws Exception {
 		Product product = new Product (1, "roomba", "description", 12.88f, "https://i.pcmag.com/imagery/reviews/01hmxcWyN13h1LfMglNxHGC-1.fit_scale.size_1028x578.v1589573902.jpg", 12.00f, 10);
 		
-		Mockito.when (this.productService.getProduct (product.getId ())).thenReturn (product);
+		Mockito.when (productService.getProduct (product.getId ())).thenReturn (product);
 		
-		assertEquals (ResponseEntity.ok (new JsonResponse ("Got product", true, product)), this.productController.getProduct (product.getId ()));
+		mvc.perform (MockMvcRequestBuilders.get ("/product/" + product.getId ()))
+			.andExpect (MockMvcResultMatchers.status ().isOk ())
+			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse ("Got product", true, product))));
 		
-		Mockito.verify (this.productService).getProduct (product.getId ());
+		Mockito.verify (productService).getProduct (product.getId ());
 	}
 	
 	/*
-    @Test
-    void getProductPositive() throws Exception {
-        Product product1 = new Product(1, "roomba", "description", 12.88f, "https://i.pcmag.com/imagery/reviews/01hmxcWyN13h1LfMglNxHGC-1.fit_scale.size_1028x578.v1589573902.jpg", 12.00f, 10);
-
-        JsonResponse expectedResult = new JsonResponse("Got product", true, product1);
-
-        Mockito.when(productService.getProduct (product1.getId())).thenReturn(product1);
-
-        RequestBuilder request = MockMvcRequestBuilders
-                .get("/product/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(product1));
-
-        mvc.perform(request)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(expectedResult)));
-    }
-
-    @Test
-    void getProductNegative() throws Exception {
-        Integer invalidId = 999;
-        InvalidValueException expectedException = new InvalidValueException("Invalid product id");
-        JsonResponse expectedResult = new JsonResponse(expectedException);
-
-        Mockito.when(this.productService.getProduct(invalidId)).thenThrow(expectedException);
-
-        RequestBuilder request = MockMvcRequestBuilders
-                .get("/product/" + invalidId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(invalidId));
-
-        mvc.perform(request)
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper().writeValueAsString(expectedResult)));
-
-
-
-    }
-
+	todo admin page tests
+	
     @Test
     void updateProductSuccessful() throws Exception {
         MultipartFile file = null;
