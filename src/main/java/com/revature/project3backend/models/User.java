@@ -8,6 +8,10 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * User model for carrying carts for products, and storing transaction history
+ * Contains ID, First name, Last name, Email, Username, Password, List of cart items, List of transactions
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

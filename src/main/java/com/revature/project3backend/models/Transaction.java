@@ -1,15 +1,16 @@
 package com.revature.project3backend.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
+/**
+ *  Transaction for user checkout giving total price for all products in cart, for user.
+ *  contains ID, User object, String of items, Total price,
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
