@@ -4,6 +4,7 @@ import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.models.CartItem;
 import com.revature.project3backend.models.Product;
 import com.revature.project3backend.models.User;
+import com.revature.project3backend.models.UserRole;
 import com.revature.project3backend.repositories.CartItemRepo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,9 +35,10 @@ class CartItemServiceTest {
 		products.add (new Product (2, "Java II", "An intermediate Java course", 20.00F, "", 18.00F, 5));
 		products.add (new Product (3, "Python I", "A beginner Python course", 10.00F, "", 8.00F, 5));
 		products.add (new Product (4, "Python II", "An intermediate Python course", 20.00F, "", 18.00F, 5));
-		users.add (new User (1, "User", "1", "email1", "username13123", "password", new ArrayList <> (), new ArrayList <> ()));
-		users.add (new User (2, "User", "2", "email2", "username22425", "password", new ArrayList <> (), new ArrayList <> ()));
-		users.add (new User (3, "User", "3", "email3", "username32323", "password", new ArrayList <> (), new ArrayList <> ()));
+		
+		users.add (new User (1, "User", "1", "email1", "username13123", "password", new ArrayList <> (), new ArrayList <> (), new UserRole (2, "USER")));
+		users.add (new User (2, "User", "2", "email2", "username22425", "password", new ArrayList <> (), new ArrayList <> (), new UserRole (2, "USER")));
+		users.add (new User (3, "User", "3", "email3", "username32323", "password", new ArrayList <> (), new ArrayList <> (), new UserRole (2, "USER")));
 	}
 	
 	@AfterEach
@@ -48,33 +50,46 @@ class CartItemServiceTest {
 	@Test
 	void createCartItem () {
 		CartItem cartItem = new CartItem (users.get (1), products.get (2), 4);
+		
 		cartItemService.createCartItem (cartItem);
-		Mockito.verify (this.cartItemRepo, Mockito.times (1)).save (cartItem);
+		
+		Mockito.verify (this.cartItemRepo).save (cartItem);
 	}
 	
 	@Test
 	void updateCartItem () throws InvalidValueException {
-		Integer cartItemId = 1;
-		CartItem cartItem = new CartItem (1, users.get (0), products.get (1), 2);
-		Mockito.when (this.cartItemRepo.findById (cartItemId)).thenReturn (Optional.of (cartItem));
-		Integer quantity = 3;
-		cartItemService.updateCartItem (cartItemId, quantity);
-		assertEquals (quantity, cartItem.getQuantity ());
-		Mockito.verify (cartItemRepo, Mockito.times (1)).save (cartItem);
+		int id = 1;
+		int quantity = 3;
+		int newQuantity = 4;
+		
+		CartItem cartItem = new CartItem (id, users.get (0), products.get (1), quantity);
+		
+		Mockito.when (cartItemRepo.findById (id)).thenReturn (Optional.of (cartItem));
+		
+		cartItemService.updateCartItem (id, newQuantity);
+		
+		assertEquals (newQuantity, cartItem.getQuantity ());
+		
+		Mockito.verify (cartItemRepo).save (cartItem);
 	}
 	
 	@Test
 	void updateCartItemWhenNotFound () {
-		Integer cartItemId = 5;
-		Mockito.when (this.cartItemRepo.findById (cartItemId)).thenReturn (Optional.empty ());
-		Integer quantity = 2;
-		assertThrows (InvalidValueException.class, () -> cartItemService.updateCartItem (cartItemId, quantity));
+		int id = 1;
+		
+		Mockito.when (this.cartItemRepo.findById (id)).thenReturn (Optional.empty ());
+		
+		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> cartItemService.updateCartItem (id, 1));
+		
+		assertEquals ("Error! Invalid cart item id", exception.getMessage ());
 	}
 	
 	@Test
 	void deleteCartItem () {
-		Integer cartItemId = 2;
-		cartItemService.deleteCartItem (cartItemId);
-		Mockito.verify (cartItemRepo, Mockito.times (1)).deleteById (cartItemId);
+		int id = 1;
+		
+		cartItemService.deleteCartItem (id);
+		
+		Mockito.verify (cartItemRepo).deleteById (id);
 	}
 }

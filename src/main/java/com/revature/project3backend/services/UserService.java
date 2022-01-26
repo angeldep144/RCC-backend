@@ -62,6 +62,15 @@ public class UserService {
 		return userRepo.findByUsername (username);
 	}
 	
+	/**The createUser function takes in a user object then it does a username and email check where it will throw an
+	 * InvalidValueException with the custom message to let the front end know if either the username or email is not unique
+	 * then it encodes the password given and replaces it in the userInput object and then saves that object
+	 * with the updated password in the database then returns the new object from the database entry
+	 *
+	 * @param user A user object with the fields all as Strings (firstname, lastname, username, email, password)
+	 * @return The user that is registered in the database entry
+	 * @throws InvalidValueException with a custom message to differentiate between unique email or username
+	 */
 	public User createUser (User user) throws InvalidValueException {
 		User userWithUsername = userRepo.findByUsername (user.getUsername ());
 		

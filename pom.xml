@@ -58,6 +58,13 @@
 			<artifactId>spring-security-crypto</artifactId>
 			<version>5.5.1</version>
 		</dependency>
+
+		<!-- Amazon S3 -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-s3</artifactId>
+			<version>1.12.129</version>
+		</dependency>
 	</dependencies>
 
 	<build>

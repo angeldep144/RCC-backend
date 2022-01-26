@@ -3,10 +3,12 @@ package com.revature.project3backend.services;
 import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.models.Product;
 import com.revature.project3backend.repositories.ProductRepo;
+import com.revature.project3backend.utils.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -47,5 +49,43 @@ public class ProductService {
 		product.setStock (newStock);
 		
 		productRepo.save (product);
+	}
+	
+	/**
+	 * Updates the product information in the database
+	 *
+	 * @param product The new product information.
+	 * @param file    The new image for the product if desired.
+	 * @return The updated product.
+	 */
+	public Product updateProduct (Product product, MultipartFile file) {
+		if (file != null) {
+			product.setImageUrl (FileUtil.uploadToS3 (product, file));
+		}
+		
+		Product updatedProduct = this.productRepo.save (product);
+		
+		return updatedProduct;
+	}
+	
+	/**
+	 * Method creates new product given new product information
+	 *
+	 * @param product created from form data received from controller
+	 * @return newly created product
+	 * @throws InvalidValueException when price or sales price is less than 0, or sales price is greater than original price
+	 */
+	public Product createProduct (Product product) throws InvalidValueException {
+		
+		if ((product.getSalePrice () < 0) || (product.getPrice () < 0)) {
+			throw new InvalidValueException ("Price cannot be less than 0");
+		}
+		if (product.getSalePrice () > product.getPrice ()) {
+			throw new InvalidValueException ("Sales price cannot be greater than original price");
+		}
+		
+		Product product2 = this.productRepo.save (product);
+		
+		return product2;
 	}
 }

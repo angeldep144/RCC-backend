@@ -1,6 +1,7 @@
 package com.revature.project3backend.repositories;
 
 import com.revature.project3backend.models.User;
+import com.revature.project3backend.models.UserRole;
 import org.aspectj.lang.annotation.After;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,11 @@ public class UserRepoIT {
 	
 	@BeforeEach
 	public void setUp () {
-		users.add (new User (null, "User", "1", "email1", "username1", "password", new ArrayList <> (), new ArrayList <> ()));
-		users.add (new User (null, "User", "2", "email2", "username2", "password", new ArrayList <> (), new ArrayList <> ()));
-		users.add (new User (null, "User", "3", "email3", "username3", "password", new ArrayList <> (), new ArrayList <> ()));
+		UserRole role = new UserRole(1, "Admin");
+
+		users.add (new User (null, "User", "1", "email1", "username1", "password", new ArrayList <> (), new ArrayList <> (), role));
+		users.add (new User (null, "User", "2", "email2", "username2", "password", new ArrayList <> (), new ArrayList <> (), role));
+		users.add (new User (null, "User", "3", "email3", "username3", "password", new ArrayList <> (), new ArrayList <> (), role));
 		
 		for (User user : users) {
 			userRepo.save (user);
