@@ -52,16 +52,6 @@ public class UserService {
 		}
 	}
 	
-	/**
-	 * Returns a user given a username.
-	 *
-	 * @param username The username to be searched.
-	 * @return The User object from the database if it exists, null if not found.
-	 */
-	public User getUserByUserName (String username) {
-		return userRepo.findByUsername (username);
-	}
-	
 	/**The createUser function takes in a user object then it does a username and email check where it will throw an
 	 * InvalidValueException with the custom message to let the front end know if either the username or email is not unique
 	 * then it encodes the password given and replaces it in the userInput object and then saves that object
