@@ -48,19 +48,86 @@ class TransactionControllerIT {
 	private final ObjectMapper json = new ObjectMapper ();
 	
 	@Test
-	void createTransaction () {
-		
-	}
+	void createTransaction () throws Exception {
+        User user = new User (1,"first", "last", "email", "username", "password", new ArrayList<> (), new ArrayList<> (), new UserRole(2, "USER"));
+
+        Product product = new Product(1, "roomba", "description", 10f, "1.jpg", null, 10);
+        Product product0 = new Product(12, "roomba", "description", 10f, "2.jpg", null, 10);
+        List<CartItem> items = new ArrayList<>();
+
+        items.add(new CartItem(user,product,1));
+        items.add(new CartItem(user,product0,1));
+
+        Transaction transaction = new Transaction (1, user, new String(), 20.00f);
+        user.getTransactions ().add(transaction);
+        user.getCart().add(new CartItem(user,product,1));
+
+        Mockito.when (this.session.getAttribute ("user")).thenReturn (user);
+        Mockito.when (this.transactionService.createTransaction(transaction,items)).thenReturn(transaction);
+
+        mvc.perform (MockMvcRequestBuilders.post ("/transaction")
+                        .contentType (MediaType.APPLICATION_JSON)
+                        .session (this.session))
+                .andExpect (MockMvcResultMatchers.status ().isOk ())
+                .andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString(new JsonResponse ("Created transaction", true, transactionService.createTransaction (new Transaction (user), items)))));
+
+
+    }
 	
 	@Test
-	void createTransactionWhenNotLoggedIn () {
-		
-	}
+	void createTransactionWhenNotLoggedIn () throws Exception {
+
+        User user = new User (1,"first", "last", "email", "username", "password", new ArrayList<> (), new ArrayList<> (), new UserRole(2, "USER"));
+
+        Product product = new Product(1, "roomba", "description", 10f, "1.jpg", null, 10);
+        Product product0 = new Product(12, "roomba", "description", 10f, "2.jpg", null, 10);
+        List<CartItem> items = new ArrayList<>();
+
+        items.add(new CartItem(user,product,1));
+        items.add(new CartItem(user,product0,1));
+
+        Transaction transaction = new Transaction (1, user, new String(), 20.00f);
+        user.getTransactions ().add(transaction);
+        user.getCart().add(new CartItem(user,product,1));
+
+        Mockito.when (this.session.getAttribute ("user")).thenReturn (null);
+        Mockito.when (this.transactionService.createTransaction(transaction,items)).thenReturn(transaction);
+
+        mvc.perform (MockMvcRequestBuilders.post ("/transaction")
+                        .contentType (MediaType.APPLICATION_JSON)
+                        .session (this.session))
+                .andExpect (MockMvcResultMatchers.status ().isUnauthorized ())
+                .andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString(new JsonResponse ("Error! Unauthorized", false, null,"/login"))));
+
+
+
+    }
 	
 	@Test
-	void createTransactionWhenCartIsEmpty () {
-		
-	}
+	void createTransactionWhenCartIsEmpty () throws Exception {
+        User user = new User (1,"first", "last", "email", "username", "password", new ArrayList<> (), new ArrayList<> (), new UserRole(2, "USER"));
+
+        Product product = new Product(1, "roomba", "description", 10f, "1.jpg", null, 10);
+        Product product0 = new Product(12, "roomba", "description", 10f, "2.jpg", null, 10);
+        List<CartItem> items = new ArrayList<>();
+
+        items.add(new CartItem(user,product,1));
+        items.add(new CartItem(user,product0,1));
+
+        Transaction transaction = new Transaction (1, user, new String(), 20.00f);
+        user.getTransactions ().add(transaction);
+
+
+        Mockito.when (this.session.getAttribute ("user")).thenReturn (user);
+        Mockito.when (this.transactionService.createTransaction(transaction,items)).thenReturn(transaction);
+
+        mvc.perform (MockMvcRequestBuilders.post ("/transaction")
+                        .contentType (MediaType.APPLICATION_JSON)
+                        .session (this.session))
+                .andExpect (MockMvcResultMatchers.status ().isBadRequest ())
+                .andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString(new JsonResponse ("Error! Invalid cart", false, null,null))));
+
+    }
 	
 	@Test
 	void getTransaction () throws Exception {
