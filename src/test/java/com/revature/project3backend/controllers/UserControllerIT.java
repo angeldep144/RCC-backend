@@ -4,18 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.jsonmodels.JsonResponse;
 import com.revature.project3backend.models.User;
-import com.revature.project3backend.models.UserRole;
 import com.revature.project3backend.services.RoleService;
 import com.revature.project3backend.services.UserService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -36,12 +32,14 @@ class UserControllerIT {
 	
 	@Test
 	void createUserWhenFirstNameIsNull () throws Exception {
+
 		mvc.perform (MockMvcRequestBuilders.post ("/user")
 			.contentType (MediaType.APPLICATION_JSON)
 			.content ("{\"lastName\": \"Smith\",\"email\": \"johnsmith@example.com\",\"username\": \"johnsmith\",\"password\": \"password\"}"))
 			
 			.andExpect (MockMvcResultMatchers.status ().isBadRequest ())
 			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new InvalidValueException ("Invalid user")))));
+
 	}
 	
 	@Test
