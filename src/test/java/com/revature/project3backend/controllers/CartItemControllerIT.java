@@ -77,16 +77,20 @@ class CartItemControllerIT {
         body.setQuantity(2);
         MockHttpSession httpSession = new MockHttpSession();
         httpSession.setAttribute("user", users.get(1)); // User 2
+
         Mockito.when(productService.getProduct(body.getProductId())).thenReturn(products.get(1));  // Java II
+
         List<CartItem> newCart = new ArrayList<>();
         CartItem cartItem = new CartItem(users.get(1), products.get(1), 2);
         newCart.add(cartItem);
+
         mvc.perform(MockMvcRequestBuilders.post ("/cartitem")
-                .contentType(MediaType.APPLICATION_JSON)
-                .session(httpSession)
-                .content(json.writeValueAsString(body)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse("Added to cart", true))));
+             .contentType(MediaType.APPLICATION_JSON)
+             .session(httpSession)
+             .content(json.writeValueAsString(body)))
+             .andExpect(MockMvcResultMatchers.status().isOk())
+             .andExpect(MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse("Added to cart", true))));
+
         Mockito.verify(cartItemService).createCartItem(cartItem);
         Mockito.verify(userService).addToCart (users.get(1), cartItem);
     }
@@ -98,12 +102,14 @@ class CartItemControllerIT {
         body.setQuantity(2);
         MockHttpSession httpSession = new MockHttpSession();
         //httpSession.setAttribute("user", users.get(1)); // User 2, on purpose DON'T set it so its null
+
         mvc.perform (MockMvcRequestBuilders.post ("/cartitem")
-                .contentType (MediaType.APPLICATION_JSON)
-                .session(httpSession)
-                .content (json.writeValueAsString(body)))
-                .andExpect (MockMvcResultMatchers.status().is4xxClientError()) //isBadRequest ())
-                .andExpect (MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse(new UnauthorizedException(), "/login"))));
+             .contentType (MediaType.APPLICATION_JSON)
+             .session(httpSession)
+             .content (json.writeValueAsString(body)))
+             .andExpect (MockMvcResultMatchers.status().is4xxClientError()) //isBadRequest ())
+             .andExpect (MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse(new UnauthorizedException(), "/login"))));
+
         Mockito.verify(productService, Mockito.never()).getProduct(Mockito.any());
         Mockito.verify(cartItemService, Mockito.never()).createCartItem(Mockito.any());
         Mockito.verify(userService, Mockito.never()).addToCart(Mockito.any(), Mockito.any());
@@ -116,12 +122,13 @@ class CartItemControllerIT {
         body.setQuantity(2);
         MockHttpSession httpSession = new MockHttpSession();
         httpSession.setAttribute("user", users.get(2));
+
         mvc.perform (MockMvcRequestBuilders.post ("/cartitem")
-                        .contentType (MediaType.APPLICATION_JSON)
-                        .session(httpSession)
-                        .content (json.writeValueAsString(body)))
-                .andExpect (MockMvcResultMatchers.status().isBadRequest ())
-                .andExpect (MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse(new InvalidValueException ("Invalid product id")))));
+             .contentType (MediaType.APPLICATION_JSON)
+             .session(httpSession)
+             .content (json.writeValueAsString(body)))
+             .andExpect (MockMvcResultMatchers.status().isBadRequest ())
+             .andExpect (MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse(new InvalidValueException ("Invalid product id")))));
         Mockito.verify(productService, Mockito.never()).getProduct(Mockito.any());
         Mockito.verify(cartItemService, Mockito.never()).createCartItem(Mockito.any());
         Mockito.verify(userService, Mockito.never()).addToCart(Mockito.any(), Mockito.any());
@@ -134,12 +141,14 @@ class CartItemControllerIT {
         //body.setQuantity(2); // If we don't set it quantity will be null
         MockHttpSession httpSession = new MockHttpSession();
         httpSession.setAttribute("user", users.get(0));
+
         mvc.perform (MockMvcRequestBuilders.post ("/cartitem")
-                        .contentType (MediaType.APPLICATION_JSON)
-                        .session(httpSession)
-                        .content (json.writeValueAsString(body)))
-                .andExpect (MockMvcResultMatchers.status().isBadRequest ())
-                .andExpect (MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse(new InvalidValueException ("Invalid quantity")))));
+             .contentType (MediaType.APPLICATION_JSON)
+             .session(httpSession)
+             .content (json.writeValueAsString(body)))
+             .andExpect (MockMvcResultMatchers.status().isBadRequest ())
+             .andExpect (MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse(new InvalidValueException ("Invalid quantity")))));
+
         Mockito.verify(productService, Mockito.never()).getProduct(Mockito.any());
         Mockito.verify(cartItemService, Mockito.never()).createCartItem(Mockito.any());
         Mockito.verify(userService, Mockito.never()).addToCart(Mockito.any(), Mockito.any());
@@ -158,6 +167,7 @@ class CartItemControllerIT {
                         .content (json.writeValueAsString(body)))
                 .andExpect (MockMvcResultMatchers.status().isBadRequest ())
                 .andExpect (MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse(new InvalidValueException ("Invalid quantity")))));
+
         Mockito.verify(productService, Mockito.never()).getProduct(Mockito.any());
         Mockito.verify(cartItemService, Mockito.never()).createCartItem(Mockito.any());
         Mockito.verify(userService, Mockito.never()).addToCart(Mockito.any(), Mockito.any());
@@ -180,11 +190,12 @@ class CartItemControllerIT {
         users.get(1).setCart(cartItems);	// Set user 2's cart to contain existing items (just the Java II course)
 
         mvc.perform (MockMvcRequestBuilders.post ("/cartitem")
-                        .contentType (MediaType.APPLICATION_JSON)
-                        .session(httpSession)
-                        .content (json.writeValueAsString(body)))
-                .andExpect (MockMvcResultMatchers.status().isBadRequest ())
-                .andExpect (MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse(new InvalidValueException ("Invalid product id")))));
+             .contentType (MediaType.APPLICATION_JSON)
+             .session(httpSession)
+             .content (json.writeValueAsString(body)))
+             .andExpect (MockMvcResultMatchers.status().isBadRequest ())
+             .andExpect (MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse(new InvalidValueException ("Invalid product id")))));
+
         Mockito.verify(productService, Mockito.never()).getProduct(Mockito.any());
         Mockito.verify(cartItemService, Mockito.never()).createCartItem(Mockito.any());
         Mockito.verify(userService, Mockito.never()).addToCart(Mockito.any(), Mockito.any());
@@ -204,16 +215,17 @@ class CartItemControllerIT {
         // Jackson + mockMvc
         User user2Clone = new User (2, "User", "2", "email2", "username22425", "password", new ArrayList <> (), new ArrayList <> (), new UserRole (2, "USER"));
         cartItems.add(new CartItem(user2Clone, products.get(1), 2)); // pre-populate with existing item Java II
-        users.get(1).setCart(cartItems);
+        users.get(1).setCart(cartItems);    // User 2
 
         Mockito.when(productService.getProduct(body.getProductId())).thenReturn(products.get(3));  // Python II
 
         mvc.perform (MockMvcRequestBuilders.post ("/cartitem")
-                        .contentType (MediaType.APPLICATION_JSON)
-                        .session(httpSession)
-                        .content (json.writeValueAsString(body)))
-                .andExpect (MockMvcResultMatchers.status().isBadRequest ())
-                .andExpect (MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse(new InvalidValueException ("Invalid quantity")))));
+             .contentType (MediaType.APPLICATION_JSON)
+             .session(httpSession)
+             .content (json.writeValueAsString(body)))
+             .andExpect (MockMvcResultMatchers.status().isBadRequest ())
+             .andExpect (MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse(new InvalidValueException ("Invalid quantity")))));
+
         Mockito.verify(cartItemService, Mockito.never()).createCartItem(Mockito.any());
         Mockito.verify(userService, Mockito.never()).addToCart(Mockito.any(), Mockito.any());
     }
@@ -227,41 +239,215 @@ class CartItemControllerIT {
         cart.add(new CartItem(user3, products.get(1), 2)); // pre-populate with existing item Java II
         cart.add(new CartItem(user3, products.get(2), 3)); // pre-populate with existing item Python I
         users.get(2).setCart(cart);	// User 3
+
         MockHttpSession httpSession = new MockHttpSession();
         httpSession.setAttribute("user", users.get(2)); // User 3
+
         mvc.perform (MockMvcRequestBuilders.get ("/cartitem")
-                        .contentType (MediaType.APPLICATION_JSON)
-                        .session(httpSession))
-                        //.content (json.writeValueAsString(body))) // no body for this one
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse ("Got " + cart.size () + " cart items", true, cart))));
+             .contentType (MediaType.APPLICATION_JSON)
+             .session(httpSession))
+             //.content (json.writeValueAsString(body))) // no body for this one
+             .andExpect(MockMvcResultMatchers.status().isOk())
+             .andExpect(MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse ("Got " + cart.size () + " cart items", true, cart))));
     }
 
     @Test
-    void getCartItemsWhenNotLoggedIn () {
+    void getCartItemsWhenNotLoggedIn () throws Exception {
+        MockHttpSession httpSession = new MockHttpSession ();
+        mvc.perform (MockMvcRequestBuilders.get ("/cartitem")
+             .contentType (MediaType.APPLICATION_JSON)
+             .session(httpSession))
+             //.content (json.writeValueAsString(body))) // no body for this one
+             .andExpect (MockMvcResultMatchers.status().is4xxClientError()) //isBadRequest ())
+             .andExpect (MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse(new UnauthorizedException(), "/login"))));
     }
 
     @Test
-    void updateCartItemWhenQuantityIsNull () {
+    void updateCartItem () throws Exception {
+        int cartItemId = 2;
+        int quantity = 4;
+
+        UpdateCartItemBody body = new UpdateCartItemBody ();
+        body.setQuantity (quantity);
+
+        // pre-populate cart for user 1
+        List <CartItem> cart = new ArrayList <> ();
+        // User 1 clone leave blanked out the cart property to avoid infinite recursive loop it's probably an idiosyncrasy with
+        // Jackson + mockMvc
+        User user1Clone = new User(1, "User", "1", "email1", "username13123", "password", new ArrayList<>(), new ArrayList <> (), new UserRole(2, "USER"));
+        cart.add (new CartItem (1, user1Clone, products.get (1), 2)); // pre-populate with existing item Java II
+        cart.add (new CartItem (2, user1Clone, products.get (2), 3)); // pre-populate with existing item Python I
+        users.get (0).setCart (cart);    // User 1
+
+        MockHttpSession httpSession = new MockHttpSession ();
+        httpSession.setAttribute ("user", users.get (0)); // User 1
+        mvc.perform(MockMvcRequestBuilders.put ("/cartitem/"+String.valueOf(cartItemId))
+             .contentType(MediaType.APPLICATION_JSON)
+             .session(httpSession)
+             .content(json.writeValueAsString(body)))
+             .andExpect(MockMvcResultMatchers.status().isOk())
+             .andExpect(MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse ("Updated cart item quantity", true))));
+
+        Mockito.verify (cartItemService).updateCartItem(cartItemId, body.getQuantity());
     }
 
     @Test
-    void updateCartItemWhenQuantityIsHigherThanStock () {
+    void updateCartItemWhenNotLoggedIn () throws Exception {
+        int cartItemId = 1;
+        UpdateCartItemBody body = new UpdateCartItemBody ();
+        body.setQuantity(3);
+        MockHttpSession httpSession = new MockHttpSession ();
+        mvc.perform(MockMvcRequestBuilders.put ("/cartitem/"+String.valueOf(cartItemId))
+             .contentType(MediaType.APPLICATION_JSON)
+             .session(httpSession)
+             .content(json.writeValueAsString(body)))
+             .andExpect(MockMvcResultMatchers.status().is4xxClientError()) //isBadRequest ())
+             .andExpect(MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse(new UnauthorizedException(), "/login"))));
+
+        Mockito.verify (cartItemService, Mockito.never ()).updateCartItem(Mockito.any(), Mockito.any());
     }
 
     @Test
-    void updateCartItemWhenItemIsNotInCart () {
+    void updateCartItemWhenQuantityIsNull () throws Exception {
+        int cartItemId = 1;
+        UpdateCartItemBody body = new UpdateCartItemBody ();
+        // no quantity set so quantity is null
+        MockHttpSession httpSession = new MockHttpSession ();
+        httpSession.setAttribute("user", users.get(0)); // User 1
+        mvc.perform(MockMvcRequestBuilders.put ("/cartitem/"+String.valueOf(cartItemId))
+             .contentType(MediaType.APPLICATION_JSON)
+             .session(httpSession)
+             .content(json.writeValueAsString(body)))
+             .andExpect(MockMvcResultMatchers.status().isBadRequest ())
+             .andExpect(MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse(new InvalidValueException ("Invalid quantity")))));
+
+        Mockito.verify (cartItemService, Mockito.never ()).updateCartItem(Mockito.any(), Mockito.any());
     }
 
     @Test
-    void deleteCartItem () throws InvalidValueException, UnauthorizedException {
+    void updateCartItemWhenQuantityIsHigherThanStock () throws Exception {
+        MockHttpSession httpSession = new MockHttpSession ();
+        httpSession.setAttribute ("user", users.get (0)); // User 1
+
+        UpdateCartItemBody body = new UpdateCartItemBody ();
+        body.setQuantity (6);    // Stock of cart item id=2, product Python I
+
+        // pre-populate cart for user 1
+        List <CartItem> cart = new ArrayList <> ();
+        // User 1 clone leave blanked out the cart property to avoid infinite recursive loop it's probably an idiosyncrasy with
+        // Jackson + mockMvc
+        User user1Clone = new User(1, "User", "1", "email1", "username13123", "password", new ArrayList<>(), new ArrayList <> (), new UserRole(2, "USER"));
+        cart.add (new CartItem (1, user1Clone, products.get (1), 2)); // pre-populate with existing item Java II
+        cart.add (new CartItem (2, user1Clone, products.get (2), 3)); // pre-populate with existing item Python I
+        users.get (0).setCart (cart);    // User 1
+
+        int cartItemId = 2;
+        mvc.perform(MockMvcRequestBuilders.put ("/cartitem/"+String.valueOf(cartItemId))
+             .contentType(MediaType.APPLICATION_JSON)
+             .session(httpSession)
+             .content(json.writeValueAsString(body)))
+             .andExpect(MockMvcResultMatchers.status().isBadRequest ())
+             .andExpect(MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse(new InvalidValueException ("Invalid quantity")))));
+
+        Mockito.verify (cartItemService, Mockito.never ()).updateCartItem(Mockito.any(), Mockito.any());
     }
 
     @Test
-    void deleteCartItemWhenNotLoggedIn () {
+    void updateCartItemWhenItemIsNotInCart () throws Exception {
+        MockHttpSession httpSession = new MockHttpSession ();
+
+        httpSession.setAttribute ("user", users.get (0)); // User 1
+
+        UpdateCartItemBody body = new UpdateCartItemBody ();
+
+        body.setQuantity (6);    // Stock of cart item id=2, product Python I
+
+        // pre-populate cart for user 1
+        List <CartItem> cart = new ArrayList <> ();
+        // User 1 clone leave blanked out the cart property to avoid infinite recursive loop it's probably an idiosyncrasy with
+        // Jackson + mockMvc
+        User user1Clone = new User(1, "User", "1", "email1", "username13123", "password", new ArrayList<>(), new ArrayList <> (), new UserRole(2, "USER"));
+        cart.add (new CartItem (1, user1Clone, products.get (1), 2)); // pre-populate with existing item Java II
+        cart.add (new CartItem (2, user1Clone, products.get (2), 3)); // pre-populate with existing item Python I
+        users.get (0).setCart (cart);    // User 1
+
+        int cartItemId = 3; // This cart item does not appear in cart
+        mvc.perform(MockMvcRequestBuilders.put ("/cartitem/"+String.valueOf(cartItemId))
+             .contentType(MediaType.APPLICATION_JSON)
+             .session(httpSession)
+             .content(json.writeValueAsString(body)))
+             .andExpect(MockMvcResultMatchers.status().isBadRequest ())
+             .andExpect(MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse(new InvalidValueException ("Invalid cart item id")))));
+
+        Mockito.verify (cartItemService, Mockito.never ()).updateCartItem(Mockito.any(), Mockito.any());
     }
 
     @Test
-    void deleteCartItemWhenItemIsNotInCart () {
+    void deleteCartItem () throws Exception {
+        MockHttpSession httpSession = new MockHttpSession ();
+
+        httpSession.setAttribute ("user", users.get (0)); // User 1
+
+        // pre-populate cart for user 1
+        List <CartItem> cart = new ArrayList <> ();
+        // User 1 clone leave blanked out the cart property to avoid infinite recursive loop it's probably an idiosyncrasy with
+        // Jackson + mockMvc
+        User user1Clone = new User(1, "User", "1", "email1", "username13123", "password", new ArrayList<>(), new ArrayList <> (), new UserRole(2, "USER"));
+        cart.add (new CartItem (1, user1Clone, products.get (1), 2)); // pre-populate with existing item Java II
+        cart.add (new CartItem (2, user1Clone, products.get (2), 3)); // pre-populate with existing item Python I
+
+        users.get (0).setCart (cart);    // User 1
+
+        CartItem cartItemToDelete = new CartItem (2, user1Clone, products.get (2), 3); // clone of second cart item Python I
+
+        int cartItemId = 2;
+        mvc.perform(MockMvcRequestBuilders.delete ("/cartitem/"+String.valueOf(cartItemId))
+             .contentType(MediaType.APPLICATION_JSON)
+             .session(httpSession))
+             //.content(json.writeValueAsString(body))) // no body for delete
+             .andExpect(MockMvcResultMatchers.status().isOk())
+             .andExpect(MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse ("Deleted cart item", true))));
+
+        Mockito.verify(userService).removeFromCart(users.get(0), cartItemToDelete);
+    }
+
+    @Test
+    void deleteCartItemWhenNotLoggedIn () throws Exception {
+        MockHttpSession httpSession = new MockHttpSession ();
+
+        int cartItemId = 2;
+        mvc.perform(MockMvcRequestBuilders.delete ("/cartitem/"+String.valueOf(cartItemId))
+             .contentType(MediaType.APPLICATION_JSON)
+             .session(httpSession))
+             //.content(json.writeValueAsString(body))) // no body for delete
+             .andExpect(MockMvcResultMatchers.status().is4xxClientError())
+             .andExpect(MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse(new UnauthorizedException(), "/login"))));
+
+        Mockito.verify(userService, Mockito.never()).removeFromCart(Mockito.any (), Mockito.any ());
+    }
+
+    @Test
+    void deleteCartItemWhenItemIsNotInCart () throws Exception {
+        MockHttpSession httpSession = new MockHttpSession ();
+        httpSession.setAttribute ("user", users.get (2)); // User 3
+
+        // pre-populate cart for user 3
+        List <CartItem> cart = new ArrayList <> ();
+        // User 3 clone leave blanked out the cart property to avoid infinite recursive loop it's probably an idiosyncrasy with
+        // Jackson + mockMvc
+        User user3Clone = new User (3, "User", "3", "email3", "username32323", "password", new ArrayList <> (), new ArrayList <> (), new UserRole (2, "USER"));
+        cart.add (new CartItem (1, user3Clone, products.get (1), 2)); // pre-populate with existing item Java II
+        cart.add (new CartItem (2, user3Clone, products.get (2), 3)); // pre-populate with existing item Python I
+        users.get (2).setCart (cart);    // User 3
+
+        int cartItemId = 3; // No such cart item 3 in cart
+        mvc.perform(MockMvcRequestBuilders.delete ("/cartitem/"+String.valueOf(cartItemId))
+             .contentType(MediaType.APPLICATION_JSON)
+             .session(httpSession))
+             //.content(json.writeValueAsString(body))) // no body for delete
+             .andExpect(MockMvcResultMatchers.status().is4xxClientError())
+             .andExpect(MockMvcResultMatchers.content().json(json.writeValueAsString (new JsonResponse(new InvalidValueException ("Invalid cart item id")))));
+
+        Mockito.verify(userService, Mockito.never()).removeFromCart(Mockito.any (), Mockito.any ());
     }
 }
