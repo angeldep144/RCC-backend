@@ -4,6 +4,7 @@ import com.revature.project3backend.models.CartItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Repository for Crud actions of Cart items to Database
+ * CartItemRepo is the repository for cart items
  */
-public interface CartItemRepo extends JpaRepository <CartItem, Integer> {}
+public interface CartItemRepo extends JpaRepository <CartItem, Integer> {
+}

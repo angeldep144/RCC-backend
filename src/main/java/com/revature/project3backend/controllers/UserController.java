@@ -11,15 +11,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * The UserController handles requests concerning users
+ * UserController handles requests concerning users
  */
 @RestController
 @RequestMapping ("user")
 @CrossOrigin (origins = "http://localhost:4200/", allowCredentials = "true")
 public class UserController {
+	/**
+	 * The instance of UserService to use
+	 */
 	private final UserService userService;
+	
+	/**
+	 * The instance of RoleService to use
+	 */
 	private final RoleService roleService;
 	
+	/**
+	 * This constructor is automatically called by Spring
+	 *
+	 * @param userService The instance of UserService to use
+	 * @param roleService The instance of RoleService to use
+	 */
 	@Autowired
 	public UserController (UserService userService, RoleService roleService) {
 		this.userService = userService;
@@ -27,11 +40,11 @@ public class UserController {
 	}
 
 	/**
-	 * Create user just calls the userService createUser method and then returns with a response entity
+	 * Creates a user
 	 *
-	 * @param body The body variable contains Strings (firstName, lastName, username, password, email)
-	 * @return A response entity that holds a Json response with the message, boolean, object, redirect.
-	 * @throws InvalidValueException is here because the userService can throw the exception to this method
+	 * @param body The data to use to create the user, contains a first name, last name, email, username, and password
+	 * @return A ResponseEntity used to create the HTTP response, redirects to /login
+	 * @throws InvalidValueException Thrown when validation fails
 	 */
 	@PostMapping
 	public ResponseEntity <JsonResponse> createUser (@RequestBody User body) throws InvalidValueException {
@@ -53,13 +66,14 @@ public class UserController {
 			throw new InvalidValueException ("Invalid email");
 		}
 		
+		//create user
+		
 		UserRole role = this.roleService.getRoleByName ("USER");
 		
 		body.setRole (role);
 		
-		//create user
-		User user = this.userService.createUser (body);
+		userService.createUser (body);
 		
-		return ResponseEntity.ok (new JsonResponse ("Created user", true, user, "/login"));
+		return ResponseEntity.ok (new JsonResponse ("Created user", true, null, "/login"));
 	}
 }

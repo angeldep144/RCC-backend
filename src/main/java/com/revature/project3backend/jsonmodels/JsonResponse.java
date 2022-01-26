@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 
 /**
  * JsonResponse is used to send responses in a consistent format to clients
- * A JsonResponse instance has a message string, success boolean, data object, and redirect string 
+ * A JsonResponse instance has a message string, success boolean, data object, and redirect string
  */
 @NoArgsConstructor
 @Data
@@ -41,6 +41,7 @@ public class JsonResponse {
 	
 	/**
 	 * This constructor allows easily creating a JsonResponse with just an exception. It sets the message to the message of the exception, and sets the success value to false
+	 *
 	 * @param exception The exception to set the message from
 	 */
 	public JsonResponse (Exception exception) {
@@ -49,6 +50,7 @@ public class JsonResponse {
 	
 	/**
 	 * This constructor takes in an exception and a redirect. It sets the message to the message of the exception, sets success to false, and allows setting a redirect path
+	 *
 	 * @param exception The exception to set the message from
 	 * @param redirect The path to redirect the client to
 	 */
@@ -58,6 +60,7 @@ public class JsonResponse {
 	
 	/**
 	 * This constructor allows easily creating a JsonResponse with just an exception. It sets the message to the message of the exception, and sets the success value to false
+	 *
 	 * @param message The message to use
 	 * @param success The success value to use
 	 */
@@ -67,6 +70,7 @@ public class JsonResponse {
 	
 	/**
 	 * This constructor takes in a message, success value, and an object to use for the response's data
+	 *
 	 * @param message The message to use
 	 * @param success The success value to use
 	 * @param data The data object to use
@@ -77,6 +81,7 @@ public class JsonResponse {
 	
 	/**
 	 * This constructor takes in all arguments for the JsonResponse. It is called by all the other constructors in the class. It sets each value of the JsonResponse, and logs the JsonResponse's contents
+	 *
 	 * @param message The message to use
 	 * @param success The success value to use
 	 * @param data The data object to use

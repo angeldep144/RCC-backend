@@ -3,18 +3,23 @@ package com.revature.project3backend.repositories;
 import com.revature.project3backend.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/**
+ * UserRepo is the repository for users
+ */
 public interface UserRepo extends JpaRepository <User, Integer> {
 	/**
+	 * Gets a user given their username
 	 *
-	 * @param username a string that will search the database in the Users table for a matching value in the username column
-	 * @return The user found in the database and if none is found it will return null
+	 * @param username The username to use to get the user
+	 * @return The found user
 	 */
 	User findByUsername (String username);
-
+	
 	/**
+	 * Gets a user given their email
 	 *
-	 * @param email a string that will search the database in the Users table for a matching value in the emails column
-	 * @return The user found in the database and if none is found it will return null
+	 * @param email The email to use to get the user
+	 * @return The found user
 	 */
 	User findByEmail (String email);
 }
