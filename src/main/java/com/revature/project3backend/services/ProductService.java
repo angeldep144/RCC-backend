@@ -58,7 +58,15 @@ public class ProductService {
 	 * @param file    The new image for the product if desired.
 	 * @return The updated product.
 	 */
-	public Product updateProduct (Product product, MultipartFile file) {
+	public Product updateProduct (Product product, MultipartFile file) throws InvalidValueException {
+		if(product.getName() == null){
+			throw new InvalidValueException("No product name");
+		}
+
+		if(product.getDescription() == null){
+			throw new InvalidValueException("No product description");
+		}
+
 		if (file != null) {
 			product.setImageUrl (FileUtil.uploadToS3 (product, file));
 		}
@@ -76,6 +84,14 @@ public class ProductService {
 	 * @throws InvalidValueException when price or sales price is less than 0, or sales price is greater than original price
 	 */
 	public Product createProduct (Product product, MultipartFile file) throws InvalidValueException {
+		if(product.getName() == null){
+			throw new InvalidValueException("No product name");
+		}
+
+		if(product.getDescription() == null){
+			throw new InvalidValueException("No product description");
+		}
+
 		if (file != null) {
 			product.setImageUrl (FileUtil.uploadToS3 (product, file));
 		}

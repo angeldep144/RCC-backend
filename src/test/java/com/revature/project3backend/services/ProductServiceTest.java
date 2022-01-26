@@ -3,12 +3,18 @@ package com.revature.project3backend.services;
 import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.models.Product;
 import com.revature.project3backend.repositories.ProductRepo;
+import com.revature.project3backend.utils.FileUtil;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,8 +25,54 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class ProductServiceTest {
 	ProductRepo productRepo = Mockito.mock (ProductRepo.class);
 	ProductService productService;
+	MultipartFile mf = null;
 	
 	List <Product> products = new ArrayList <> ();
+
+	@BeforeEach
+	void beforeEach(){
+		mf = new MultipartFile() {
+			@Override
+			public String getName() {
+				return null;
+			}
+
+			@Override
+			public String getOriginalFilename() {
+				return "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png";
+			}
+
+			@Override
+			public String getContentType() {
+				return null;
+			}
+
+			@Override
+			public boolean isEmpty() {
+				return false;
+			}
+
+			@Override
+			public long getSize() {
+				return 0;
+			}
+
+			@Override
+			public byte[] getBytes() throws IOException {
+				return new byte[0];
+			}
+
+			@Override
+			public InputStream getInputStream() throws IOException {
+				return null;
+			}
+
+			@Override
+			public void transferTo(File dest) throws IOException, IllegalStateException {
+
+			}
+		};
+	}
 	
 	public ProductServiceTest () {
 		this.productService = new ProductService (this.productRepo);
@@ -91,5 +143,78 @@ class ProductServiceTest {
 		assertEquals (stock, product.getStock ());
 		
 		Mockito.verify (productRepo, Mockito.never ()).save (Mockito.any ());
+	}
+
+	@Test
+	void createProductWithValidInputAndFile() throws InvalidValueException {
+		Product product = new Product (1, "name", "description", 10F, null, null, null);
+
+		Mockito.mockStatic(FileUtil.class);
+		Mockito.when(FileUtil.uploadToS3(product, this.mf)).thenReturn("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
+		Mockito.when(productRepo.save(product)).thenReturn(product);
+
+		Product actualResult = productService.createProduct(product, this.mf);
+		product.setImageUrl("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
+
+		assertEquals(product, actualResult);
+	}
+
+	@Test
+	void createProductWithValidInputNoFile() throws InvalidValueException {
+		Product product = new Product (1, "name", "description", 10F, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", null, null);
+
+		Mockito.when(productRepo.save(product)).thenReturn(product);
+
+		Product actualResult = productService.createProduct(product, null);
+
+		assertEquals(product, actualResult);
+	}
+
+	@Test
+	void createProductWithNegativePrice() throws InvalidValueException {
+		Product product = new Product (1, "name", "description", -(10F), "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", null, null);
+
+		String expectedResult = "Error! Price cannot be less than 0";
+		String actualResult = null;
+
+		try {
+			productService.createProduct(product, null);
+		} catch (InvalidValueException e) {
+			actualResult = e.getMessage();
+		}
+
+		assertEquals(expectedResult, actualResult);
+	}
+
+	@Test
+	void createProductWithNegativeSalePrice() throws InvalidValueException {
+		Product product = new Product (1, "name", "description", 10F, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", -(10F), null);
+
+		String expectedResult = "Error! Sale price cannot be less than 0";
+		String actualResult = null;
+
+		try {
+			productService.createProduct(product, null);
+		} catch (InvalidValueException e) {
+			actualResult = e.getMessage();
+		}
+
+		assertEquals(expectedResult, actualResult);
+	}
+
+	@Test
+	void createProductWithSalePriceGreaterThanPrice() throws InvalidValueException {
+		Product product = new Product (1, "name", "description", 10F, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 40F, null);
+
+		String expectedResult = "Error! Sales price cannot be greater than original price";
+		String actualResult = null;
+
+		try {
+			productService.createProduct(product, null);
+		} catch (InvalidValueException e) {
+			actualResult = e.getMessage();
+		}
+
+		assertEquals(expectedResult, actualResult);
 	}
 }
