@@ -4,6 +4,7 @@ import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.exceptions.UnauthorizedException;
 import com.revature.project3backend.jsonmodels.CreateCartItemBody;
 import com.revature.project3backend.jsonmodels.JsonResponse;
+import com.revature.project3backend.jsonmodels.UpdateCartItemBody;
 import com.revature.project3backend.models.CartItem;
 import com.revature.project3backend.models.Product;
 import com.revature.project3backend.models.User;
@@ -22,8 +23,10 @@ import org.springframework.mock.web.MockHttpSession;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doAnswer;
 
 class CartItemControllerTest {
     private final CartItemRepo cartItemRepo = Mockito.mock(CartItemRepo.class);
@@ -64,140 +67,278 @@ class CartItemControllerTest {
     }
 	
 	@Test
-	void createCartItem () {
-		
+	void createCartItem () throws InvalidValueException, UnauthorizedException {
+		CreateCartItemBody body = new CreateCartItemBody();
+		body.setProductId(2);    // Java II
+		body.setQuantity(2);
+		MockHttpSession httpSession = new MockHttpSession();
+		httpSession.setAttribute("user", users.get(1)); // User 2
+		Mockito.when(productRepo.findById(2)).thenReturn(java.util.Optional.of(products.get(1)));   // Java II
+		List<CartItem> newCart = new ArrayList<>();
+		CartItem cartItem = new CartItem(users.get(1), products.get(1), 2);
+		newCart.add(cartItem);
+		assertEquals(ResponseEntity.ok (new JsonResponse("Added to cart", true)),
+				cartItemController.createCartItem(body, httpSession));
+		assertEquals(newCart, users.get(1).getCart());
+		Mockito.verify(cartItemRepo, Mockito.times(1)).save(cartItem);
+		Mockito.verify(userRepo, Mockito.times(1)).save (users.get(1));
 	}
 	
 	@Test
 	void createCartItemWhenNotLoggedIn () {
-		
+		CreateCartItemBody body = new CreateCartItemBody();
+		body.setProductId(2);    // Java II
+		body.setQuantity(2);
+		MockHttpSession httpSession = new MockHttpSession();
+		// Mock the session but don't set the session attribute in other words user will be null
+		//httpSession.setAttribute("user", users.get(1));
+		UnauthorizedException exception = assertThrows(UnauthorizedException.class, () -> cartItemController.createCartItem(body, httpSession));
+		assertEquals("Error! Unauthorized", exception.getMessage());
+		Mockito.verify(productRepo, Mockito.never()).findById(Mockito.any());
+		Mockito.verify(cartItemRepo, Mockito.never()).save(Mockito.any());
+		Mockito.verify(userRepo, Mockito.never()).save(Mockito.any());
 	}
 	
 	@Test
 	void createCartItemWhenProductIdIsNull () {
-		
+		CreateCartItemBody body = new CreateCartItemBody();
+		//body.setProductId(2); // If we don't set it product id will be null
+		body.setQuantity(2);
+		MockHttpSession httpSession = new MockHttpSession();
+		httpSession.setAttribute("user", users.get(2));
+		InvalidValueException exception = assertThrows(InvalidValueException.class, () -> cartItemController.createCartItem(body, httpSession));
+		assertEquals("Error! Invalid product id", exception.getMessage());
+		Mockito.verify(productRepo, Mockito.never()).findById(Mockito.any());
+		Mockito.verify(cartItemRepo, Mockito.never()).save(Mockito.any());
+		Mockito.verify(userRepo, Mockito.never()).save(Mockito.any());
 	}
 	
 	@Test
 	void createCartItemWhenQuantityIsNull () {
-		
+		CreateCartItemBody body = new CreateCartItemBody();
+		body.setProductId(2); // Java II
+		//body.setQuantity(2); // If we don't set it quantity will be null
+		MockHttpSession httpSession = new MockHttpSession();
+		httpSession.setAttribute("user", users.get(0));
+		InvalidValueException exception = assertThrows(InvalidValueException.class, () -> cartItemController.createCartItem(body, httpSession));
+		assertEquals("Error! Invalid quantity", exception.getMessage());
+		Mockito.verify(productRepo, Mockito.never()).findById(Mockito.any());
+		Mockito.verify(cartItemRepo, Mockito.never()).save(Mockito.any());
+		Mockito.verify(userRepo, Mockito.never()).save(Mockito.any());
 	}
 	
 	@Test
 	void createCartItemWhenQuantityIsLessThanOne () {
-		
+		CreateCartItemBody body = new CreateCartItemBody();
+		body.setProductId(2); // Java II
+		body.setQuantity(0);  // Set quantity to invalid value e.g. < 1
+		MockHttpSession httpSession = new MockHttpSession();
+		httpSession.setAttribute("user", users.get(0));
+		InvalidValueException exception = assertThrows(InvalidValueException.class, () -> cartItemController.createCartItem(body, httpSession));
+		assertEquals("Error! Invalid quantity", exception.getMessage());
+		Mockito.verify(productRepo, Mockito.never()).findById(Mockito.any());
+		Mockito.verify(cartItemRepo, Mockito.never()).save(Mockito.any());
+		Mockito.verify(userRepo, Mockito.never()).save(Mockito.any());
 	}
 	
 	@Test
 	void createCartItemWhenItemIsAlreadyInCart () {
-		
+		CreateCartItemBody body = new CreateCartItemBody();
+		body.setProductId(2);    // Java II
+		body.setQuantity(5);
+		MockHttpSession httpSession = new MockHttpSession();
+		httpSession.setAttribute("user", users.get(1)); // User 2
+
+		// Pre-populate user 2's cart with existing cart items which already contains Java II course
+		List<CartItem> cartItems = new ArrayList<>();
+		cartItems.add(new CartItem(users.get(1), products.get(1), 2)); // pre-populate with existing item Java II
+		users.get(1).setCart(cartItems);	// Set user 2's cart to contain existing items (just the Java II course)
+
+		InvalidValueException exception = assertThrows(InvalidValueException.class, () -> cartItemController.createCartItem(body, httpSession));
+		assertEquals("Error! Invalid product id", exception.getMessage());
+		Mockito.verify(productRepo, Mockito.never()).findById(Mockito.any());
+		Mockito.verify(cartItemRepo, Mockito.never()).save(Mockito.any());
+		Mockito.verify(userRepo, Mockito.never()).save(Mockito.any());
 	}
 	
 	@Test
 	void createCartItemWhenQuantityIsHigherThanStock () {
-		
+		CreateCartItemBody body = new CreateCartItemBody();
+		body.setProductId(4);    	// Python II
+		body.setQuantity(6);		// Existing stock of Python II course is 5 on purpose exceed it for test
+		MockHttpSession httpSession = new MockHttpSession();
+		httpSession.setAttribute("user", users.get(1)); // User 2
+
+		// Pre-populate user 2's cart with existing cart items but NOT the Java II course
+		List<CartItem> cartItems = new ArrayList<>();
+		cartItems.add(new CartItem(users.get(1), products.get(1), 2)); // pre-populate with existing item Java II
+		users.get(1).setCart(cartItems);
+
+		Mockito.when(productRepo.findById(4)).thenReturn(java.util.Optional.of(products.get(3)));   // Python II
+
+		InvalidValueException exception = assertThrows(InvalidValueException.class, () -> cartItemController.createCartItem(body, httpSession));
+		assertEquals("Error! Invalid quantity", exception.getMessage());
+		Mockito.verify(cartItemRepo, Mockito.never()).save(Mockito.any());
+		Mockito.verify(userRepo, Mockito.never()).save(Mockito.any());
 	}
 	
 	@Test
-	void getCartItems () {
-		
+	void getCartItems () throws UnauthorizedException {
+		List<CartItem> cart = new ArrayList<>();
+		cart.add(new CartItem(users.get(2), products.get(1), 2)); // pre-populate with existing item Java II
+		cart.add(new CartItem(users.get(2), products.get(2), 3)); // pre-populate with existing item Python I
+		users.get(2).setCart(cart);	// User 3
+		MockHttpSession httpSession = new MockHttpSession();
+		httpSession.setAttribute("user", users.get(2)); // User 3
+		ResponseEntity<JsonResponse> getCartItemsResponse = cartItemController.getCartItems(httpSession);
+		assertEquals(ResponseEntity.ok (new JsonResponse ("Got " + cart.size () + " cart items", true, cart)),
+				getCartItemsResponse);
+		assertEquals(cart, (List<CartItem>) getCartItemsResponse.getBody().getData());
 	}
 	
 	@Test
 	void getCartItemsWhenNotLoggedIn () {
-		
+		MockHttpSession httpSession = new MockHttpSession();
+		//httpSession.setAttribute("user", users.get(2)); // User 3 <- If we don't set the session it's the same as them not being logged in
+		UnauthorizedException exception = assertThrows(UnauthorizedException.class, () -> cartItemController.getCartItems(httpSession));
+		assertEquals("Error! Unauthorized", exception.getMessage());
 	}
 	
 	@Test
-	void updateCartItem () {
-		
+	void updateCartItem () throws InvalidValueException, UnauthorizedException {
+		UpdateCartItemBody body = new UpdateCartItemBody();
+		body.setQuantity(4);
+
+		// pre-populate cart for user 1
+		List<CartItem> cart = new ArrayList<>();
+		cart.add(new CartItem(1, users.get(0), products.get(1), 2)); // pre-populate with existing item Java II
+		cart.add(new CartItem(2, users.get(0), products.get(2), 3)); // pre-populate with existing item Python I
+		users.get(0).setCart(cart);	// User 1
+
+		MockHttpSession httpSession = new MockHttpSession();
+		httpSession.setAttribute("user", users.get(0)); // User 1
+
+		Integer cartItemId = 2;
+		//cartItemRepo.findById (cartItemId).orElse (null);
+		Mockito.when(cartItemRepo.findById(cartItemId)).thenReturn(java.util.Optional.of(cart.get(1)));   // Python I in user's cart
+		assertEquals(ResponseEntity.ok (new JsonResponse ("Updated cart item quantity", true)),
+				cartItemController.updateCartItem(2, body, httpSession));
+		assertEquals(4, users.get(0).getCart().get(1).getQuantity());
+		Mockito.verify(cartItemRepo, Mockito.times(1)).save(cart.get(1));
 	}
 	
 	@Test
 	void updateCartItemWhenNotLoggedIn () {
-		
+		UpdateCartItemBody body = new UpdateCartItemBody();
+		body.setQuantity(3);
+		MockHttpSession httpSession = new MockHttpSession();
+		//httpSession.setAttribute("user", users.get(0)); // If we don't set it user will be null
+		UnauthorizedException exception = assertThrows(UnauthorizedException.class, () -> cartItemController.updateCartItem(1, body, httpSession));
+		assertEquals("Error! Unauthorized", exception.getMessage());
+		Mockito.verify(cartItemRepo, Mockito.never()).findById(Mockito.any());
+		Mockito.verify(cartItemRepo, Mockito.never()).save(Mockito.any());
 	}
 	
 	@Test
 	void updateCartItemWhenQuantityIsNull () {
-		
+		UpdateCartItemBody body = new UpdateCartItemBody();
+		//body.setQuantity(3);	// If quantity is not set it will be null
+		MockHttpSession httpSession = new MockHttpSession();
+		httpSession.setAttribute("user", users.get(0));
+		InvalidValueException exception = assertThrows(InvalidValueException.class, () -> cartItemController.updateCartItem(1, body, httpSession));
+		assertEquals("Error! Invalid quantity", exception.getMessage());
+		Mockito.verify(cartItemRepo, Mockito.never()).findById(Mockito.any());
+		Mockito.verify(cartItemRepo, Mockito.never()).save(Mockito.any());
 	}
 	
 	@Test
 	void updateCartItemWhenQuantityIsHigherThanStock () {
-		
+		UpdateCartItemBody body = new UpdateCartItemBody();
+		body.setQuantity(6);	// Stock of cart item id=2, product Python I
+
+		// pre-populate cart for user 1
+		List<CartItem> cart = new ArrayList<>();
+		cart.add(new CartItem(1, users.get(0), products.get(1), 2)); // pre-populate with existing item Java II
+		cart.add(new CartItem(2, users.get(0), products.get(2), 3)); // pre-populate with existing item Python I
+		users.get(0).setCart(cart);	// User 1
+
+		MockHttpSession httpSession = new MockHttpSession();
+		httpSession.setAttribute("user", users.get(0)); // User 1
+
+		InvalidValueException exception = assertThrows(InvalidValueException.class, () -> cartItemController.updateCartItem(2, body, httpSession));
+		assertEquals("Error! Invalid quantity", exception.getMessage());
+		Mockito.verify(cartItemRepo, Mockito.never()).findById(Mockito.any());
+		Mockito.verify(cartItemRepo, Mockito.never()).save(Mockito.any());
 	}
 	
 	@Test
 	void updateCartItemWhenItemIsNotInCart () {
-		
+		UpdateCartItemBody body = new UpdateCartItemBody();
+		body.setQuantity(4);
+
+		// pre-populate cart for user 1
+		List<CartItem> cart = new ArrayList<>();
+		cart.add(new CartItem(1, users.get(0), products.get(1), 2)); // pre-populate with existing item Java II
+		cart.add(new CartItem(2, users.get(0), products.get(2), 3)); // pre-populate with existing item Python I
+		users.get(0).setCart(cart);	// User 1
+
+		MockHttpSession httpSession = new MockHttpSession();
+		httpSession.setAttribute("user", users.get(0)); // User 1
+
+		// cart item id 3 does not exist in the cart
+		InvalidValueException exception = assertThrows(InvalidValueException.class, () -> cartItemController.updateCartItem(3, body, httpSession));
+		assertEquals("Error! Invalid cart item id", exception.getMessage());
+		Mockito.verify(cartItemRepo, Mockito.never()).findById(Mockito.any());
+		Mockito.verify(cartItemRepo, Mockito.never()).save(Mockito.any());
 	}
 	
 	@Test
-	void deleteCartItem () {
-		
+	void deleteCartItem () throws InvalidValueException, UnauthorizedException {
+		// pre-populate cart for user 1
+		List<CartItem> cart = new ArrayList<>();
+		cart.add(new CartItem(1, users.get(0), products.get(1), 2)); // pre-populate with existing item Java II
+		cart.add(new CartItem(2, users.get(0), products.get(2), 3)); // pre-populate with existing item Python I
+		users.get(0).setCart(cart);	// User 1
+
+		CartItem cartItemToDelete = new CartItem(2, users.get(0), products.get(2), 3); // clone of second cart item Python I
+
+		MockHttpSession httpSession = new MockHttpSession();
+		httpSession.setAttribute("user", users.get(0)); // User 1
+
+		assertEquals(ResponseEntity.ok (new JsonResponse ("Deleted cart item", true)),
+				cartItemController.deleteCartItem(2, httpSession));
+		List<CartItem> expectedResult = new ArrayList<>();
+		expectedResult.add(new CartItem(1, users.get(0), products.get(1), 2));
+
+		assertEquals(expectedResult, users.get(0).getCart());
+		Mockito.verify(cartItemRepo).delete(cartItemToDelete);	// Verify Python I course had .delete() method called on it
+		Mockito.verify(userRepo).save(users.get(0));
 	}
 	
 	@Test
 	void deleteCartItemWhenNotLoggedIn () {
-		
+		MockHttpSession httpSession = new MockHttpSession();
+		//httpSession.setAttribute("user", users.get(0)); // Not setting attribute makes user null
+		UnauthorizedException exception = assertThrows(UnauthorizedException.class, () -> cartItemController.deleteCartItem(1, httpSession));
+		assertEquals("Error! Unauthorized", exception.getMessage());
+		Mockito.verify(cartItemRepo, Mockito.never()).delete(Mockito.any());	// Verify Python I course had .delete() method called on it
+		Mockito.verify(userRepo, Mockito.never()).save(Mockito.any());
 	}
 	
 	@Test
 	void deleteCartItemWhenItemIsNotInCart () {
-		
+		// pre-populate cart for user 3
+		List<CartItem> cart = new ArrayList<>();
+		cart.add(new CartItem(1, users.get(2), products.get(1), 2)); // pre-populate with existing item Java II
+		cart.add(new CartItem(2, users.get(2), products.get(2), 3)); // pre-populate with existing item Python I
+		users.get(2).setCart(cart);	// User 1
+
+		MockHttpSession httpSession = new MockHttpSession();
+		httpSession.setAttribute("user", users.get(2)); // User 1
+		// cart item with id 3 does not exist
+		InvalidValueException exception = assertThrows(InvalidValueException.class, () -> cartItemController.deleteCartItem(3, httpSession));
+		assertEquals("Error! Invalid cart item id", exception.getMessage());
+		Mockito.verify(cartItemRepo, Mockito.never()).delete(Mockito.any());	// Verify Python I course had .delete() method called on it
+		Mockito.verify(userRepo, Mockito.never()).save(Mockito.any());
 	}
-	
-	/*
-    @Test
-    void createCartItem() throws InvalidValueException, UnauthorizedException {
-        CreateCartItemBody body = new CreateCartItemBody();
-        body.setProductId(2);    // Java II
-        body.setQuantity(2);
-        MockHttpSession httpSession = new MockHttpSession();
-        httpSession.setAttribute("user", users.get(1)); // User 2
-        Mockito.when(productRepo.findById(2)).thenReturn(java.util.Optional.of(products.get(1)));   // Java II
-        List<CartItem> newCart = new ArrayList<>();
-        CartItem cartItem = new CartItem(users.get(1), products.get(1), 2);
-        newCart.add(cartItem);
-        assertEquals(ResponseEntity.ok (new JsonResponse("Added to cart", true)),
-                cartItemController.createCartItem(body, httpSession));
-        assertEquals(newCart, users.get(1).getCart());
-        Mockito.verify(cartItemRepo, Mockito.times(1)).save(cartItem);
-        Mockito.verify(userRepo, Mockito.times(1)).save (users.get(1));
-    }
-
-    @Test
-    void createCartItem_HasExistingItemsAlready() throws InvalidValueException, UnauthorizedException {
-        CreateCartItemBody body = new CreateCartItemBody();
-        body.setProductId(4);    // Java II
-        body.setQuantity(4);
-        MockHttpSession httpSession = new MockHttpSession();
-        httpSession.setAttribute("user", users.get(1)); // User 2
-        Mockito.when(productRepo.findById(4)).thenReturn(java.util.Optional.of(products.get(3)));   // Python II
-
-        List<CartItem> newCart = new ArrayList<>();
-        CartItem oldCartItem = new CartItem(users.get(1), products.get(1), 2); // pre-populate with existing item
-        newCart.add(oldCartItem);
-
-        CartItem cartItem = new CartItem(users.get(1), products.get(4), 4);
-        assertEquals(ResponseEntity.ok (new JsonResponse("Added to cart", true)),
-                cartItemController.createCartItem(body, httpSession));
-        assertEquals(newCart, users.get(1).getCart());
-        Mockito.verify(cartItemRepo, Mockito.times(1)).save(cartItem);
-        Mockito.verify(userRepo, Mockito.times(1)).save (users.get(1));
-    }
-
-    @Test
-    void getCartItems() {
-    }
-
-    @Test
-    void updateCartItem() {
-    }
-
-    @Test
-    void deleteCartItem() {
-    }
-    */
 }
