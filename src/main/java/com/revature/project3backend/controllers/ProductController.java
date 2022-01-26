@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 /**
- * The ProductController handles requests concerning products
+ * ProductController handles requests concerning products
  */
 @RestController
 @RequestMapping ("product")
@@ -23,11 +23,11 @@ public class ProductController {
 	 * The instance of ProductService to use
 	 */
 	private final ProductService productService;
-	Logger log = Logger.getLogger(ProductController.class);
+	Logger log = Logger.getLogger (ProductController.class);
 	
 	/**
 	 * This constructor is automatically called by Spring
-	 * 
+	 *
 	 * @param productService The instance of ProductService to use
 	 */
 	@Autowired
@@ -71,9 +71,10 @@ public class ProductController {
 		
 		return ResponseEntity.ok (new JsonResponse ("Got product", true, product));
 	}
-
+	
 	/**
 	 * Updates an existing product with new information, if no file is provided the imageUrl will stay the same.
+	 *
 	 * @param productName The product's name.
 	 * @param productDescription The product's description.
 	 * @param price The product's price.
@@ -85,39 +86,35 @@ public class ProductController {
 	 * @return It returns a response containing the updated product.
 	 */
 	@PatchMapping
-	public ResponseEntity<JsonResponse> updateProduct(@RequestParam("name") String productName, @RequestParam("description") String productDescription,
-		  @RequestParam("price") Float price, @RequestParam(value = "salePrice", required = false) Float salePrice, @RequestParam(value = "id") Integer id,
-		  @RequestParam(value = "file", required = false) MultipartFile file, @RequestParam(value = "stock", required = false) Integer stock,
-		  @RequestParam(value = "imageUrl", required = false) String imageUrl) throws InvalidValueException {
+	public ResponseEntity <JsonResponse> updateProduct (@RequestParam ("name") String productName, @RequestParam ("description") String productDescription, @RequestParam ("price") Float price, @RequestParam (value = "salePrice", required = false) Float salePrice, @RequestParam (value = "id") Integer id, @RequestParam (value = "file", required = false) MultipartFile file, @RequestParam (value = "stock", required = false) Integer stock, @RequestParam (value = "imageUrl", required = false) String imageUrl) throws InvalidValueException {
 		Product product = null;
-
-			product = new Product(id, productName, productDescription, price, imageUrl, stock);
-			if(salePrice != null){
-				product.setSalePrice(salePrice);
-				if(product.getSalePrice() < 0){
-					product.setSalePrice(null);
-				}
-
-				//Error thrown if the sale price is higher than the normal price.
-				if(product.getPrice() < product.getSalePrice()){
-					throw new InvalidValueException("Sale price cannot be higher than normal price.");
-				}
+		
+		product = new Product (id, productName, productDescription, price, imageUrl, stock);
+		if (salePrice != null) {
+			product.setSalePrice (salePrice);
+			if (product.getSalePrice () < 0) {
+				product.setSalePrice (null);
 			}
-
-
-			//Error thrown if the price is negative.
-			if(product.getPrice() < 0){
-				throw new InvalidValueException("Price cannot be negative.");
+			
+			//Error thrown if the sale price is higher than the normal price.
+			if (product.getPrice () < product.getSalePrice ()) {
+				throw new InvalidValueException ("Sale price cannot be higher than normal price.");
 			}
-
-
-		product = this.productService.updateProduct(product, file);
-
+		}
+		
+		//Error thrown if the price is negative.
+		if (product.getPrice () < 0) {
+			throw new InvalidValueException ("Price cannot be negative.");
+		}
+		
+		product = this.productService.updateProduct (product, file);
+		
 		return ResponseEntity.ok (new JsonResponse ("Product updated ok.", true, product));
 	}
-
+	
 	/**
 	 * Takes form data from frontend and uses it create new product
+	 *
 	 * @param productName name of product
 	 * @param productDescription description of product
 	 * @param price price of product
@@ -129,14 +126,11 @@ public class ProductController {
 	 * @throws InvalidValueException when business logic fails in service layer
 	 */
 	@PostMapping
-	public ResponseEntity<JsonResponse> createProduct(@RequestParam("name") String productName, @RequestParam("description") String productDescription,
-													  @RequestParam("price") Double price, @RequestParam(value = "salePrice", required = false) Double salePrice,
-													  @RequestParam(value = "file", required = false) MultipartFile file, @RequestParam(value = "stock", required = false) Integer stock,
-													  @RequestParam(value = "imageUrl", required = false) String imageUrl) throws InvalidValueException {
-		Product product = new Product(0, productName, productDescription, price.floatValue(), imageUrl, salePrice.floatValue(), stock);
-
-		this.productService.createProduct(product);
-
+	public ResponseEntity <JsonResponse> createProduct (@RequestParam ("name") String productName, @RequestParam ("description") String productDescription, @RequestParam ("price") Double price, @RequestParam (value = "salePrice", required = false) Double salePrice, @RequestParam (value = "file", required = false) MultipartFile file, @RequestParam (value = "stock", required = false) Integer stock, @RequestParam (value = "imageUrl", required = false) String imageUrl) throws InvalidValueException {
+		Product product = new Product (0, productName, productDescription, price.floatValue (), imageUrl, salePrice.floatValue (), stock);
+		
+		this.productService.createProduct (product);
+		
 		return ResponseEntity.ok (new JsonResponse ("Got product updated ok.", true, product));
 	}
 }

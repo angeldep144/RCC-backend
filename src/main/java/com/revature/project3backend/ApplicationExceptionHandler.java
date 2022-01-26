@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
- * ApplicationExceptionHandler contains exception handlers for the various exceptions that are thrown throughout the application
+ * ApplicationExceptionHandler contains exception handlers for the exceptions that are thrown throughout the application
  */
 @ControllerAdvice
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
@@ -20,7 +20,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 	 * This method handles InvalidValueExceptions
 	 *
 	 * @param exception The exception that was thrown
-	 * @return A ResponseEntity to send to the client
+	 * @return A ResponseEntity used to create the HTTP response
 	 */
 	@ExceptionHandler
 	public ResponseEntity <JsonResponse> invalidValueExceptionHandler (InvalidValueException exception) {
@@ -31,7 +31,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 	 * This method handles UnauthorizedExceptions
 	 *
 	 * @param exception The exception that was thrown
-	 * @return A ResponseEntity to send to the client
+	 * @return A ResponseEntity used to create the HTTP response
 	 */
 	@ExceptionHandler
 	public ResponseEntity <JsonResponse> unauthorizedExceptionHandler (UnauthorizedException exception) {
@@ -42,7 +42,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 	 * This method handles InvalidCredentialsExceptions
 	 *
 	 * @param exception The exception that was thrown
-	 * @return A ResponseEntity to send to the client
+	 * @return A ResponseEntity used to create the HTTP response
 	 */
 	@ExceptionHandler
 	public ResponseEntity <JsonResponse> invalidCredentialsExceptionHandler (InvalidCredentialsException exception) {
@@ -53,7 +53,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 	 * This method handles NotFoundExceptions
 	 *
 	 * @param exception The exception that was thrown
-	 * @return A ResponseEntity to send to the client
+	 * @return A ResponseEntity used to create the HTTP response
 	 */
 	@ExceptionHandler
 	public ResponseEntity <JsonResponse> notFoundExceptionHandler (ChangeSetPersister.NotFoundException exception) {
@@ -64,7 +64,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 	 * This method handles all exceptions that aren't handled by other exception handlers in this class
 	 *
 	 * @param exception The exception that was thrown
-	 * @return A ResponseEntity to send to the client
+	 * @return A ResponseEntity used to create the HTTP response
 	 */
 	@ExceptionHandler
 	public ResponseEntity <JsonResponse> exceptionHandler (Exception exception) {

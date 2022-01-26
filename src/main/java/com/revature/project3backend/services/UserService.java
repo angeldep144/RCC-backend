@@ -46,13 +46,13 @@ public class UserService {
 		
 		if (passwordEncoder.matches (password, user.getPassword ())) {
 			return user;
-		}
-		else {
+		} else {
 			throw new InvalidCredentialsException ();
 		}
 	}
 	
-	/**The createUser function takes in a user object then it does a username and email check where it will throw an
+	/**
+	 * The createUser function takes in a user object then it does a username and email check where it will throw an
 	 * InvalidValueException with the custom message to let the front end know if either the username or email is not unique
 	 * then it encodes the password given and replaces it in the userInput object and then saves that object
 	 * with the updated password in the database then returns the new object from the database entry

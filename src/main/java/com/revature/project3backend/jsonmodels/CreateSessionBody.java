@@ -8,12 +8,12 @@ import lombok.Data;
 @Data
 public class CreateSessionBody {
 	/**
-	 * The username or email to login with
+	 * The username to log in with
 	 */
 	private String identifier;
 	
 	/**
-	 * The password to login with
+	 * The password to log in with
 	 */
 	private String password;
 }

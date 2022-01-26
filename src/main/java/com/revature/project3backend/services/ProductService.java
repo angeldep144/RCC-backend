@@ -55,7 +55,7 @@ public class ProductService {
 	 * Updates the product information in the database
 	 *
 	 * @param product The new product information.
-	 * @param file    The new image for the product if desired.
+	 * @param file The new image for the product if desired.
 	 * @return The updated product.
 	 */
 	public Product updateProduct (Product product, MultipartFile file) {

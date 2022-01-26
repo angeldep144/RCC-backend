@@ -12,8 +12,8 @@ import javax.persistence.*;
 @Entity
 @Table
 public class Product {
-
-	public Product(Integer id, String name, String description, Float price, String imageUrl, Integer stock) {
+	
+	public Product (Integer id, String name, String description, Float price, String imageUrl, Integer stock) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -21,7 +21,7 @@ public class Product {
 		this.imageUrl = imageUrl;
 		this.stock = stock;
 	}
-
+	
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Integer id;

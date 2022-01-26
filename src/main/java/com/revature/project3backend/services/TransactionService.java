@@ -6,9 +6,7 @@ import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.models.CartItem;
 import com.revature.project3backend.models.Product;
 import com.revature.project3backend.models.Transaction;
-import com.revature.project3backend.models.User;
 import com.revature.project3backend.repositories.TransactionRepo;
-import com.revature.project3backend.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
