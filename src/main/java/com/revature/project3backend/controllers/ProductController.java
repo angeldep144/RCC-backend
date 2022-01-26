@@ -23,7 +23,11 @@ public class ProductController {
 	 * The instance of ProductService to use
 	 */
 	private final ProductService productService;
-	Logger log = Logger.getLogger (ProductController.class);
+	
+	/**
+	 * The default image to use when uploading a product
+	 */
+	private String defaultImageUrl = "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png";
 	
 	/**
 	 * This constructor is automatically called by Spring
@@ -31,6 +35,7 @@ public class ProductController {
 	 * @param productService The instance of ProductService to use
 	 */
 	@Autowired
+	
 	public ProductController (ProductService productService) {
 		this.productService = productService;
 	}
@@ -126,10 +131,22 @@ public class ProductController {
 	 * @throws InvalidValueException when business logic fails in service layer
 	 */
 	@PostMapping
-	public ResponseEntity <JsonResponse> createProduct (@RequestParam ("name") String productName, @RequestParam ("description") String productDescription, @RequestParam ("price") Double price, @RequestParam (value = "salePrice", required = false) Double salePrice, @RequestParam (value = "file", required = false) MultipartFile file, @RequestParam (value = "stock", required = false) Integer stock, @RequestParam (value = "imageUrl", required = false) String imageUrl) throws InvalidValueException {
-		Product product = new Product (0, productName, productDescription, price.floatValue (), imageUrl, salePrice.floatValue (), stock);
+	public ResponseEntity <JsonResponse> createProduct (@RequestParam ("name") String productName,
+														@RequestParam ("description") String productDescription,
+														@RequestParam ("price") Float price,
+														@RequestParam (value = "salePrice", required = false) Double salePrice,
+														@RequestParam (value = "file", required = false) MultipartFile file,
+														@RequestParam (value = "stock", required = false) Integer stock,
+														@RequestParam (value = "imageUrl", required = false) String imageUrl) throws InvalidValueException {
+		Product product = null;
 		
-		this.productService.createProduct (product);
+		product = new Product (null, productName, productDescription, price, imageUrl, stock);
+		
+		if (file == null) {
+			product.setImageUrl (defaultImageUrl);
+		}
+		
+		product = this.productService.createProduct (product, file);
 		
 		return ResponseEntity.ok (new JsonResponse ("Got product updated ok.", true, product));
 	}
