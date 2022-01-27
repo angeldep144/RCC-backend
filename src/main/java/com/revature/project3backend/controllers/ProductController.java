@@ -1,8 +1,10 @@
 package com.revature.project3backend.controllers;
 
 import com.revature.project3backend.exceptions.InvalidValueException;
+import com.revature.project3backend.exceptions.UnauthorizedException;
 import com.revature.project3backend.jsonmodels.JsonResponse;
 import com.revature.project3backend.models.Product;
+import com.revature.project3backend.models.User;
 import com.revature.project3backend.services.ProductService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -91,10 +94,27 @@ public class ProductController {
 	 * @return It returns a response containing the updated product.
 	 */
 	@PatchMapping
-	public ResponseEntity <JsonResponse> updateProduct (@RequestParam ("name") String productName, @RequestParam ("description") String productDescription, @RequestParam ("price") Float price, @RequestParam (value = "salePrice", required = false) Float salePrice, @RequestParam (value = "id") Integer id, @RequestParam (value = "file", required = false) MultipartFile file, @RequestParam (value = "stock", required = false) Integer stock, @RequestParam (value = "imageUrl", required = false) String imageUrl) throws InvalidValueException {
-		Product product = null;
+	public ResponseEntity <JsonResponse> updateProduct (@RequestParam ("name") String productName,
+														@RequestParam ("description") String productDescription,
+														@RequestParam ("price") Float price,
+														@RequestParam (value = "salePrice", required = false) Float salePrice,
+														@RequestParam (value = "id") Integer id,
+														@RequestParam (value = "file", required = false) MultipartFile file,
+														@RequestParam (value = "stock", required = false) Integer stock,
+														@RequestParam (value = "imageUrl", required = false) String imageUrl,
+														HttpSession httpSession) throws InvalidValueException, UnauthorizedException {
+		User user = (User) httpSession.getAttribute ("user");
 		
-		product = new Product (id, productName, productDescription, price, imageUrl, stock);
+		if (user == null) {
+			throw new UnauthorizedException ();
+		}
+		
+		if (user.getRole ().getRole ().equals ("ADMIN")) {
+			throw new UnauthorizedException ();
+		}
+		
+		Product product = new Product (id, productName, productDescription, price, imageUrl, stock);
+		
 		if (salePrice != null) {
 			product.setSalePrice (salePrice);
 			if (product.getSalePrice () < 0) {
@@ -137,7 +157,18 @@ public class ProductController {
 														@RequestParam (value = "salePrice", required = false) Double salePrice,
 														@RequestParam (value = "file", required = false) MultipartFile file,
 														@RequestParam (value = "stock", required = false) Integer stock,
-														@RequestParam (value = "imageUrl", required = false) String imageUrl) throws InvalidValueException {
+														@RequestParam (value = "imageUrl", required = false) String imageUrl,
+														HttpSession httpSession) throws InvalidValueException, UnauthorizedException {
+		User user = (User) httpSession.getAttribute ("user");
+		
+		if (user == null) {
+			throw new UnauthorizedException ();
+		}
+		
+		if (user.getRole ().getRole ().equals ("ADMIN")) {
+			throw new UnauthorizedException ();
+		}
+		
 		Product product = null;
 		
 		product = new Product (null, productName, productDescription, price, imageUrl, stock);
