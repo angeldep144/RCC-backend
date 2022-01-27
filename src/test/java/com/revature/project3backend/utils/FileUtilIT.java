@@ -1,4 +1,4 @@
-package com.revature.project3backend.util;
+package com.revature.project3backend.utils;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
