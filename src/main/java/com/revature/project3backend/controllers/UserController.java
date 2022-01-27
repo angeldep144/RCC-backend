@@ -39,7 +39,7 @@ public class UserController {
 		this.userService = userService;
 		this.roleService = roleService;
 	}
-	
+
 	/**
 	 * Creates a user
 	 *
