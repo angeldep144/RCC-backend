@@ -104,12 +104,13 @@ public class ProductController {
 														@RequestParam (value = "imageUrl", required = false) String imageUrl,
 														HttpSession httpSession) throws InvalidValueException, UnauthorizedException {
 		User user = (User) httpSession.getAttribute ("user");
+		System.out.println(user);
 		
 		if (user == null) {
 			throw new UnauthorizedException ();
 		}
 		
-		if (user.getRole ().getRole ().equals ("ADMIN")) {
+		if (!user.getRole ().getRole ().equals ("ADMIN")) {
 			throw new UnauthorizedException ();
 		}
 		
@@ -134,7 +135,7 @@ public class ProductController {
 		
 		product = this.productService.updateProduct (product, file);
 		
-		return ResponseEntity.ok (new JsonResponse ("Product updated ok.", true, product));
+		return ResponseEntity.ok (new JsonResponse ("Product updated ok.", true, product, "/product/" + product.getId()));
 	}
 	
 	/**
@@ -165,7 +166,7 @@ public class ProductController {
 			throw new UnauthorizedException ();
 		}
 		
-		if (user.getRole ().getRole ().equals ("ADMIN")) {
+		if (!user.getRole ().getRole ().equals ("ADMIN")) {
 			throw new UnauthorizedException ();
 		}
 		
@@ -179,6 +180,6 @@ public class ProductController {
 		
 		product = this.productService.createProduct (product, file);
 		
-		return ResponseEntity.ok (new JsonResponse ("Got product updated ok.", true, product));
+		return ResponseEntity.ok (new JsonResponse ("Got product updated ok.", true, product, "/product/" + product.getId()));
 	}
 }
