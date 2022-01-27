@@ -73,15 +73,22 @@ public class ProductControllerIT {
 	}
 	
 
-	//todo admin page tests
-	
+
     @Test
     void updateProductSuccessful() throws Exception {
-        MultipartFile file = null;
+		MultipartFile file = null;
         Product product = new Product(1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, 13);
 
         Mockito.when(this.productService.updateProduct(product, file)).thenReturn(product);
-
+	
+		List <CartItem> items = new ArrayList<>();
+		List <Transaction> transactions = new ArrayList<>();
+		String pass = "pass123";
+		UserRole role = new UserRole (1, "ADMIN");
+	
+		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions, role);
+		Mockito.when(session.getAttribute ("user")).thenReturn(user);
+		
         RequestBuilder request = MockMvcRequestBuilders
                 .patch("/product")
                 .param("id", product.getId().toString())
@@ -89,11 +96,12 @@ public class ProductControllerIT {
                 .param("description", product.getDescription())
                 .param("price", product.getPrice().toString())
                 .param("stock", product.getStock().toString())
-                .contentType(MediaType.MULTIPART_FORM_DATA);
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+				.session (session);
 
         mvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk())
                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
-                        .writeValueAsString(new JsonResponse ("Product updated ok.", true, product))));
+                        .writeValueAsString(new JsonResponse ("Product updated ok.", true, product, "/product/1"))));
     }
 
     @Test
@@ -102,7 +110,15 @@ public class ProductControllerIT {
         Product product = new Product(1, "Dog Tricks", "Teach your dog new tricks.", (float) -1.15, null, 13);
         InvalidValueException invalidValueException = new InvalidValueException("Price cannot be negative.");
         Mockito.when(this.productService.updateProduct(product, file)).thenReturn(product);
-
+	
+		List <CartItem> items = new ArrayList<>();
+		List <Transaction> transactions = new ArrayList<>();
+		String pass = "pass123";
+		UserRole role = new UserRole (1, "ADMIN");
+	
+		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions, role);
+		Mockito.when(session.getAttribute ("user")).thenReturn(user);
+		
         RequestBuilder request = MockMvcRequestBuilders
                 .patch("/product")
                 .param("id", product.getId().toString())
@@ -110,7 +126,8 @@ public class ProductControllerIT {
                 .param("description", product.getDescription())
                 .param("price", product.getPrice().toString())
                 .param("stock", product.getStock().toString())
-                .contentType(MediaType.MULTIPART_FORM_DATA);
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+				.session (session);
 
         mvc.perform(request).andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
@@ -123,7 +140,15 @@ public class ProductControllerIT {
         Product product = new Product(1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, 13);
         InvalidValueException invalidValueException = new InvalidValueException("Sale price cannot be higher than normal price.");
         Mockito.when(this.productService.updateProduct(product, file)).thenReturn(product);
-
+	
+		List <CartItem> items = new ArrayList<>();
+		List <Transaction> transactions = new ArrayList<>();
+		String pass = "pass123";
+		UserRole role = new UserRole (1, "ADMIN");
+	
+		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions, role);
+		Mockito.when(session.getAttribute ("user")).thenReturn(user);
+		
         RequestBuilder request = MockMvcRequestBuilders
                 .patch("/product")
                 .param("id", product.getId().toString())
@@ -132,12 +157,14 @@ public class ProductControllerIT {
                 .param("price", product.getPrice().toString())
                 .param("stock", product.getStock().toString())
                 .param("salePrice", (product.getPrice() + 10) + "")
-                .contentType(MediaType.MULTIPART_FORM_DATA);
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+				.session (session);
 
         mvc.perform(request).andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
                         .writeValueAsString(new JsonResponse (invalidValueException))));
     }
+	
     @Test
     void createProduct() throws Exception {
         MultipartFile file = null;
@@ -165,6 +192,18 @@ public class ProductControllerIT {
                 .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
                         .writeValueAsString (new JsonResponse ("Got product updated ok.", true, integral, "/product/" + integral.getId()))));
     }
+	
+	@Test
+	void createProductWhenNotLoggedIn () {
+		
+	}
+	
+	@Test
+	void createProductWhenNotAnAdmin () {
+		
+	}
+	
+	//todo the rest of the createProduct tests
 }
 
 
