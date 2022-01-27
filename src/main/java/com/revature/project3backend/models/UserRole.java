@@ -3,7 +3,6 @@ package com.revature.project3backend.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 
@@ -11,14 +10,14 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "userRoles")
+@Table (name = "userRoles")
 public class UserRole {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    private String role;
+	
+	@Id
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
+	private Integer id;
+	
+	private String role;
 
     /*@OneToMany(mappedBy = "role")
     private User user;*/

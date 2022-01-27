@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 
 /**
- * The SessionController handles requests concerning sessions
+ * SessionController handles requests concerning sessions
  */
 @RestController
 @RequestMapping ("session")
@@ -36,10 +36,10 @@ public class SessionController {
 	
 	/**
 	 * Creates a session for the user (logs them in)
-	 * 
+	 *
 	 * @param body The data to use to log in the user, contains an identifier and a password
 	 * @param httpSession The HTTP session of the user
-	 * @return A ResponseEntity used to create the HTTP response
+	 * @return A ResponseEntity used to create the HTTP response, redirects to /
 	 * @throws InvalidCredentialsException Thrown when credentials are invalid
 	 * @throws InvalidValueException Thrown when validation fails
 	 */
@@ -58,9 +58,9 @@ public class SessionController {
 	
 	/**
 	 * Deletes the user's session (logs them out)
-	 * 
+	 *
 	 * @param httpSession The HTTP session of the user
-	 * @return A ResponseEntity used to create the HTTP response
+	 * @return A ResponseEntity used to create the HTTP response, redirects to /login
 	 */
 	@DeleteMapping
 	public ResponseEntity <JsonResponse> deleteSession (HttpSession httpSession) {

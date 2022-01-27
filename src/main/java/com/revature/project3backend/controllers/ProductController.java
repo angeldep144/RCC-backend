@@ -1,8 +1,10 @@
 package com.revature.project3backend.controllers;
 
 import com.revature.project3backend.exceptions.InvalidValueException;
+import com.revature.project3backend.exceptions.UnauthorizedException;
 import com.revature.project3backend.jsonmodels.JsonResponse;
 import com.revature.project3backend.models.Product;
+import com.revature.project3backend.models.User;
 import com.revature.project3backend.services.ProductService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
- * The ProductController handles requests concerning products
+ * ProductController handles requests concerning products
  */
 @RestController
 @RequestMapping ("product")
@@ -23,17 +26,19 @@ public class ProductController {
 	 * The instance of ProductService to use
 	 */
 	private final ProductService productService;
-
+	
+	/**
+	 * The default image to use when uploading a product
+	 */
 	private String defaultImageUrl = "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png";
-	Logger log = Logger.getLogger(ProductController.class);
-
 	
 	/**
 	 * This constructor is automatically called by Spring
-	 * 
+	 *
 	 * @param productService The instance of ProductService to use
 	 */
 	@Autowired
+	
 	public ProductController (ProductService productService) {
 		this.productService = productService;
 	}
@@ -74,9 +79,10 @@ public class ProductController {
 		
 		return ResponseEntity.ok (new JsonResponse ("Got product", true, product));
 	}
-
+	
 	/**
 	 * Updates an existing product with new information, if no file is provided the imageUrl will stay the same.
+	 *
 	 * @param productName The product's name.
 	 * @param productDescription The product's description.
 	 * @param price The product's price.
@@ -88,39 +94,52 @@ public class ProductController {
 	 * @return It returns a response containing the updated product.
 	 */
 	@PatchMapping
-	public ResponseEntity<JsonResponse> updateProduct(@RequestParam("name") String productName, @RequestParam("description") String productDescription,
-		  @RequestParam("price") Float price, @RequestParam(value = "salePrice", required = false) Float salePrice, @RequestParam(value = "id") Integer id,
-		  @RequestParam(value = "file", required = false) MultipartFile file, @RequestParam(value = "stock", required = false) Integer stock,
-		  @RequestParam(value = "imageUrl", required = false) String imageUrl) throws InvalidValueException {
-		Product product = null;
-
-			product = new Product(id, productName, productDescription, price, imageUrl, stock);
-			if(salePrice != null){
-				product.setSalePrice(salePrice);
-				if(product.getSalePrice() < 0){
-					product.setSalePrice(null);
-				}
-
-				//Error thrown if the sale price is higher than the normal price.
-				if(product.getPrice() < product.getSalePrice()){
-					throw new InvalidValueException("Sale price cannot be higher than normal price.");
-				}
+	public ResponseEntity <JsonResponse> updateProduct (@RequestParam ("name") String productName,
+														@RequestParam ("description") String productDescription,
+														@RequestParam ("price") Float price,
+														@RequestParam (value = "salePrice", required = false) Float salePrice,
+														@RequestParam (value = "id") Integer id,
+														@RequestParam (value = "file", required = false) MultipartFile file,
+														@RequestParam (value = "stock", required = false) Integer stock,
+														@RequestParam (value = "imageUrl", required = false) String imageUrl,
+														HttpSession httpSession) throws InvalidValueException, UnauthorizedException {
+		User user = (User) httpSession.getAttribute ("user");
+		
+		if (user == null) {
+			throw new UnauthorizedException ();
+		}
+		
+		if (user.getRole ().getRole ().equals ("ADMIN")) {
+			throw new UnauthorizedException ();
+		}
+		
+		Product product = new Product (id, productName, productDescription, price, imageUrl, stock);
+		
+		if (salePrice != null) {
+			product.setSalePrice (salePrice);
+			if (product.getSalePrice () < 0) {
+				product.setSalePrice (null);
 			}
-
-
-			//Error thrown if the price is negative.
-			if(product.getPrice() < 0){
-				throw new InvalidValueException("Price cannot be negative.");
+			
+			//Error thrown if the sale price is higher than the normal price.
+			if (product.getPrice () < product.getSalePrice ()) {
+				throw new InvalidValueException ("Sale price cannot be higher than normal price.");
 			}
-
-
-		product = this.productService.updateProduct(product, file);
-
+		}
+		
+		//Error thrown if the price is negative.
+		if (product.getPrice () < 0) {
+			throw new InvalidValueException ("Price cannot be negative.");
+		}
+		
+		product = this.productService.updateProduct (product, file);
+		
 		return ResponseEntity.ok (new JsonResponse ("Product updated ok.", true, product));
 	}
-
+	
 	/**
 	 * Takes form data from frontend and uses it create new product
+	 *
 	 * @param productName name of product
 	 * @param productDescription description of product
 	 * @param price price of product
@@ -132,20 +151,34 @@ public class ProductController {
 	 * @throws InvalidValueException when business logic fails in service layer
 	 */
 	@PostMapping
-	public ResponseEntity<JsonResponse> createProduct(@RequestParam("name") String productName, @RequestParam("description") String productDescription,
-													  @RequestParam("price") Float price, @RequestParam(value = "salePrice", required = false) Double salePrice,
-													  @RequestParam(value = "file", required = false) MultipartFile file, @RequestParam(value = "stock", required = false) Integer stock,
-													  @RequestParam(value = "imageUrl", required = false) String imageUrl) throws InvalidValueException {
-		Product product = null;
-
-		product = new Product(null, productName, productDescription, price, imageUrl, stock);
-
-		if(file == null){
-			product.setImageUrl(defaultImageUrl);
+	public ResponseEntity <JsonResponse> createProduct (@RequestParam ("name") String productName,
+														@RequestParam ("description") String productDescription,
+														@RequestParam ("price") Float price,
+														@RequestParam (value = "salePrice", required = false) Double salePrice,
+														@RequestParam (value = "file", required = false) MultipartFile file,
+														@RequestParam (value = "stock", required = false) Integer stock,
+														@RequestParam (value = "imageUrl", required = false) String imageUrl,
+														HttpSession httpSession) throws InvalidValueException, UnauthorizedException {
+		User user = (User) httpSession.getAttribute ("user");
+		
+		if (user == null) {
+			throw new UnauthorizedException ();
 		}
-
-		product = this.productService.createProduct(product, file);
-
+		
+		if (user.getRole ().getRole ().equals ("ADMIN")) {
+			throw new UnauthorizedException ();
+		}
+		
+		Product product = null;
+		
+		product = new Product (null, productName, productDescription, price, imageUrl, stock);
+		
+		if (file == null) {
+			product.setImageUrl (defaultImageUrl);
+		}
+		
+		product = this.productService.createProduct (product, file);
+		
 		return ResponseEntity.ok (new JsonResponse ("Got product updated ok.", true, product));
 	}
 }
