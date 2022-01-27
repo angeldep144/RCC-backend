@@ -2,6 +2,7 @@ package com.revature.project3backend.controllers;
 
 import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.jsonmodels.JsonResponse;
+import com.revature.project3backend.modeldtos.UserDTO;
 import com.revature.project3backend.models.User;
 import com.revature.project3backend.models.UserRole;
 import com.revature.project3backend.services.RoleService;
@@ -34,14 +35,15 @@ class UserControllerTest {
 	
 	@Test
 	void createUserWhenFirstNameIsNull () throws InvalidValueException {
-		User user = new User ();
-		
-		user.setId (1);
-		user.setLastName ("Smith");
-		user.setEmail ("johnsmith@example.com");
-		user.setUsername ("johnsmith");
-		user.setPassword ("password");
-		
+		User newUser = new User ();
+
+		newUser.setId (1);
+		newUser.setLastName ("Smith");
+		newUser.setEmail ("johnsmith@example.com");
+		newUser.setUsername ("johnsmith");
+		newUser.setPassword ("password");
+		UserDTO user = new UserDTO(newUser);
+
 		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.userController.createUser (user));
 		
 		assertEquals ("Error! Invalid user", exception.getMessage ());
@@ -51,14 +53,14 @@ class UserControllerTest {
 	
 	@Test
 	void createUserWhenLastNameIsNull () throws InvalidValueException {
-		User user = new User ();
-		
+		UserDTO user = new UserDTO ();
+
 		user.setId (1);
 		user.setFirstName ("John");
 		user.setEmail ("johnsmith@example.com");
 		user.setUsername ("johnsmith");
 		user.setPassword ("password");
-		
+
 		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.userController.createUser (user));
 		
 		assertEquals ("Error! Invalid user", exception.getMessage ());
@@ -68,14 +70,14 @@ class UserControllerTest {
 	
 	@Test
 	void createUserWhenEmailIsNull () throws InvalidValueException {
-		User user = new User ();
-		
+		UserDTO user = new UserDTO ();
+
 		user.setId (1);
 		user.setFirstName ("John");
 		user.setLastName ("Smith");
 		user.setUsername ("johnsmith");
 		user.setPassword ("password");
-		
+
 		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.userController.createUser (user));
 		
 		assertEquals ("Error! Invalid user", exception.getMessage ());
@@ -85,14 +87,14 @@ class UserControllerTest {
 	
 	@Test
 	void createUserWhenUsernameIsNull () throws InvalidValueException {
-		User user = new User ();
-		
+		UserDTO user = new UserDTO ();
+
 		user.setId (1);
 		user.setFirstName ("John");
 		user.setLastName ("Smith");
 		user.setEmail ("johnsmith@example.com");
 		user.setPassword ("password");
-		
+
 		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.userController.createUser (user));
 		
 		assertEquals ("Error! Invalid user", exception.getMessage ());
@@ -102,14 +104,14 @@ class UserControllerTest {
 	
 	@Test
 	void createUserWhenPasswordIsNull () throws InvalidValueException {
-		User user = new User ();
-		
+		UserDTO user = new UserDTO ();
+
 		user.setId (1);
 		user.setFirstName ("John");
 		user.setLastName ("Smith");
 		user.setEmail ("johnsmith@example.com");
 		user.setUsername ("johnsmith");
-		
+
 		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.userController.createUser (user));
 		
 		assertEquals ("Error! Invalid user", exception.getMessage ());
@@ -119,15 +121,15 @@ class UserControllerTest {
 	
 	@Test
 	void createUserWhenFirstNameIsEmpty () throws InvalidValueException {
-		User user = new User ();
-		
+		UserDTO user = new UserDTO ();
+
 		user.setId (1);
 		user.setFirstName ("");
 		user.setLastName ("Smith");
 		user.setEmail ("johnsmith@example.com");
 		user.setUsername ("johnsmith");
 		user.setPassword ("password");
-		
+
 		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.userController.createUser (user));
 		
 		assertEquals ("Error! Invalid user", exception.getMessage ());
@@ -137,15 +139,15 @@ class UserControllerTest {
 	
 	@Test
 	void createUserWhenLastNameIsEmpty () throws InvalidValueException {
-		User user = new User ();
-		
+		UserDTO user = new UserDTO ();
+
 		user.setId (1);
 		user.setFirstName ("John");
 		user.setLastName ("");
 		user.setEmail ("johnsmith@example.com");
 		user.setUsername ("johnsmith");
 		user.setPassword ("password");
-		
+
 		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.userController.createUser (user));
 		
 		assertEquals ("Error! Invalid user", exception.getMessage ());
@@ -155,15 +157,15 @@ class UserControllerTest {
 	
 	@Test
 	void createUserWhenEmailIsEmpty () throws InvalidValueException {
-		User user = new User ();
-		
+		UserDTO user = new UserDTO ();
+
 		user.setId (1);
 		user.setFirstName ("John");
 		user.setLastName ("Smith");
 		user.setEmail ("");
 		user.setUsername ("johnsmith");
 		user.setPassword ("password");
-		
+
 		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.userController.createUser (user));
 		
 		assertEquals ("Error! Invalid user", exception.getMessage ());
@@ -173,15 +175,15 @@ class UserControllerTest {
 	
 	@Test
 	void createUserWhenUsernameIsEmpty () throws InvalidValueException {
-		User user = new User ();
-		
+		UserDTO user = new UserDTO ();
+
 		user.setId (1);
 		user.setFirstName ("John");
 		user.setLastName ("Smith");
 		user.setEmail ("johnsmith@example.com");
 		user.setUsername ("");
 		user.setPassword ("password");
-		
+
 		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.userController.createUser (user));
 		
 		assertEquals ("Error! Invalid user", exception.getMessage ());
@@ -191,15 +193,15 @@ class UserControllerTest {
 	
 	@Test
 	void createUserWhenPasswordIsEmpty () throws InvalidValueException {
-		User user = new User ();
-		
+		UserDTO user = new UserDTO ();
+
 		user.setId (1);
 		user.setFirstName ("John");
 		user.setLastName ("Smith");
 		user.setEmail ("johnsmith@example.com");
 		user.setUsername ("johnsmith");
 		user.setPassword ("");
-		
+
 		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.userController.createUser (user));
 		
 		assertEquals ("Error! Invalid user", exception.getMessage ());
@@ -209,15 +211,15 @@ class UserControllerTest {
 	
 	@Test
 	void createUserWhenFirstNameIsWhitespace () throws InvalidValueException {
-		User user = new User ();
-		
+		UserDTO user = new UserDTO ();
+
 		user.setId (1);
 		user.setFirstName ("       ");
 		user.setLastName ("Smith");
 		user.setEmail ("johnsmith@example.com");
 		user.setUsername ("johnsmith");
 		user.setPassword ("password");
-		
+
 		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.userController.createUser (user));
 		
 		assertEquals ("Error! Invalid user", exception.getMessage ());
@@ -227,15 +229,15 @@ class UserControllerTest {
 	
 	@Test
 	void createUserWhenLastNameIsWhitespace () throws InvalidValueException {
-		User user = new User ();
-		
+		UserDTO user = new UserDTO ();
+
 		user.setId (1);
 		user.setFirstName ("John");
 		user.setLastName ("          ");
 		user.setEmail ("johnsmith@example.com");
 		user.setUsername ("johnsmith");
 		user.setPassword ("password");
-		
+
 		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.userController.createUser (user));
 		
 		assertEquals ("Error! Invalid user", exception.getMessage ());
@@ -245,15 +247,15 @@ class UserControllerTest {
 	
 	@Test
 	void createUserWhenEmailIsWhitespace () throws InvalidValueException {
-		User user = new User ();
-		
+		UserDTO user = new UserDTO ();
+
 		user.setId (1);
 		user.setFirstName ("John");
 		user.setLastName ("Smith");
 		user.setEmail ("            ");
 		user.setUsername ("johnsmith");
 		user.setPassword ("password");
-		
+
 		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.userController.createUser (user));
 		
 		assertEquals ("Error! Invalid user", exception.getMessage ());
@@ -263,15 +265,15 @@ class UserControllerTest {
 	
 	@Test
 	void createUserWhenUsernameIsWhitespace () throws InvalidValueException {
-		User user = new User ();
-		
+		UserDTO user = new UserDTO ();
+
 		user.setId (1);
 		user.setFirstName ("John");
 		user.setLastName ("Smith");
 		user.setEmail ("johnsmith@example.com");
 		user.setUsername ("          ");
 		user.setPassword ("password");
-		
+
 		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.userController.createUser (user));
 		
 		assertEquals ("Error! Invalid user", exception.getMessage ());
@@ -281,15 +283,15 @@ class UserControllerTest {
 	
 	@Test
 	void createUserWhenPasswordIsWhitespace () throws InvalidValueException {
-		User user = new User ();
-		
+		UserDTO user = new UserDTO ();
+
 		user.setId (1);
 		user.setFirstName ("John");
 		user.setLastName ("Smith");
 		user.setEmail ("johnsmith@example.com");
 		user.setUsername ("johnsmith");
 		user.setPassword ("            ");
-		
+
 		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.userController.createUser (user));
 		
 		assertEquals ("Error! Invalid user", exception.getMessage ());
@@ -299,15 +301,15 @@ class UserControllerTest {
 	
 	@Test
 	void createUserWhenUsernameIsInvalid () throws InvalidValueException {
-		User user = new User ();
-		
+		UserDTO user = new UserDTO ();
+
 		user.setId (1);
 		user.setFirstName ("John");
 		user.setLastName ("Smith");
 		user.setEmail ("johnsmith@example.com");
 		user.setUsername ("@.\\/");
 		user.setPassword ("password");
-		
+
 		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.userController.createUser (user));
 		
 		assertEquals ("Error! Invalid username", exception.getMessage ());
@@ -317,15 +319,15 @@ class UserControllerTest {
 	
 	@Test
 	void createUserWhenEmailIsInvalid () throws InvalidValueException {
-		User user = new User ();
-		
+		UserDTO user = new UserDTO ();
+
 		user.setId (1);
 		user.setFirstName ("John");
 		user.setLastName ("Smith");
 		user.setEmail ("not an email");
 		user.setUsername ("johnsmith");
 		user.setPassword ("password");
-		
+
 		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.userController.createUser (user));
 		
 		assertEquals ("Error! Invalid email", exception.getMessage ());
@@ -335,8 +337,10 @@ class UserControllerTest {
 	
 	@Test
 	void createUser () throws InvalidValueException {
-		assertEquals (ResponseEntity.ok (new JsonResponse ("Created user", true, null, "/login")), this.userController.createUser (this.users.get (0)));
+		UserDTO userDTO = new UserDTO (this.users.get(0));
+
+		assertEquals (ResponseEntity.ok (new JsonResponse ("Created user", true, null, "/login")), this.userController.createUser (userDTO));
 		
-		Mockito.verify (userService).createUser (users.get (0));
+		Mockito.verify (userService).createUser (userDTO);
 	}
 }
