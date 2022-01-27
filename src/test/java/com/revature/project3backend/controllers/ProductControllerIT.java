@@ -69,8 +69,8 @@ public class ProductControllerIT {
 		Mockito.verify (productService).getProduct (product.getId ());
 	}
 	
-	/*
-	todo admin page tests
+
+	//todo admin page tests
 	
     @Test
     void updateProductSuccessful() throws Exception {
@@ -134,5 +134,5 @@ public class ProductControllerIT {
         mvc.perform(request).andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
                         .writeValueAsString(new JsonResponse (invalidValueException))));
-    }*/
+    }
 }
