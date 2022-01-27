@@ -39,8 +39,8 @@ public class ProductControllerIT {
 
     @MockBean
     private MockHttpSession session;
-	
-	private final ObjectMapper json = new ObjectMapper ();
+
+    private final ObjectMapper json = new ObjectMapper ();
 	
 	@Test
 	void getProducts () throws Exception {
@@ -253,16 +253,65 @@ public class ProductControllerIT {
     }
 	
 	@Test
-	void createProductWhenNotLoggedIn () {
-		
+	void createProductWhenNotLoggedIn () throws Exception {
+
+		MultipartFile file = null;
+		List <CartItem> items = new ArrayList<>();
+		List <Transaction> transactions = new ArrayList<>();
+		String pass = "pass123";
+		UserRole role = new UserRole (1, "ADMIN");
+		Product product = new Product(null, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
+		Product integral = new Product(9, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
+
+		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions, role);
+		Mockito.when(session.getAttribute ("user")).thenReturn(null);
+		Mockito.when(this.productService.createProduct(product, file)).thenReturn(integral);
+		RequestBuilder request = MockMvcRequestBuilders
+				.post("/product")
+				.param("name", product.getName())
+				.param("description", product.getDescription())
+				.param("price", product.getPrice().toString())
+				.param("stock", product.getStock().toString())
+				.param("imageUrl", product.getImageUrl())
+				.contentType(MediaType.MULTIPART_FORM_DATA)
+				.session(session);
+
+		UnauthorizedException unauthorizedException = new UnauthorizedException();
+
+		mvc.perform(request).andExpect(MockMvcResultMatchers.status().isUnauthorized())
+				.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
+						.writeValueAsString (new JsonResponse ("Error! Unauthorized", false, null,"/login"))));
 	}
 	
 	@Test
-	void createProductWhenNotAnAdmin () {
-		
+	void createProductWhenNotAnAdmin () throws Exception {
+		MultipartFile file = null;
+		List <CartItem> items = new ArrayList<>();
+		List <Transaction> transactions = new ArrayList<>();
+		String pass = "pass123";
+		UserRole role = new UserRole (2, "USER");
+		Product product = new Product(null, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
+		Product integral = new Product(9, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
+
+		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions, role);
+		Mockito.when(session.getAttribute ("user")).thenReturn(user);
+		Mockito.when(this.productService.createProduct(product, file)).thenReturn(integral);
+		RequestBuilder request = MockMvcRequestBuilders
+				.post("/product")
+				.param("name", product.getName())
+				.param("description", product.getDescription())
+				.param("price", product.getPrice().toString())
+				.param("stock", product.getStock().toString())
+				.param("imageUrl", product.getImageUrl())
+				.contentType(MediaType.MULTIPART_FORM_DATA)
+				.session(session);
+
+		UnauthorizedException unauthorizedException = new UnauthorizedException();
+
+		mvc.perform(request).andExpect(MockMvcResultMatchers.status().isUnauthorized())
+				.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
+						.writeValueAsString (new JsonResponse ("Error! Unauthorized", false, null,"/login"))));
 	}
-	
-	//todo the rest of the createProduct tests
 }
 
 
