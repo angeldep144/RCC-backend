@@ -141,10 +141,8 @@ public class ProductService {
 		if (product.getPrice () < 0){
 			throw new InvalidValueException ("Price cannot be less than 0");
 		}
-
 		
-		Product product2 = this.productRepo.save (product);
 		
-		return product2;
+		return this.productRepo.save (product);
 	}
 }
