@@ -46,6 +46,8 @@ public class FileUtil {
 		imageURL = imageURL.replace (' ', '+');
 		try {
 			s3Client.putObject (new PutObjectRequest (bucketName, imageURL, multipartFile.getInputStream (), new ObjectMetadata ()));
+			//prevents the filename from containing line characters
+			multipartFile.getName().replaceAll("[\n\r\t]", "_");
 			log.info (multipartFile.getName () + " has been uploaded to S3 bucket.");
 		} catch (Exception e) {
 			log.error (e);

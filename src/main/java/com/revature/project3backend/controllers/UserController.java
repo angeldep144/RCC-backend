@@ -2,6 +2,7 @@ package com.revature.project3backend.controllers;
 
 import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.jsonmodels.JsonResponse;
+import com.revature.project3backend.modeldtos.UserDTO;
 import com.revature.project3backend.models.User;
 import com.revature.project3backend.models.UserRole;
 import com.revature.project3backend.services.RoleService;
@@ -38,7 +39,7 @@ public class UserController {
 		this.userService = userService;
 		this.roleService = roleService;
 	}
-	
+
 	/**
 	 * Creates a user
 	 *
@@ -47,8 +48,8 @@ public class UserController {
 	 * @throws InvalidValueException Thrown when validation fails
 	 */
 	@PostMapping
-	public ResponseEntity <JsonResponse> createUser (@RequestBody User body) throws InvalidValueException {
-		//validate user
+	public ResponseEntity <JsonResponse> createUser (@RequestBody UserDTO body) throws InvalidValueException {
+
 		
 		if (body.getFirstName () == null || body.getLastName () == null || body.getEmail () == null || body.getUsername () == null || body.getPassword () == null) {
 			throw new InvalidValueException ("Invalid user");
@@ -72,7 +73,7 @@ public class UserController {
 		
 		body.setRole (role);
 		
-		userService.createUser (body);
+		userService.createUser ((User) body);
 		
 		return ResponseEntity.ok (new JsonResponse ("Created user", true, null, "/login"));
 	}
