@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.jsonmodels.CreateSessionBody;
 import com.revature.project3backend.jsonmodels.JsonResponse;
-import com.revature.project3backend.models.Product;
+import com.revature.project3backend.models.*;
 import com.revature.project3backend.services.ProductService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -34,6 +34,9 @@ public class ProductControllerIT {
 
     @MockBean
     private ProductService productService;
+
+    @MockBean
+    private MockHttpSession session;
 	
 	private final ObjectMapper json = new ObjectMapper ();
 	
@@ -134,4 +137,34 @@ public class ProductControllerIT {
                 .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
                         .writeValueAsString(new JsonResponse (invalidValueException))));
     }
+
+    @Test
+    void createProduct() throws Exception {
+        MultipartFile file = null;
+        List <CartItem> items = new ArrayList<>();
+        List <Transaction> transactions = new ArrayList<>();
+        String pass = "pass123";
+        UserRole role = new UserRole (1, "ADMIN");
+        Product product = new Product(null, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
+        Product integral = new Product(9, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
+
+        User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions, role);
+        Mockito.when(session.getAttribute ("user")).thenReturn(user);
+        Mockito.when(this.productService.createProduct(product, file)).thenReturn(integral);
+        RequestBuilder request = MockMvcRequestBuilders
+                .post("/product")
+                .param("name", product.getName())
+                .param("description", product.getDescription())
+                .param("price", product.getPrice().toString())
+                .param("stock", product.getStock().toString())
+                .param("imageUrl", product.getImageUrl())
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .session(session);
+
+        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
+                        .writeValueAsString (new JsonResponse ("Got product updated ok.", true, integral, "/product/" + integral.getId()))));
+    }
 }
+
+
