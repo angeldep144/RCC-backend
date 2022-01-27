@@ -70,8 +70,7 @@ public class ProductControllerIT {
 	}
 	
 
-	//todo admin page tests
-	
+
     @Test
     void updateProductSuccessful() throws Exception {
         MultipartFile file = null;
