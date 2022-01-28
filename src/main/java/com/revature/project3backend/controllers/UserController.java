@@ -48,9 +48,7 @@ public class UserController {
 	 * @throws InvalidValueException Thrown when validation fails
 	 */
 	@PostMapping
-	public ResponseEntity <JsonResponse> createUser (@RequestBody UserDTO body) throws InvalidValueException {
-
-		
+	public ResponseEntity <JsonResponse> createUser (@RequestBody User body) throws InvalidValueException {
 		if (body.getFirstName () == null || body.getLastName () == null || body.getEmail () == null || body.getUsername () == null || body.getPassword () == null) {
 			throw new InvalidValueException ("Invalid user");
 		}
@@ -69,11 +67,11 @@ public class UserController {
 		
 		//create user
 		
-		UserRole role = this.roleService.getRoleByName ("USER");
+//		User user = new User (body.getFirstName (), body.getLastName (), body.getEmail (), body.getUsername (), body.getPassword ());
 		
-		body.setRole (role);
+		body.setRole (roleService.getRoleByName ("USER"));
 		
-		userService.createUser ((User) body);
+		userService.createUser (body);
 		
 		return ResponseEntity.ok (new JsonResponse ("Created user", true, null, "/login"));
 	}
