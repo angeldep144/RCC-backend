@@ -1,5 +1,3 @@
-zzzzzzz
-
 INSERT INTO USERS (FIRST_NAME, LAST_NAME, EMAIL, USERNAME, PASSWORD, ROLE_ID)values('Admin', 'Istrator', 'adminUser@email.com', 'admin', '$2a$10$UCoYxwBAux02BsqnhaNRDeBAqcVsWWZTKB/lV3Qm8i8StQpXi62wi', 2);
 --pass1234
 
