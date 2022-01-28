@@ -11,8 +11,11 @@ import com.revature.project3backend.models.Product;
 import com.revature.project3backend.utils.FileUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.event.annotation.PrepareTestInstance;
 import org.springframework.web.multipart.MultipartFile;
 import org.apache.log4j.Logger;
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,14 +24,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+
 public class FileUtilIT {
     private static Logger log = Logger.getLogger(FileUtil.class);
 
     private MultipartFile multipartFile;
     private Product product;
-
+    private FileUtil fileUtil;
     @BeforeEach
     void beforeEach() {
+        fileUtil = new FileUtil();
+
         multipartFile = new MultipartFile() {
             @Override
             public String getName() {
@@ -76,8 +82,9 @@ public class FileUtilIT {
 
     @Test
     void uploadToS3() {
+
         String expectedValue = "https://jwa-p2.s3.us-east-2.amazonaws.com/" + "RCC/" + "products/" + product.getId().toString() + "-" + multipartFile.getOriginalFilename();
-        String actualValue = FileUtil.uploadToS3(product, multipartFile);
+        String actualValue =  fileUtil.uploadToS3(product, multipartFile);
         assertEquals(expectedValue, actualValue);
     }
 }

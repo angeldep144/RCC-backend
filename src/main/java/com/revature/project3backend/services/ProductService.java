@@ -23,20 +23,26 @@ public class ProductService {
 	 * The instance of ProductRepo to use
 	 */
 	private final ProductRepo productRepo;
-	
+
 	/**
 	 * The number of posts on a page
 	 */
 	private final int postsPerPage = 20;
-	
+
+	/**
+	 * The file utility for uploading a file to the S3 bucket
+	 */
+	private final FileUtil fileUtil;
+
 	/**
 	 * This constructor is automatically called by Spring
 	 *
 	 * @param productRepo The instance of ProductRepo to use
 	 */
 	@Autowired
-	public ProductService (ProductRepo productRepo) {
+	public ProductService (ProductRepo productRepo, FileUtil fileUtil) {
 		this.productRepo = productRepo;
+		this.fileUtil = fileUtil;
 	}
 	
 	/**
@@ -103,7 +109,7 @@ public class ProductService {
 		}
 
 		if (file != null) {
-			product.setImageUrl (FileUtil.uploadToS3 (product, file));
+			product.setImageUrl (this.fileUtil.uploadToS3 (product, file));
 		}
 		
 		return productRepo.save (product);
@@ -125,9 +131,7 @@ public class ProductService {
 			throw new InvalidValueException("No product description");
 		}
 
-		if (file != null) {
-			product.setImageUrl (FileUtil.uploadToS3 (product, file));
-		}
+
 
 		if(product.getSalePrice() != null){
 			if (product.getSalePrice () < 0) {
@@ -138,11 +142,17 @@ public class ProductService {
 			}
 		}
 
+
 		if (product.getPrice () < 0){
 			throw new InvalidValueException ("Price cannot be less than 0");
 		}
-		
-		
+
+		//saves so the product has an id for the image url
+		if (file != null) {
+			product = this.productRepo.save (product);
+
+			product.setImageUrl (this.fileUtil.uploadToS3 (product, file));
+		}
 		return this.productRepo.save (product);
 	}
 }

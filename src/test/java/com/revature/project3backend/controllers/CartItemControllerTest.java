@@ -15,6 +15,7 @@ import com.revature.project3backend.repositories.UserRepo;
 import com.revature.project3backend.services.CartItemService;
 import com.revature.project3backend.services.ProductService;
 import com.revature.project3backend.services.UserService;
+import com.revature.project3backend.utils.FileUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,7 @@ class  CartItemControllerTest {
     private final CartItemRepo cartItemRepo = Mockito.mock(CartItemRepo.class);
     private final ProductRepo productRepo = Mockito.mock(ProductRepo.class);
     private final UserRepo userRepo = Mockito.mock(UserRepo.class);
+    private final FileUtil fileUtil = Mockito.mock(FileUtil.class);
 
     private final CartItemService cartItemService;
     private final ProductService productService;
@@ -44,7 +46,7 @@ class  CartItemControllerTest {
 
     public CartItemControllerTest() {
         cartItemService = new CartItemService(cartItemRepo);
-        productService = new ProductService(productRepo);
+        productService = new ProductService(productRepo, fileUtil);
         userService = new UserService(userRepo, cartItemRepo);
         cartItemController = new CartItemController(cartItemService, productService, userService);
     }

@@ -9,14 +9,16 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.revature.project3backend.models.Product;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Handles uploading a file to the S3 bucket.
  */
+@Service
 public class FileUtil {
 	
-	private static Logger log = Logger.getLogger (FileUtil.class);
+	private Logger log = Logger.getLogger (FileUtil.class);
 	
 	/**
 	 * Uploads a file to the S3 bucket for the user.
@@ -25,7 +27,7 @@ public class FileUtil {
 	 * @param multipartFile The file that is uploaded.
 	 * @return The url for the uploaded file.
 	 */
-	public static String uploadToS3 (Product product, MultipartFile multipartFile) {
+	public String uploadToS3 (Product product, MultipartFile multipartFile) {
 		
 		final String awsID = System.getenv ("AWS_PASS");
 		final String secretKey = System.getenv ("AWS_SECRET_PASS");
@@ -54,5 +56,5 @@ public class FileUtil {
 		}
 		return "https://jwa-p2.s3.us-east-2.amazonaws.com/" + imageURL;
 	}
-	
+
 }

@@ -7,6 +7,7 @@ import com.revature.project3backend.utils.FileUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -27,12 +28,11 @@ class ProductServiceTest {
 	ProductRepo productRepo = Mockito.mock (ProductRepo.class);
 	ProductService productService;
 	MultipartFile mf = null;
-	
+	FileUtil fileUtil = Mockito.mock(FileUtil.class);
 	List <Product> products = new ArrayList <> ();
 
 	@BeforeAll
 	static void beforeAll(){
-		Mockito.mockStatic(FileUtil.class);
 
 	}
 
@@ -83,7 +83,7 @@ class ProductServiceTest {
 	}
 	
 	public ProductServiceTest () {
-		this.productService = new ProductService (this.productRepo);
+		this.productService = new ProductService (this.productRepo, this.fileUtil);
 		
 		products.add (new Product (1, "name", "description", 10F, "", null, 10));
 		products.add (new Product (2, "name", "description", 10F, "", null, 10));
@@ -157,7 +157,7 @@ class ProductServiceTest {
 	void createProductWithValidInputAndFile() throws InvalidValueException {
 		Product product = new Product (1, "name", "description", 10F, null, null, null);
 
-		Mockito.when(FileUtil.uploadToS3(product, this.mf)).thenReturn("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
+		Mockito.when(fileUtil.uploadToS3(product, this.mf)).thenReturn("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
 		Mockito.when(productRepo.save(product)).thenReturn(product);
 
 		Product actualResult = productService.createProduct(product, this.mf);
@@ -229,7 +229,8 @@ class ProductServiceTest {
 	void updateProductWithFilePositive() throws InvalidValueException {
 		Product product = new Product (1, "name", "description", 10F, null, null, null);
 
-		Mockito.when(FileUtil.uploadToS3(product, this.mf)).thenReturn("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
+
+		Mockito.when(fileUtil.uploadToS3(product, this.mf)).thenReturn("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
 		Mockito.when(productRepo.save(product)).thenReturn(product);
 
 		Product actualResult = productService.updateProduct(product, this.mf);
@@ -242,7 +243,7 @@ class ProductServiceTest {
 	void updateProductWithoutFilePositive() throws InvalidValueException {
 		Product product = new Product (1, "name", "description", 10F, null, null, null);
 
-		Mockito.when(FileUtil.uploadToS3(product, null)).thenReturn("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
+		Mockito.when(fileUtil.uploadToS3(product, null)).thenReturn("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
 		Mockito.when(productRepo.save(product)).thenReturn(product);
 
 		Product actualResult = productService.updateProduct(product, null);
@@ -254,7 +255,7 @@ class ProductServiceTest {
 	void updateProductWithoutNameNegative() throws InvalidValueException {
 		Product product = new Product (1, null, "description", 10F, null, null, null);
 
-		Mockito.when(FileUtil.uploadToS3(product, null)).thenReturn("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
+		Mockito.when(fileUtil.uploadToS3(product, null)).thenReturn("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
 		Mockito.when(productRepo.save(product)).thenReturn(product);
 
 		String expectedResult = "Error! No product name";
@@ -274,7 +275,7 @@ class ProductServiceTest {
 	void updateProductWithoutDescriptionNegative() throws InvalidValueException {
 		Product product = new Product (1, "name", null, 10F, null, null, null);
 
-		Mockito.when(FileUtil.uploadToS3(product, null)).thenReturn("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
+		Mockito.when(fileUtil.uploadToS3(product, null)).thenReturn("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
 		Mockito.when(productRepo.save(product)).thenReturn(product);
 
 		String expectedResult = "Error! No product description";
