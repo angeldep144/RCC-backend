@@ -107,6 +107,8 @@ class ProductControllerTest {
 		product.setSalePrice (product.getPrice () + 1);
 		InvalidValueException invalidValueException = new InvalidValueException ("Sale price cannot be higher than normal price.");
 		
+		//todo assertThrows and test message
+		
 		Mockito.when (this.productService.updateProduct (product, file)).thenReturn (product);
 		
 		Mockito.verify (this.productService, Mockito.never ()).updateProduct (Mockito.any (), Mockito.any ());
@@ -117,6 +119,8 @@ class ProductControllerTest {
 		MultipartFile file = null;
 		Product product = new Product (1, "Dog Tricks", "Teach your dog new tricks.", (float) -1.15, null, 13);
 		InvalidValueException invalidValueException = new InvalidValueException ("Sale price cannot be higher than normal price.");
+		
+		//todo assertThrows and test message
 		
 		Mockito.verify (this.productService, Mockito.never ()).updateProduct (Mockito.any (), Mockito.any ());
 	}
@@ -139,26 +143,41 @@ class ProductControllerTest {
 	@Test
 	void createProductWhenNotLoggedIn () {
 		fail ();
+		
+		//todo assertThrows and test message
+		//todo verify that methods were not run
 	}
 	
 	@Test
 	void createProductWhenNotAnAdmin () {
 		fail ();
+		
+		//todo assertThrows and test message
+		//todo verify that methods were not run
 	}
 	
 	@Test
 	void createProductWhenSalePriceIsNegative () {
 		fail ();
+		
+		//todo assertThrows and test message
+		//todo verify that methods were not run
 	}
 	
 	@Test
 	void createProductWhenSalePriceIsHigherThanPrice () {
 		fail ();
+		
+		//todo assertThrows and test message
+		//todo verify that methods were not run
 	}
 	
 	@Test
 	void createProductWhenPriceIsNegative () {
 		fail ();
+		
+		//todo assertThrows and test message
+		//todo verify that methods were not run
 	}
 	
 	@Test
