@@ -341,6 +341,6 @@ class UserControllerTest {
 
 		assertEquals (ResponseEntity.ok (new JsonResponse ("Created user", true, null, "/login")), this.userController.createUser (userDTO));
 		
-		Mockito.verify (userService).createUser (userDTO);
+		Mockito.verify (userService).createUser (this.users.get (0));
 	}
 }
