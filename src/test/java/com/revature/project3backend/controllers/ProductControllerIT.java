@@ -26,8 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @WebMvcTest(ProductController.class)
 public class ProductControllerIT {
@@ -74,187 +73,137 @@ public class ProductControllerIT {
 		Mockito.verify (productService).getProduct (product.getId ());
 	}
 	
-
-
-    @Test
-    void updateProductSuccessful() throws Exception {
+	@Test
+	void updateProductWhenNotLoggedIn () throws Exception {
 		MultipartFile file = null;
-        Product product = new Product(1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, 13);
-
-        Mockito.when(this.productService.updateProduct(product, file)).thenReturn(product);
-	
-		List <CartItem> items = new ArrayList<>();
-		List <Transaction> transactions = new ArrayList<>();
-		String pass = "pass123";
-		UserRole role = new UserRole (1, "ADMIN");
-	
-		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions, role);
-		Mockito.when(session.getAttribute ("user")).thenReturn(user);
+		Product product = new Product(1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, 13);
+		UnauthorizedException exception = new UnauthorizedException();
 		
-        RequestBuilder request = MockMvcRequestBuilders
-                .patch("/product")
-                .param("id", product.getId().toString())
-                .param("name", product.getName())
-                .param("description", product.getDescription())
-                .param("price", product.getPrice().toString())
-                .param("stock", product.getStock().toString())
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-				.session (session);
-
-        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk())
-               .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
-                        .writeValueAsString(new JsonResponse ("Product updated ok.", true, product, "/product/1"))));
-    }
-
-	@Test
-	void updateProductNotLoggedIn() throws Exception {
-		MultipartFile file = null;
-		Product product = new Product(1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, 13);
-		UnauthorizedException exception = new UnauthorizedException();
-
 		Mockito.when(this.productService.updateProduct(product, file)).thenReturn(product);
-
+		
 		Mockito.when(session.getAttribute ("user")).thenReturn(null);
-
+		
 		RequestBuilder request = MockMvcRequestBuilders
-				.patch("/product")
-				.param("id", product.getId().toString())
-				.param("name", product.getName())
-				.param("description", product.getDescription())
-				.param("price", product.getPrice().toString())
-				.param("stock", product.getStock().toString())
-				.contentType(MediaType.MULTIPART_FORM_DATA)
-				.session (session);
-
+			.patch("/product")
+			.param("id", product.getId().toString())
+			.param("name", product.getName())
+			.param("description", product.getDescription())
+			.param("price", product.getPrice().toString())
+			.param("stock", product.getStock().toString())
+			.contentType(MediaType.MULTIPART_FORM_DATA)
+			.session (session);
+		
 		mvc.perform(request).andExpect(MockMvcResultMatchers.status().isUnauthorized())
-				.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
-						.writeValueAsString(new JsonResponse (exception, "/login"))));
+			.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
+				.writeValueAsString(new JsonResponse (exception, "/login"))));
 	}
-
-
+	
 	@Test
-	void updateProductAsNotAdmin() throws Exception {
+	void updateProductWhenNotAnAdmin () throws Exception {
 		MultipartFile file = null;
 		Product product = new Product(1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, 13);
 		UnauthorizedException exception = new UnauthorizedException();
-
+		
 		Mockito.when(this.productService.updateProduct(product, file)).thenReturn(product);
-
+		
 		List <CartItem> items = new ArrayList<>();
 		List <Transaction> transactions = new ArrayList<>();
 		String pass = "pass123";
 		UserRole role = new UserRole (1, "USER");
-
+		
 		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions, role);
 		Mockito.when(session.getAttribute ("user")).thenReturn(user);
-
+		
 		RequestBuilder request = MockMvcRequestBuilders
-				.patch("/product")
-				.param("id", product.getId().toString())
-				.param("name", product.getName())
-				.param("description", product.getDescription())
-				.param("price", product.getPrice().toString())
-				.param("stock", product.getStock().toString())
-				.contentType(MediaType.MULTIPART_FORM_DATA)
-				.session (session);
-
+			.patch("/product")
+			.param("id", product.getId().toString())
+			.param("name", product.getName())
+			.param("description", product.getDescription())
+			.param("price", product.getPrice().toString())
+			.param("stock", product.getStock().toString())
+			.contentType(MediaType.MULTIPART_FORM_DATA)
+			.session (session);
+		
 		mvc.perform(request).andExpect(MockMvcResultMatchers.status().isUnauthorized())
-				.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
-						.writeValueAsString(new JsonResponse (exception, "/login"))));
+			.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
+				.writeValueAsString(new JsonResponse (exception, "/login"))));
 	}
-
-    @Test
-    void updateProductNegativePrice() throws Exception {
-        MultipartFile file = null;
-        Product product = new Product(1, "Dog Tricks", "Teach your dog new tricks.", (float) -1.15, null, 13);
-        InvalidValueException invalidValueException = new InvalidValueException("Price cannot be negative.");
-        Mockito.when(this.productService.updateProduct(product, file)).thenReturn(product);
 	
+	@Test
+	void updateProductWhenSalePriceIsNegative () {
+		fail ();
+	}
+	
+	@Test
+	void updateProductWhenSalePriceIsHigherThanPrice () throws InvalidValueException {
+		fail ();
+	}
+	
+	@Test
+	void updateProductWhenPriceIsNegative () throws Exception {
+		MultipartFile file = null;
+		Product product = new Product(1, "Dog Tricks", "Teach your dog new tricks.", (float) -1.15, null, 13);
+		InvalidValueException invalidValueException = new InvalidValueException("Price cannot be negative.");
+		Mockito.when(this.productService.updateProduct(product, file)).thenReturn(product);
+		
 		List <CartItem> items = new ArrayList<>();
 		List <Transaction> transactions = new ArrayList<>();
 		String pass = "pass123";
 		UserRole role = new UserRole (1, "ADMIN");
-	
+		
 		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions, role);
 		Mockito.when(session.getAttribute ("user")).thenReturn(user);
 		
-        RequestBuilder request = MockMvcRequestBuilders
-                .patch("/product")
-                .param("id", product.getId().toString())
-                .param("name", product.getName())
-                .param("description", product.getDescription())
-                .param("price", product.getPrice().toString())
-                .param("stock", product.getStock().toString())
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-				.session (session);
-
-        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
-                        .writeValueAsString(new JsonResponse (invalidValueException))));
-    }
-
-    @Test
-    void updateProductSalePriceTooHigh() throws Exception {
-        MultipartFile file = null;
-        Product product = new Product(1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, 13);
-        InvalidValueException invalidValueException = new InvalidValueException("Sale price cannot be higher than normal price.");
-        Mockito.when(this.productService.updateProduct(product, file)).thenReturn(product);
+		RequestBuilder request = MockMvcRequestBuilders
+			.patch("/product")
+			.param("id", product.getId().toString())
+			.param("name", product.getName())
+			.param("description", product.getDescription())
+			.param("price", product.getPrice().toString())
+			.param("stock", product.getStock().toString())
+			.contentType(MediaType.MULTIPART_FORM_DATA)
+			.session (session);
+		
+		mvc.perform(request).andExpect(MockMvcResultMatchers.status().isBadRequest())
+			.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
+				.writeValueAsString(new JsonResponse (invalidValueException))));
+	}
 	
+	@Test
+	void updateProduct () throws Exception {
+		MultipartFile file = null;
+		Product product = new Product(1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, 13);
+		
+		Mockito.when(this.productService.updateProduct(product, file)).thenReturn(product);
+		
 		List <CartItem> items = new ArrayList<>();
 		List <Transaction> transactions = new ArrayList<>();
 		String pass = "pass123";
 		UserRole role = new UserRole (1, "ADMIN");
-	
+		
 		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions, role);
 		Mockito.when(session.getAttribute ("user")).thenReturn(user);
 		
-        RequestBuilder request = MockMvcRequestBuilders
-                .patch("/product")
-                .param("id", product.getId().toString())
-                .param("name", product.getName())
-                .param("description", product.getDescription())
-                .param("price", product.getPrice().toString())
-                .param("stock", product.getStock().toString())
-                .param("salePrice", (product.getPrice() + 10) + "")
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-				.session (session);
-
-        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
-                        .writeValueAsString(new JsonResponse (invalidValueException))));
-    }
-	
-    @Test
-    void createProduct() throws Exception {
-        MultipartFile file = null;
-        List <CartItem> items = new ArrayList<>();
-        List <Transaction> transactions = new ArrayList<>();
-        String pass = "pass123";
-        UserRole role = new UserRole (1, "ADMIN");
-        Product product = new Product(null, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
-        Product integral = new Product(9, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
-
-        User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions, role);
-        Mockito.when(session.getAttribute ("user")).thenReturn(user);
-        Mockito.when(this.productService.createProduct(product, file)).thenReturn(integral);
-        RequestBuilder request = MockMvcRequestBuilders
-                .post("/product")
-                .param("name", product.getName())
-                .param("description", product.getDescription())
-                .param("price", product.getPrice().toString())
-                .param("stock", product.getStock().toString())
-                .param("imageUrl", product.getImageUrl())
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .session(session);
-
-        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
-                        .writeValueAsString (new JsonResponse ("Got product updated ok.", true, integral, "/product/" + integral.getId()))));
-    }
+		RequestBuilder request = MockMvcRequestBuilders
+			.patch("/product")
+			.param("id", product.getId().toString())
+			.param("name", product.getName())
+			.param("description", product.getDescription())
+			.param("price", product.getPrice().toString())
+			.param("stock", product.getStock().toString())
+			.contentType(MediaType.MULTIPART_FORM_DATA)
+			.session (session);
+		
+		mvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
+				.writeValueAsString(new JsonResponse ("Product updated ok.", true, product, "/product/1"))));
+		
+		//todo verify that methods were run
+		//todo test ResponseEntity
+	}
 	
 	@Test
 	void createProductWhenNotLoggedIn () throws Exception {
-
 		MultipartFile file = null;
 		List <CartItem> items = new ArrayList<>();
 		List <Transaction> transactions = new ArrayList<>();
@@ -262,25 +211,25 @@ public class ProductControllerIT {
 		UserRole role = new UserRole (1, "ADMIN");
 		Product product = new Product(null, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
 		Product integral = new Product(9, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
-
+		
 		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions, role);
 		Mockito.when(session.getAttribute ("user")).thenReturn(null);
 		Mockito.when(this.productService.createProduct(product, file)).thenReturn(integral);
 		RequestBuilder request = MockMvcRequestBuilders
-				.post("/product")
-				.param("name", product.getName())
-				.param("description", product.getDescription())
-				.param("price", product.getPrice().toString())
-				.param("stock", product.getStock().toString())
-				.param("imageUrl", product.getImageUrl())
-				.contentType(MediaType.MULTIPART_FORM_DATA)
-				.session(session);
-
+			.post("/product")
+			.param("name", product.getName())
+			.param("description", product.getDescription())
+			.param("price", product.getPrice().toString())
+			.param("stock", product.getStock().toString())
+			.param("imageUrl", product.getImageUrl())
+			.contentType(MediaType.MULTIPART_FORM_DATA)
+			.session(session);
+		
 		UnauthorizedException unauthorizedException = new UnauthorizedException();
-
+		
 		mvc.perform(request).andExpect(MockMvcResultMatchers.status().isUnauthorized())
-				.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
-						.writeValueAsString (new JsonResponse ("Error! Unauthorized", false, null,"/login"))));
+			.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
+				.writeValueAsString (new JsonResponse ("Error! Unauthorized", false, null,"/login"))));
 	}
 	
 	@Test
@@ -292,25 +241,97 @@ public class ProductControllerIT {
 		UserRole role = new UserRole (2, "USER");
 		Product product = new Product(null, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
 		Product integral = new Product(9, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
-
+		
 		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions, role);
 		Mockito.when(session.getAttribute ("user")).thenReturn(user);
 		Mockito.when(this.productService.createProduct(product, file)).thenReturn(integral);
 		RequestBuilder request = MockMvcRequestBuilders
-				.post("/product")
-				.param("name", product.getName())
-				.param("description", product.getDescription())
-				.param("price", product.getPrice().toString())
-				.param("stock", product.getStock().toString())
-				.param("imageUrl", product.getImageUrl())
-				.contentType(MediaType.MULTIPART_FORM_DATA)
-				.session(session);
-
+			.post("/product")
+			.param("name", product.getName())
+			.param("description", product.getDescription())
+			.param("price", product.getPrice().toString())
+			.param("stock", product.getStock().toString())
+			.param("imageUrl", product.getImageUrl())
+			.contentType(MediaType.MULTIPART_FORM_DATA)
+			.session(session);
+		
 		UnauthorizedException unauthorizedException = new UnauthorizedException();
-
+		
 		mvc.perform(request).andExpect(MockMvcResultMatchers.status().isUnauthorized())
-				.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
-						.writeValueAsString (new JsonResponse ("Error! Unauthorized", false, null,"/login"))));
+			.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
+				.writeValueAsString (new JsonResponse ("Error! Unauthorized", false, null,"/login"))));
+	}
+	
+	@Test
+	void createProductWhenSalePriceIsNegative () {
+		fail ();
+	}
+	
+	@Test
+	void createProductWhenSalePriceIsHigherThanPrice () throws Exception {
+		MultipartFile file = null;
+		Product product = new Product(1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, 13);
+		InvalidValueException invalidValueException = new InvalidValueException("Sale price cannot be higher than normal price.");
+		Mockito.when(this.productService.updateProduct(product, file)).thenReturn(product);
+		
+		List <CartItem> items = new ArrayList<>();
+		List <Transaction> transactions = new ArrayList<>();
+		String pass = "pass123";
+		UserRole role = new UserRole (1, "ADMIN");
+		
+		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions, role);
+		Mockito.when(session.getAttribute ("user")).thenReturn(user);
+		
+		RequestBuilder request = MockMvcRequestBuilders
+			.patch("/product")
+			.param("id", product.getId().toString())
+			.param("name", product.getName())
+			.param("description", product.getDescription())
+			.param("price", product.getPrice().toString())
+			.param("stock", product.getStock().toString())
+			.param("salePrice", (product.getPrice() + 10) + "")
+			.contentType(MediaType.MULTIPART_FORM_DATA)
+			.session (session);
+		
+		mvc.perform(request).andExpect(MockMvcResultMatchers.status().isBadRequest())
+			.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
+				.writeValueAsString(new JsonResponse (invalidValueException))));
+	}
+	
+	@Test
+	void createProductWhenPriceIsNegative () {
+		fail ();
+	}
+	
+	@Test
+	void createProduct () throws Exception {
+		MultipartFile file = null;
+		List <CartItem> items = new ArrayList<>();
+		List <Transaction> transactions = new ArrayList<>();
+		String pass = "pass123";
+		UserRole role = new UserRole (1, "ADMIN");
+		Product product = new Product(null, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
+		Product integral = new Product(9, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
+		
+		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions, role);
+		Mockito.when(session.getAttribute ("user")).thenReturn(user);
+		Mockito.when(this.productService.createProduct(product, file)).thenReturn(integral);
+		RequestBuilder request = MockMvcRequestBuilders
+			.post("/product")
+			.param("name", product.getName())
+			.param("description", product.getDescription())
+			.param("price", product.getPrice().toString())
+			.param("stock", product.getStock().toString())
+			.param("imageUrl", product.getImageUrl())
+			.contentType(MediaType.MULTIPART_FORM_DATA)
+			.session(session);
+		
+		mvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
+				.writeValueAsString (new JsonResponse ("Got product updated ok.", true, integral, "/product/" + integral.getId()))));
+		
+		//todo verify that methods were run
+		//todo test ResponseEntity
 	}
 }
 
