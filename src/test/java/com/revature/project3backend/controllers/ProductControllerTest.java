@@ -12,8 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ProductControllerTest {
 	private final ProductController productController;
@@ -69,6 +68,7 @@ class ProductControllerTest {
 		Mockito.verify (productService).getProduct (product.getId ());
 	}
 	
+	//todo redundant
 	@Test
 	void getProductNegative () throws InvalidValueException {
 		String expectedResult = "Error! Invalid product id";
@@ -86,7 +86,43 @@ class ProductControllerTest {
 	}
 	
 	@Test
-	void updateProductSuccessful () throws InvalidValueException {
+	void updateProductWhenNotLoggedIn () {
+		fail ();
+	}
+	
+	@Test
+	void updateProductWhenNotAnAdmin () {
+		fail ();
+	}
+	
+	@Test
+	void updateProductWhenSalePriceIsNegative () {
+		fail ();
+	}
+	
+	@Test
+	void updateProductWhenSalePriceIsHigherThanPrice () throws InvalidValueException {
+		MultipartFile file = null;
+		Product product = new Product (1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, 13);
+		product.setSalePrice (product.getPrice () + 1);
+		InvalidValueException invalidValueException = new InvalidValueException ("Sale price cannot be higher than normal price.");
+		
+		Mockito.when (this.productService.updateProduct (product, file)).thenReturn (product);
+		
+		Mockito.verify (this.productService, Mockito.never ()).updateProduct (Mockito.any (), Mockito.any ());
+	}
+	
+	@Test
+	void updateProductWhenPriceIsNegative () throws InvalidValueException {
+		MultipartFile file = null;
+		Product product = new Product (1, "Dog Tricks", "Teach your dog new tricks.", (float) -1.15, null, 13);
+		InvalidValueException invalidValueException = new InvalidValueException ("Sale price cannot be higher than normal price.");
+		
+		Mockito.verify (this.productService, Mockito.never ()).updateProduct (Mockito.any (), Mockito.any ());
+	}
+	
+	@Test
+	void updateProduct () throws InvalidValueException {
 		MultipartFile file = null;
 		Product product = new Product (1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, 13);
 		
@@ -95,28 +131,41 @@ class ProductControllerTest {
 		Product actual = this.productService.updateProduct (product, file);
 		
 		assertEquals (product, actual);
+		
+		//todo verify that methods were run
+		//todo test ResponseEntity
 	}
 	
 	@Test
-	void updateProductPriceNegative () throws InvalidValueException {
-		MultipartFile file = null;
-		Product product = new Product (1, "Dog Tricks", "Teach your dog new tricks.", (float) -1.15, null, 13);
-		InvalidValueException invalidValueException = new InvalidValueException ("Sale price cannot be higher than normal price.");
-		
-		Mockito.verify (this.productService, Mockito.times (0)).updateProduct (Mockito.any (), Mockito.any ());
-		
+	void createProductWhenNotLoggedIn () {
+		fail ();
 	}
 	
 	@Test
-	void updateProductSalePriceTooHigh () throws InvalidValueException {
-		MultipartFile file = null;
-		Product product = new Product (1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, 13);
-		product.setSalePrice (product.getPrice () + 1);
-		InvalidValueException invalidValueException = new InvalidValueException ("Sale price cannot be higher than normal price.");
+	void createProductWhenNotAnAdmin () {
+		fail ();
+	}
+	
+	@Test
+	void createProductWhenSalePriceIsNegative () {
+		fail ();
+	}
+	
+	@Test
+	void createProductWhenSalePriceIsHigherThanPrice () {
+		fail ();
+	}
+	
+	@Test
+	void createProductWhenPriceIsNegative () {
+		fail ();
+	}
+	
+	@Test
+	void createProduct () {
+		fail ();
 		
-		Mockito.when (this.productService.updateProduct (product, file)).thenReturn (product);
-		
-		Mockito.verify (this.productService, Mockito.times (0)).updateProduct (Mockito.any (), Mockito.any ());
-		
+		//todo verify that methods were run
+		//todo test ResponseEntity
 	}
 }
