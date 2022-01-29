@@ -68,7 +68,6 @@ public class User {
 	private List <Transaction> transactions;
 	
 	@ManyToOne
-//TODO: set default role to USER, also set it in constructor?
 	private UserRole role;
 	
 	/**

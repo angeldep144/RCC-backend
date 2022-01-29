@@ -119,6 +119,7 @@ public class ProductService {
 	 * Method creates new product given new product information
 	 *
 	 * @param product created from form data received from controller
+	 * @param file the image file for the product, optional
 	 * @return newly created product
 	 * @throws InvalidValueException when price or sales price is less than 0, or sales price is greater than original price
 	 */
