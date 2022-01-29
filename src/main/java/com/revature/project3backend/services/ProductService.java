@@ -23,17 +23,17 @@ public class ProductService {
 	 * The instance of ProductRepo to use
 	 */
 	private final ProductRepo productRepo;
-
+	
 	/**
 	 * The number of posts on a page
 	 */
 	private final int postsPerPage = 20;
-
+	
 	/**
 	 * The file utility for uploading a file to the S3 bucket
 	 */
 	private final FileUtil fileUtil;
-
+	
 	/**
 	 * This constructor is automatically called by Spring
 	 *
@@ -75,7 +75,7 @@ public class ProductService {
 	
 	/**
 	 * Reduces a product's stock by a given quantity
-	 * 
+	 *
 	 * @param product The product to reduce the stock of
 	 * @param quantity The quantity to reduce the stock by
 	 * @throws InvalidValueException Thrown when validation fails
@@ -100,14 +100,14 @@ public class ProductService {
 	 * @return The updated product.
 	 */
 	public Product updateProduct (Product product, MultipartFile file) throws InvalidValueException {
-		if(product.getName() == null){
-			throw new InvalidValueException("No product name");
+		if (product.getName () == null) {
+			throw new InvalidValueException ("No product name");
 		}
-
-		if(product.getDescription() == null){
-			throw new InvalidValueException("No product description");
+		
+		if (product.getDescription () == null) {
+			throw new InvalidValueException ("No product description");
 		}
-
+		
 		if (file != null) {
 			product.setImageUrl (this.fileUtil.uploadToS3 (product, file));
 		}
@@ -124,36 +124,35 @@ public class ProductService {
 	 * @throws InvalidValueException when price or sales price is less than 0, or sales price is greater than original price
 	 */
 	public Product createProduct (Product product, MultipartFile file) throws InvalidValueException {
-		if(product.getName() == null){
-			throw new InvalidValueException("No product name");
+		if (product.getName () == null) {
+			throw new InvalidValueException ("No product name");
 		}
-
-		if(product.getDescription() == null){
-			throw new InvalidValueException("No product description");
+		
+		if (product.getDescription () == null) {
+			throw new InvalidValueException ("No product description");
 		}
-
-
-
-		if(product.getSalePrice() != null){
+		
+		if (product.getSalePrice () != null) {
 			if (product.getSalePrice () < 0) {
 				throw new InvalidValueException ("Sale price cannot be less than 0");
 			}
+			
 			if (product.getSalePrice () > product.getPrice ()) {
 				throw new InvalidValueException ("Sales price cannot be greater than original price");
 			}
 		}
-
-
-		if (product.getPrice () < 0){
+		
+		if (product.getPrice () < 0) {
 			throw new InvalidValueException ("Price cannot be less than 0");
 		}
-
+		
 		//saves so the product has an id for the image url
 		if (file != null) {
 			product = this.productRepo.save (product);
-
+			
 			product.setImageUrl (this.fileUtil.uploadToS3 (product, file));
 		}
+		
 		return this.productRepo.save (product);
 	}
 }
