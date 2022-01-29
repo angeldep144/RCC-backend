@@ -50,3 +50,7 @@ INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('HTML a
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('HTML and CSS Part 3', 'More structure and more styling', 59.99, 23, 'https://i.ytimg.com/vi/1rbo_HHt5nw/maxresdefault.jpg')
 
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VALUES ('NodeJS', 'Use JavaScript outside the browser', 78.99, 45.99, 30, 'https://i.ytimg.com/vi/RLtyhwFtXQA/maxresdefault.jpg')
+
+INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Rust', 'Learn Rust language', 13.99, 30, 'https://www.rust-lang.org/static/images/rust-social-wide.jpg')
+
+INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Ruby on Rails 101', 'Basics of Ruby on Rails', 11.13, 3, 'https://res.cloudinary.com/practicaldev/image/fetch/s--jvDLhx0b--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/i/cpcr5w0kgl6j94tss7n9.png')
