@@ -68,7 +68,7 @@ class ProductControllerTest {
 		Mockito.verify (productService).getProduct (product.getId ());
 	}
 	
-	//todo redundant
+	//todo this is a service test, it doesn't call the controller. It's also redundant because the service is already tested for this (ProductServiceTest.getProductWhenNotFound). Should probably just remove this test
 	@Test
 	void getProductNegative () throws InvalidValueException {
 		String expectedResult = "Error! Invalid product id";
@@ -102,14 +102,13 @@ class ProductControllerTest {
 	
 	@Test
 	void updateProductWhenSalePriceIsHigherThanPrice () throws InvalidValueException {
-		MultipartFile file = null;
-		Product product = new Product (1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, 13);
-		product.setSalePrice (product.getPrice () + 1);
-		InvalidValueException invalidValueException = new InvalidValueException ("Sale price cannot be higher than normal price.");
+		//todo call productController.updateProduct with sale price negative
 		
-		//todo assertThrows and test message
+		//todo assert that the sale price is null
 		
-		Mockito.when (this.productService.updateProduct (product, file)).thenReturn (product);
+		fail ();
+		
+		//todo should we do mockito verifys and check return value here since we already test it in updateProduct test?
 		
 		Mockito.verify (this.productService, Mockito.never ()).updateProduct (Mockito.any (), Mockito.any ());
 	}
@@ -121,6 +120,9 @@ class ProductControllerTest {
 		InvalidValueException invalidValueException = new InvalidValueException ("Sale price cannot be higher than normal price.");
 		
 		//todo assertThrows and test message
+		//todo this doesn't ever call the controller method
+		
+		fail ();
 		
 		Mockito.verify (this.productService, Mockito.never ()).updateProduct (Mockito.any (), Mockito.any ());
 	}
@@ -135,6 +137,10 @@ class ProductControllerTest {
 		Product actual = this.productService.updateProduct (product, file);
 		
 		assertEquals (product, actual);
+		
+		//todo this doesn't ever call the controller method
+		
+		fail ();
 		
 		//todo verify that methods were run
 		//todo test ResponseEntity

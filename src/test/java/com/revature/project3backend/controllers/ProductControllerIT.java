@@ -96,6 +96,8 @@ public class ProductControllerIT {
 		mvc.perform(request).andExpect(MockMvcResultMatchers.status().isUnauthorized())
 			.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
 				.writeValueAsString(new JsonResponse (exception, "/login"))));
+		
+		//todo verify that methods were run (copy verifications from ProductController unit tests)
 	}
 	
 	@Test
@@ -127,16 +129,22 @@ public class ProductControllerIT {
 		mvc.perform(request).andExpect(MockMvcResultMatchers.status().isUnauthorized())
 			.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
 				.writeValueAsString(new JsonResponse (exception, "/login"))));
+		
+		//todo verify that methods were run (copy verifications from ProductController unit tests)
 	}
 	
 	@Test
 	void updateProductWhenSalePriceIsNegative () {
 		fail ();
+		
+		//todo verify that methods were run (copy verifications from ProductController unit tests)
 	}
 	
 	@Test
 	void updateProductWhenSalePriceIsHigherThanPrice () throws InvalidValueException {
 		fail ();
+		
+		//todo verify that methods were run (copy verifications from ProductController unit tests)
 	}
 	
 	@Test
@@ -167,6 +175,8 @@ public class ProductControllerIT {
 		mvc.perform(request).andExpect(MockMvcResultMatchers.status().isBadRequest())
 			.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
 				.writeValueAsString(new JsonResponse (invalidValueException))));
+		
+		//todo verify that methods were run (copy verifications from ProductController unit tests)
 	}
 	
 	@Test
@@ -198,7 +208,7 @@ public class ProductControllerIT {
 			.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
 				.writeValueAsString(new JsonResponse ("Product updated ok.", true, product, "/product/1"))));
 		
-		//todo verify that methods were run
+		//todo verify that methods were run (copy verifications from ProductController unit tests)
 		//todo test ResponseEntity
 	}
 	
@@ -230,6 +240,8 @@ public class ProductControllerIT {
 		mvc.perform(request).andExpect(MockMvcResultMatchers.status().isUnauthorized())
 			.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
 				.writeValueAsString (new JsonResponse ("Error! Unauthorized", false, null,"/login"))));
+		
+		//todo verify that methods were run (copy verifications from ProductController unit tests)
 	}
 	
 	@Test
@@ -260,11 +272,15 @@ public class ProductControllerIT {
 		mvc.perform(request).andExpect(MockMvcResultMatchers.status().isUnauthorized())
 			.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
 				.writeValueAsString (new JsonResponse ("Error! Unauthorized", false, null,"/login"))));
+		
+		//todo verify that methods were run (copy verifications from ProductController unit tests)
 	}
 	
 	@Test
 	void createProductWhenSalePriceIsNegative () {
 		fail ();
+		
+		//todo verify that methods were run (copy verifications from ProductController unit tests)
 	}
 	
 	@Test
@@ -296,11 +312,15 @@ public class ProductControllerIT {
 		mvc.perform(request).andExpect(MockMvcResultMatchers.status().isBadRequest())
 			.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
 				.writeValueAsString(new JsonResponse (invalidValueException))));
+		
+		//todo verify that methods were run (copy verifications from ProductController unit tests)
 	}
 	
 	@Test
 	void createProductWhenPriceIsNegative () {
 		fail ();
+		
+		//todo verify that methods were run (copy verifications from ProductController unit tests)
 	}
 	
 	@Test
@@ -330,8 +350,7 @@ public class ProductControllerIT {
 			.andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
 				.writeValueAsString (new JsonResponse ("Got product updated ok.", true, integral, "/product/" + integral.getId()))));
 		
-		//todo verify that methods were run
-		//todo test ResponseEntity
+		//todo verify that methods were run (copy verifications from ProductController unit tests)
 	}
 }
 
