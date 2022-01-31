@@ -20,7 +20,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping ("product")
-@CrossOrigin (origins = "http://derbxyh7qcp65.cloudfront.net/", allowCredentials = "true")
+@CrossOrigin (origins = "${PROJECT3_FRONTEND_URL}", allowCredentials = "true")
 public class ProductController {
 	/**
 	 * The instance of ProductService to use

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping ("user")
-@CrossOrigin (origins = "http://derbxyh7qcp65.cloudfront.net/", allowCredentials = "true")
+@CrossOrigin (origins = "${PROJECT3_FRONTEND_URL}", allowCredentials = "true")
 public class UserController {
 	/**
 	 * The instance of UserService to use
