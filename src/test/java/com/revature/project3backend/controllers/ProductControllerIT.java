@@ -265,7 +265,7 @@ public class ProductControllerIT {
 	@Test
 	void createProductWhenSalePriceIsNegative () throws Exception {
 		MultipartFile file = null;
-		Product product = new Product(null, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
+		Product product = new Product(null, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", -20f, 13);
 		InvalidValueException invalidValueException = new InvalidValueException("Sale price cannot be less than 0");
 		Mockito.when(this.productService.createProduct(product, file)).thenThrow(invalidValueException);
 
@@ -283,7 +283,7 @@ public class ProductControllerIT {
 				.param("description", product.getDescription())
 				.param("price", product.getPrice().toString())
 				.param("stock", product.getStock().toString())
-				.param("salePrice", (product.getPrice() - 10) + "")
+				.param("salePrice", product.getSalePrice().toString())
 				.contentType(MediaType.MULTIPART_FORM_DATA)
 				.session (session);
 
@@ -326,10 +326,9 @@ public class ProductControllerIT {
 	
 	@Test
 	void createProductWhenPriceIsNegative () throws Exception {
-		MultipartFile file = null;
-		Product product = new Product(null, "Dog Tricks", "Teach your dog new tricks.", (float) -1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
-		InvalidValueException invalidValueException = new InvalidValueException("Sale price cannot be higher than normal price.");
-		Mockito.when(this.productService.createProduct(product, file)).thenThrow(invalidValueException);
+		Product product = new Product(null, "Dog Tricks", "Teach your dog new tricks.", -1.15f, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
+		InvalidValueException invalidValueException = new InvalidValueException("Price cannot be less than 0");
+		Mockito.when(productService.createProduct(product, null)).thenThrow(invalidValueException);
 
 		List <CartItem> items = new ArrayList<>();
 		List <Transaction> transactions = new ArrayList<>();
@@ -345,7 +344,6 @@ public class ProductControllerIT {
 				.param("description", product.getDescription())
 				.param("price", product.getPrice().toString())
 				.param("stock", product.getStock().toString())
-				.param("salePrice", (product.getPrice() + 10) + "")
 				.contentType(MediaType.MULTIPART_FORM_DATA)
 				.session (session);
 

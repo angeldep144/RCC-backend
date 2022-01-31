@@ -182,28 +182,9 @@ class ProductControllerTest {
 
 		InvalidValueException exception = assertThrows(InvalidValueException.class, () -> this.productController.updateProduct(product.getName(), product.getDescription(), product.getPrice(), product.getSalePrice(), product.getId(), null, product.getStock(),  product.getImageUrl(),  session));
 
-		assertEquals ("Error! Price cannot be negative.", exception.getMessage ());
+		assertEquals ("Error! Sale price cannot negative.", exception.getMessage ());
 
 		Mockito.verify (this.productService, Mockito.never ()).updateProduct (Mockito.any (), Mockito.any ());
-	}
-	
-	@Test
-	void updateProduct () throws InvalidValueException {
-		MultipartFile file = null;
-		Product product = new Product (1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, 13);
-		
-		Mockito.when (productService.updateProduct (product, file)).thenReturn (product);
-		
-		Product actual = this.productService.updateProduct (product, file);
-		
-		assertEquals (product, actual);
-		
-		//todo this doesn't ever call the controller method
-		
-		fail ();
-		
-		//todo verify that methods were run
-		//todo test ResponseEntity
 	}
 	
 	@Test
@@ -245,11 +226,20 @@ class ProductControllerTest {
 	}
 	
 	@Test
-	void createProductWhenSalePriceIsNegative () {
-		fail ();
-		
-		//todo assertThrows and test message
-		//todo verify that methods were not run
+	void createProductWhenSalePriceIsNegative () throws InvalidValueException {
+		Product product = new Product (null, "Dog Tricks", "Teach your dog new tricks.", (float) -1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
+		MultipartFile file = null;
+		User user = new User (1, "User", "1", "email1", "username13123", "password", new ArrayList <> (), new ArrayList <> (), new UserRole(2, "ADMIN"));
+		MockHttpSession httpSession = new MockHttpSession();
+		httpSession.setAttribute("user", user);
+
+		InvalidValueException invalidValueException = new InvalidValueException("Sale price cannot be less than 0");
+
+		Mockito.when(productService.createProduct(product, null)).thenThrow(invalidValueException);
+
+		InvalidValueException exception = assertThrows(InvalidValueException.class, () -> this.productController.createProduct(product.getName(), product.getDescription(), product.getPrice(), product.getSalePrice(), file, product.getStock(), product.getImageUrl(), httpSession));
+
+		assertEquals ("Error! Sale price cannot be less than 0", exception.getMessage ());
 	}
 	
 	@Test
@@ -260,11 +250,13 @@ class ProductControllerTest {
 		MockHttpSession httpSession = new MockHttpSession();
 		httpSession.setAttribute("user", user);
 
-		InvalidValueException exception = assertThrows(InvalidValueException.class, () -> this.productController.createProduct(product.getName(), product.getDescription(), product.getPrice(), (float) 10, file, product.getStock(), product.getImageUrl(), httpSession));
+		InvalidValueException invalidValueException = new InvalidValueException("Sale price cannot be higher than normal price.");
+
+		Mockito.when(productService.createProduct(product, null)).thenThrow(invalidValueException);
+
+		InvalidValueException exception = assertThrows(InvalidValueException.class, () -> this.productController.createProduct(product.getName(), product.getDescription(), product.getPrice(), product.getSalePrice(), file, product.getStock(), product.getImageUrl(), httpSession));
 
 		assertEquals ("Error! Sale price cannot be higher than normal price.", exception.getMessage ());
-
-		Mockito.verify(productService, Mockito.never()).createProduct(Mockito.any(), Mockito.any());
 	}
 	
 	@Test
@@ -275,11 +267,13 @@ class ProductControllerTest {
 		MockHttpSession httpSession = new MockHttpSession();
 		httpSession.setAttribute("user", user);
 
+		InvalidValueException invalidValueException = new InvalidValueException("Price cannot be less than 0");
+
+		Mockito.when(productService.createProduct(product, null)).thenThrow(invalidValueException);
+
 		InvalidValueException exception = assertThrows(InvalidValueException.class, () -> this.productController.createProduct(product.getName(), product.getDescription(), product.getPrice(), product.getSalePrice(), file, product.getStock(), product.getImageUrl(), httpSession));
 
-		assertEquals ("Error! Price cannot be negative.", exception.getMessage ());
-
-		Mockito.verify(productService, Mockito.never()).createProduct(Mockito.any(), Mockito.any());
+		assertEquals ("Error! Price cannot be less than 0", exception.getMessage ());
 	}
 	
 	@Test

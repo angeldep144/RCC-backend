@@ -153,7 +153,7 @@ class ProductServiceTest {
 	
 	@Test
 	void updateProductWhenNameIsNull () throws InvalidValueException {
-		Product product = new Product (1, null, "description", 10F, null, null, null);
+		Product product = new Product (1, null, "description", 10F, null, null, 10);
 		
 		Mockito.when (fileUtil.uploadToS3 (product, null)).thenReturn ("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
 		Mockito.when (productRepo.save (product)).thenReturn (product);
@@ -173,7 +173,7 @@ class ProductServiceTest {
 	
 	@Test
 	void updateProductWhenDescriptionIsNull () throws InvalidValueException {
-		Product product = new Product (1, "name", null, 10F, null, null, null);
+		Product product = new Product (1, "name", null, 10F, null, null, 10);
 		
 		Mockito.when (fileUtil.uploadToS3 (product, null)).thenReturn ("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
 		Mockito.when (productRepo.save (product)).thenReturn (product);
@@ -206,7 +206,7 @@ class ProductServiceTest {
 	
 	@Test
 	void updateProductWithoutImage () throws InvalidValueException {
-		Product product = new Product (1, "name", "description", 10F, null, null, null);
+		Product product = new Product (1, "name", "description", 10F, null, null, 10);
 		
 		Mockito.when (fileUtil.uploadToS3 (product, null)).thenReturn ("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
 		Mockito.when (productRepo.save (product)).thenReturn (product);
@@ -231,7 +231,7 @@ class ProductServiceTest {
 	
 	@Test
 	void createProductWithNegativeSalePrice () throws InvalidValueException {
-		Product product = new Product (1, "name", "description", 10F, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", -(10F), null);
+		Product product = new Product (1, "name", "description", 10F, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", -(10F), 10);
 		
 		String expectedResult = "Error! Sale price cannot be less than 0";
 		String actualResult = null;
@@ -249,7 +249,7 @@ class ProductServiceTest {
 	
 	@Test
 	void createProductWithSalePriceGreaterThanPrice () throws InvalidValueException {
-		Product product = new Product (1, "name", "description", 10F, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 40F, null);
+		Product product = new Product (1, "name", "description", 10F, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 40F, 10);
 		
 		String expectedResult = "Error! Sales price cannot be greater than original price";
 		String actualResult = null;
@@ -267,7 +267,7 @@ class ProductServiceTest {
 	
 	@Test
 	void createProductWithNegativePrice () throws InvalidValueException {
-		Product product = new Product (1, "name", "description", -(10F), "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", null, null);
+		Product product = new Product (1, "name", "description", -(10F), "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", null, 10);
 		
 		String expectedResult = "Error! Price cannot be less than 0";
 		String actualResult = null;
@@ -283,7 +283,7 @@ class ProductServiceTest {
 	
 	@Test
 	void createProductWithImage () throws InvalidValueException {
-		Product product = new Product (1, "name", "description", 10F, null, null, null);
+		Product product = new Product (1, "name", "description", 10F, null, null, 10);
 		
 		Mockito.when (fileUtil.uploadToS3 (product, this.mf)).thenReturn ("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
 		Mockito.when (productRepo.save (product)).thenReturn (product);
@@ -296,7 +296,7 @@ class ProductServiceTest {
 	
 	@Test
 	void createProductWithoutImage () throws InvalidValueException {
-		Product product = new Product (1, "name", "description", 10F, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", null, null);
+		Product product = new Product (1, "name", "description", 10F, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", null, 10);
 		
 		Mockito.when (productRepo.save (product)).thenReturn (product);
 		
