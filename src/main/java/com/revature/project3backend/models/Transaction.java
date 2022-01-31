@@ -30,10 +30,12 @@ public class Transaction {
 	@JsonProperty (access = JsonProperty.Access.WRITE_ONLY)
 	private User buyer;
 	
+	//todo use a List of CartItems, problem is that you can't delete the CartItems when they are used in a transaction, but you should delete them if the user clears them from the cart or they checkout and you want to clear their cart
+	//todo this causes error if items string is more than 2000 characters
 	/**
 	 * The items in the transaction (formatted as a JSON string)
 	 */
-	@Column (length = 1000)
+	@Column (length = 2000)
 	private String items;
 	
 	/**
