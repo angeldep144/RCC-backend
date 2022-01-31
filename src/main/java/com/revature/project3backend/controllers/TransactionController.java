@@ -22,7 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping ("transaction")
-@CrossOrigin (origins = "http://localhost:4200/", allowCredentials = "true")
+@CrossOrigin (origins = "http://derbxyh7qcp65.cloudfront.net/", allowCredentials = "true")
 public class TransactionController {
 	/**
 	 * The instance of TransactionService to use
