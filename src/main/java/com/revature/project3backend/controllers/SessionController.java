@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
  */
 @RestController
 @RequestMapping ("session")
-@CrossOrigin (origins = "http://localhost:4200/", allowCredentials = "true")
+@CrossOrigin (origins = "http://derbxyh7qcp65.cloudfront.net/", allowCredentials = "true")
 public class SessionController {
 	/**
 	 * The instance of UserService to use
