@@ -173,6 +173,21 @@ public class ProductController {
 		if (file == null) {
 			product.setImageUrl (defaultImageUrl);
 		}
+
+		//if sale price is higher than price
+		if (salePrice != null) {
+			product.setSalePrice (salePrice);
+			if (product.getSalePrice () < 0) {
+				product.setSalePrice (null);
+			}else if (product.getPrice () < product.getSalePrice ()) {
+				throw new InvalidValueException ("Sale price cannot be higher than normal price.");
+			}
+		}
+
+		//Error thrown if the price is negative.
+		if (product.getPrice () < 0) {
+			throw new InvalidValueException ("Price cannot be negative.");
+		}
 		
 		Product result = this.productService.createProduct (product, file);
 		
