@@ -100,7 +100,7 @@ public class ProductService {
 	 * @return The updated product.
 	 */
 	public Product updateProduct (Product product, MultipartFile file) throws InvalidValueException {
-		if (product.getStock() < 0){
+		if ((product.getStock() == null) || (product.getStock() < 0)){
 			product.setStock(null);
 		}
 
