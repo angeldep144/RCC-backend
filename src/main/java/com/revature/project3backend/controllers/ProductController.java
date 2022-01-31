@@ -114,7 +114,7 @@ public class ProductController {
 			throw new UnauthorizedException ();
 		}
 		
-		Product product = new Product (id, productName, productDescription, price, imageUrl, stock);
+		Product product = new Product (id, productName, productDescription, price, imageUrl, salePrice, stock);
 		
 		if (salePrice != null) {
 			product.setSalePrice (salePrice);

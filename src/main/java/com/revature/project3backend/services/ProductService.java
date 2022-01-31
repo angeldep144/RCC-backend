@@ -145,7 +145,8 @@ public class ProductService {
 	 * @throws InvalidValueException when price or sales price is less than 0, or sales price is greater than original price
 	 */
 	public Product createProduct (Product product, MultipartFile file) throws InvalidValueException {
-		if (product.getStock() < 0){
+		System.out.println(product);
+		if ((product.getStock() == null) || (product.getStock() < 0)){
 			product.setStock(null);
 		}
 
