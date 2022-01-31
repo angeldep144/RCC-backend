@@ -113,7 +113,6 @@ public class ProductService {
 		}
 
 		if (product.getSalePrice() != null) {
-			product.setSalePrice (product.getSalePrice());
 			if (product.getSalePrice () < 0) {
 				product.setSalePrice (null);
 			}
