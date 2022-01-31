@@ -167,8 +167,7 @@ public class ProductController {
 			throw new UnauthorizedException ();
 		}
 		
-		Product product = new Product (null, productName, productDescription, price, imageUrl, stock);
-
+		Product product = new Product (null, productName, productDescription, price, imageUrl, salePrice, stock);
 		// sets default image if none given
 		if (file == null) {
 			product.setImageUrl (defaultImageUrl);
