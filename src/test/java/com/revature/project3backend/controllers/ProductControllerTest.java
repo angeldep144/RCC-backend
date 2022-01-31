@@ -131,8 +131,22 @@ class ProductControllerTest {
 
 
 	@Test
-	void updateProductWhenSalePriceIsNegative () {
-		fail ();
+	void updateProductWhenSalePriceIsNegative () throws InvalidValueException {
+		Product product = new Product (1, "roomba", "description", 12.88f, "https://i.pcmag.com/imagery/reviews/01hmxcWyN13h1LfMglNxHGC-1.fit_scale.size_1028x578.v1589573902.jpg", -13.00f, 10);
+
+		UserRole userRole = new UserRole(1, "ADMIN");
+
+		User user = new User (1, "John", "Smith", "johnsmith@example.com", "johnsmith", "password", null, null, userRole);
+
+		MockHttpSession session = new MockHttpSession();
+
+		session.setAttribute("user", user);
+
+		InvalidValueException exception = assertThrows(InvalidValueException.class, () -> this.productController.updateProduct(product.getName(), product.getDescription(), product.getPrice(), product.getSalePrice(), product.getId(), null, product.getStock(),  product.getImageUrl(),  session));
+
+		assertEquals ("Error! Sale price cannot negative.", exception.getMessage ());
+
+		Mockito.verify (this.productService, Mockito.never ()).updateProduct (Mockito.any (), Mockito.any ());
 	}
 
 	@Test

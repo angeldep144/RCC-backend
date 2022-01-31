@@ -119,7 +119,7 @@ public class ProductController {
 		if (salePrice != null) {
 			product.setSalePrice (salePrice);
 			if (product.getSalePrice () < 0) {
-				product.setSalePrice (null);
+				throw new InvalidValueException ("Sale price cannot negative.");
 			}else if (product.getPrice () < product.getSalePrice ()) {
 				throw new InvalidValueException ("Sale price cannot be higher than normal price.");
 			}

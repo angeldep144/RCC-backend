@@ -263,10 +263,32 @@ public class ProductControllerIT {
 	}
 	
 	@Test
-	void createProductWhenSalePriceIsNegative () {
-		fail ();
-		
-		//todo verify that methods were run (copy verifications from ProductController unit tests)
+	void createProductWhenSalePriceIsNegative () throws Exception {
+		MultipartFile file = null;
+		Product product = new Product(null, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
+		InvalidValueException invalidValueException = new InvalidValueException("Sale price cannot be less than 0");
+		Mockito.when(this.productService.createProduct(product, file)).thenThrow(invalidValueException);
+
+		List <CartItem> items = new ArrayList<>();
+		List <Transaction> transactions = new ArrayList<>();
+		String pass = "pass123";
+		UserRole role = new UserRole (1, "ADMIN");
+
+		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions, role);
+		Mockito.when(session.getAttribute ("user")).thenReturn(user);
+
+		RequestBuilder request = MockMvcRequestBuilders
+				.post("/product")
+				.param("name", product.getName())
+				.param("description", product.getDescription())
+				.param("price", product.getPrice().toString())
+				.param("stock", product.getStock().toString())
+				.param("salePrice", (product.getPrice() - 10) + "")
+				.contentType(MediaType.MULTIPART_FORM_DATA)
+				.session (session);
+
+		mvc.perform(request).andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
+						.writeValueAsString(new JsonResponse (invalidValueException))));
 	}
 	
 	@Test
@@ -274,7 +296,7 @@ public class ProductControllerIT {
 		MultipartFile file = null;
 		Product product = new Product(1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, 13);
 		InvalidValueException invalidValueException = new InvalidValueException("Sale price cannot be higher than normal price.");
-		Mockito.when(this.productService.updateProduct(product, file)).thenReturn(product);
+		Mockito.when(this.productService.createProduct(product, file)).thenReturn(product);
 		
 		List <CartItem> items = new ArrayList<>();
 		List <Transaction> transactions = new ArrayList<>();
@@ -303,10 +325,33 @@ public class ProductControllerIT {
 	}
 	
 	@Test
-	void createProductWhenPriceIsNegative () {
-		fail ();
-		
-		//todo verify that methods were run (copy verifications from ProductController unit tests)
+	void createProductWhenPriceIsNegative () throws Exception {
+		MultipartFile file = null;
+		Product product = new Product(null, "Dog Tricks", "Teach your dog new tricks.", (float) -1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
+		InvalidValueException invalidValueException = new InvalidValueException("Sale price cannot be higher than normal price.");
+		Mockito.when(this.productService.createProduct(product, file)).thenThrow(invalidValueException);
+
+		List <CartItem> items = new ArrayList<>();
+		List <Transaction> transactions = new ArrayList<>();
+		String pass = "pass123";
+		UserRole role = new UserRole (1, "ADMIN");
+
+		User user = new User (1, "john", "doe", "jdoe@mail.com", "jdoe1", pass, items, transactions, role);
+		Mockito.when(session.getAttribute ("user")).thenReturn(user);
+
+		RequestBuilder request = MockMvcRequestBuilders
+				.post("/product")
+				.param("name", product.getName())
+				.param("description", product.getDescription())
+				.param("price", product.getPrice().toString())
+				.param("stock", product.getStock().toString())
+				.param("salePrice", (product.getPrice() + 10) + "")
+				.contentType(MediaType.MULTIPART_FORM_DATA)
+				.session (session);
+
+		mvc.perform(request).andExpect(MockMvcResultMatchers.content().json(new ObjectMapper()
+				.writeValueAsString(new JsonResponse (invalidValueException))));
+
 	}
 	
 	@Test
