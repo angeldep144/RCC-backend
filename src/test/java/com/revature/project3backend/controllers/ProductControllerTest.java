@@ -197,18 +197,40 @@ class ProductControllerTest {
 	
 	@Test
 	void createProductWhenNotLoggedIn () {
-		fail ();
-		
-		//todo assertThrows and test message
-		//todo verify that methods were not run
+		String expectedResult = "Error! Unauthorized";
+		String actualResult = "";
+
+		Mockito.when(httpSession.getAttribute("user")).thenReturn(null);
+
+		try{
+			productController.createProduct("product", "description", 13.0f, 11.0f, Mockito.any(), null, "url.com", httpSession);
+		} catch (UnauthorizedException | InvalidValueException e) {
+			actualResult = e.getMessage();
+		}
+
+		assertEquals(expectedResult, actualResult);
 	}
 	
 	@Test
 	void createProductWhenNotAnAdmin () {
-		fail ();
-		
-		//todo assertThrows and test message
-		//todo verify that methods were not run
+		User user = new User("fname", "lname", "email@email.com", "username", "password");
+
+		UserRole role = new UserRole();
+		role.setRole("USER");
+		user.setRole(role);
+
+		String expectedResult = "Error! Unauthorized";
+		String actualResult = "";
+
+		Mockito.when(httpSession.getAttribute("user")).thenReturn(user);
+
+		try{
+			productController.createProduct("product", "description", 13.0f, 11.0f, Mockito.any(), null, "url.com", httpSession);
+		} catch (UnauthorizedException | InvalidValueException e) {
+			actualResult = e.getMessage();
+		}
+
+		assertEquals(expectedResult, actualResult);
 	}
 	
 	@Test
