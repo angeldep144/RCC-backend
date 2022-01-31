@@ -123,7 +123,7 @@ class ProductControllerTest {
 		//todo this doesn't ever call the controller method
 		
 		fail ();
-		
+
 		Mockito.verify (this.productService, Mockito.never ()).updateProduct (Mockito.any (), Mockito.any ());
 	}
 	
@@ -141,7 +141,7 @@ class ProductControllerTest {
 		//todo this doesn't ever call the controller method
 		
 		fail ();
-		
+
 		//todo verify that methods were run
 		//todo test ResponseEntity
 	}
