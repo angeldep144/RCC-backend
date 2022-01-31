@@ -100,6 +100,10 @@ public class ProductService {
 	 * @return The updated product.
 	 */
 	public Product updateProduct (Product product, MultipartFile file) throws InvalidValueException {
+		if (product.getStock() < 0){
+			product.setStock(null);
+		}
+
 		if (product.getName () == null) {
 			throw new InvalidValueException ("No product name");
 		}
@@ -141,6 +145,10 @@ public class ProductService {
 	 * @throws InvalidValueException when price or sales price is less than 0, or sales price is greater than original price
 	 */
 	public Product createProduct (Product product, MultipartFile file) throws InvalidValueException {
+		if (product.getStock() < 0){
+			product.setStock(null);
+		}
+
 		if (product.getName () == null) {
 			throw new InvalidValueException ("No product name");
 		}

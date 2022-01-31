@@ -120,11 +120,7 @@ public class ProductController {
 			product.setSalePrice (salePrice);
 			if (product.getSalePrice () < 0) {
 				product.setSalePrice (null);
-			}
-			
-			//todo make this an else if?
-			//Error thrown if the sale price is higher than the normal price.
-			if (product.getPrice () < product.getSalePrice ()) {
+			}else if (product.getPrice () < product.getSalePrice ()) {
 				throw new InvalidValueException ("Sale price cannot be higher than normal price.");
 			}
 		}

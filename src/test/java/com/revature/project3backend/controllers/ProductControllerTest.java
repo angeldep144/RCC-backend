@@ -9,8 +9,11 @@ import com.revature.project3backend.models.UserRole;
 import com.revature.project3backend.services.ProductService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
@@ -23,7 +26,7 @@ class ProductControllerTest {
 	private final ProductController productController;
 	private final ProductService productService = Mockito.mock (ProductService.class);
 	private final HttpSession httpSession = Mockito.mock(HttpSession.class);
-	
+
 	public ProductControllerTest () {
 		this.productController = new ProductController (productService);
 	}
@@ -137,28 +140,39 @@ class ProductControllerTest {
 
 	@Test
 	void updateProductWhenSalePriceIsHigherThanPrice () throws InvalidValueException {
-		//todo call productController.updateProduct with sale price negative
-		
-		//todo assert that the sale price is null
-		
-		fail ();
-		
-		//todo should we do mockito verifys and check return value here since we already test it in updateProduct test?
+		Product product = new Product (1, "roomba", "description", 12.88f, "https://i.pcmag.com/imagery/reviews/01hmxcWyN13h1LfMglNxHGC-1.fit_scale.size_1028x578.v1589573902.jpg", 13.00f, 10);
+
+		UserRole userRole = new UserRole(1, "ADMIN");
+
+		User user = new User (1, "John", "Smith", "johnsmith@example.com", "johnsmith", "password", null, null, userRole);
+
+		MockHttpSession session = new MockHttpSession();
+
+		session.setAttribute("user", user);
+
+		InvalidValueException exception = assertThrows(InvalidValueException.class, () -> this.productController.updateProduct(product.getName(), product.getDescription(), product.getPrice(), product.getSalePrice(), product.getId(), null, product.getStock(),  product.getImageUrl(),  session));
+
+		assertEquals ("Error! Sale price cannot be higher than normal price.", exception.getMessage ());
 		
 		Mockito.verify (this.productService, Mockito.never ()).updateProduct (Mockito.any (), Mockito.any ());
 	}
 	
 	@Test
 	void updateProductWhenPriceIsNegative () throws InvalidValueException {
-		MultipartFile file = null;
-		Product product = new Product (1, "Dog Tricks", "Teach your dog new tricks.", (float) -1.15, null, 13);
-		InvalidValueException invalidValueException = new InvalidValueException ("Sale price cannot be higher than normal price.");
-		
-		//todo assertThrows and test message
-		//todo this doesn't ever call the controller method
-		
-		fail ();
-		
+		Product product = new Product (1, "roomba", "description", -12.88f, "https://i.pcmag.com/imagery/reviews/01hmxcWyN13h1LfMglNxHGC-1.fit_scale.size_1028x578.v1589573902.jpg", -13.00f, 10);
+
+		UserRole userRole = new UserRole(1, "ADMIN");
+
+		User user = new User (1, "John", "Smith", "johnsmith@example.com", "johnsmith", "password", null, null, userRole);
+
+		MockHttpSession session = new MockHttpSession();
+
+		session.setAttribute("user", user);
+
+		InvalidValueException exception = assertThrows(InvalidValueException.class, () -> this.productController.updateProduct(product.getName(), product.getDescription(), product.getPrice(), product.getSalePrice(), product.getId(), null, product.getStock(),  product.getImageUrl(),  session));
+
+		assertEquals ("Error! Price cannot be negative.", exception.getMessage ());
+
 		Mockito.verify (this.productService, Mockito.never ()).updateProduct (Mockito.any (), Mockito.any ());
 	}
 	

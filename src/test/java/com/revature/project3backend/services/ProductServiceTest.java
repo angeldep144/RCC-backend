@@ -215,6 +215,19 @@ class ProductServiceTest {
 		
 		assertEquals (product, actualResult);
 	}
+
+	@Test
+	void updateProductNegativeStock() throws InvalidValueException {
+		MultipartFile file = null;
+		Product product = new Product (1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, -13);
+
+		Mockito.when(productRepo.save(product)).thenReturn(product);
+
+		Product actual = productService.updateProduct(product, null);
+		product.setStock(null);
+
+		assertEquals(product, actual);
+	}
 	
 	@Test
 	void createProductWithNegativeSalePrice () throws InvalidValueException {
@@ -290,5 +303,19 @@ class ProductServiceTest {
 		Product actualResult = productService.createProduct (product, null);
 		
 		assertEquals (product, actualResult);
+	}
+
+
+	@Test
+	void createProductNegativeStock() throws InvalidValueException {
+		MultipartFile file = null;
+		Product product = new Product (1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, -13);
+
+		Mockito.when(productRepo.save(product)).thenReturn(product);
+
+		Product actual = productService.createProduct(product, null);
+		product.setStock(null);
+
+		assertEquals(product, actual);
 	}
 }
