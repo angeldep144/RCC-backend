@@ -100,12 +100,33 @@ public class ProductService {
 	 * @return The updated product.
 	 */
 	public Product updateProduct (Product product, MultipartFile file) throws InvalidValueException {
+		if (product.getStock() < 0){
+			product.setStock(null);
+		}
+
 		if (product.getName () == null) {
 			throw new InvalidValueException ("No product name");
 		}
 		
 		if (product.getDescription () == null) {
 			throw new InvalidValueException ("No product description");
+		}
+
+		if (product.getSalePrice() != null) {
+			product.setSalePrice (product.getSalePrice());
+			if (product.getSalePrice () < 0) {
+				product.setSalePrice (null);
+			}
+
+			//Error thrown if the sale price is higher than the normal price.
+			if (product.getPrice () < product.getSalePrice ()) {
+				throw new InvalidValueException ("Sale price cannot be higher than normal price.");
+			}
+		}
+
+		//Error thrown if the price is negative.
+		if (product.getPrice () < 0) {
+			throw new InvalidValueException ("Price cannot be negative.");
 		}
 		
 		if (file != null) {
@@ -124,6 +145,10 @@ public class ProductService {
 	 * @throws InvalidValueException when price or sales price is less than 0, or sales price is greater than original price
 	 */
 	public Product createProduct (Product product, MultipartFile file) throws InvalidValueException {
+		if (product.getStock() < 0){
+			product.setStock(null);
+		}
+
 		if (product.getName () == null) {
 			throw new InvalidValueException ("No product name");
 		}

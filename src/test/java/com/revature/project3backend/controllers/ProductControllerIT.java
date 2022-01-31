@@ -134,20 +134,6 @@ public class ProductControllerIT {
 	}
 	
 	@Test
-	void updateProductWhenSalePriceIsNegative () {
-		fail ();
-		
-		//todo verify that methods were run (copy verifications from ProductController unit tests)
-	}
-	
-	@Test
-	void updateProductWhenSalePriceIsHigherThanPrice () throws InvalidValueException {
-		fail ();
-		
-		//todo verify that methods were run (copy verifications from ProductController unit tests)
-	}
-	
-	@Test
 	void updateProductWhenPriceIsNegative () throws Exception {
 		MultipartFile file = null;
 		Product product = new Product(1, "Dog Tricks", "Teach your dog new tricks.", (float) -1.15, null, 13);
