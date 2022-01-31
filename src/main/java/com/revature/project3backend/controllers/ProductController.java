@@ -171,9 +171,9 @@ public class ProductController {
 		if (file == null) {
 			product.setImageUrl (defaultImageUrl);
 		}
-		
-		Product result = this.productService.createProduct (product, file);
-		
+
+		Product result = this.productService.createProduct(product, file);
+
 		return ResponseEntity.ok (new JsonResponse ("Got product updated ok.", true, result, "/product/" + result.getId()));
 	}
 }

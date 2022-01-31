@@ -50,10 +50,10 @@ public class FileUtil {
 			s3Client.putObject (new PutObjectRequest (bucketName, imageURL, multipartFile.getInputStream (), new ObjectMetadata ()));
 			//prevents the filename from containing line characters
 			multipartFile.getName().replaceAll("[\n\r\t]", "_");
-			log.info (multipartFile.getName () + " has been uploaded to S3 bucket.");
 		} catch (Exception e) {
 			log.error (e);
 		}
+
 		return "https://jwa-p2.s3.us-east-2.amazonaws.com/" + imageURL;
 	}
 
