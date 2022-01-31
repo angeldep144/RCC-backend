@@ -1,12 +1,16 @@
 package com.revature.project3backend.controllers;
 
 import com.revature.project3backend.exceptions.InvalidValueException;
+import com.revature.project3backend.exceptions.UnauthorizedException;
 import com.revature.project3backend.jsonmodels.JsonResponse;
 import com.revature.project3backend.models.Product;
+import com.revature.project3backend.models.User;
+import com.revature.project3backend.models.UserRole;
 import com.revature.project3backend.services.ProductService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -187,9 +191,21 @@ class ProductControllerTest {
 	}
 	
 	@Test
-	void createProduct () {
-		fail ();
-		
+	void createProduct () throws InvalidValueException, UnauthorizedException {
+		Product product = new Product (null, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
+		Product actualResult = new Product (1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
+		MultipartFile file = null;
+		User user = new User (1, "User", "1", "email1", "username13123", "password", new ArrayList <> (), new ArrayList <> (), new UserRole(2, "ADMIN"));
+		MockHttpSession httpSession = new MockHttpSession();
+		httpSession.setAttribute("user", user);
+
+		Mockito.when(productService.createProduct(product, file)).thenReturn(actualResult);
+
+		ResponseEntity<JsonResponse> expectedResult = ResponseEntity.ok (new JsonResponse ("Got product updated ok.", true, actualResult, "/product/" + actualResult.getId()));
+
+		assertEquals(expectedResult, productController.createProduct(actualResult.getName(), actualResult.getDescription(), actualResult.getPrice(), actualResult.getSalePrice(), file, actualResult.getStock(), actualResult.getImageUrl(), httpSession));
+
+
 		//todo verify that methods were run
 		//todo test ResponseEntity
 	}
