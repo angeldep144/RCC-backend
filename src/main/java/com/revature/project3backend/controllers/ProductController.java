@@ -173,23 +173,6 @@ public class ProductController {
 		
 		Product product = new Product (null, productName, productDescription, price, imageUrl, stock);
 
-		if (salePrice != null) {
-			product.setSalePrice (salePrice);
-			if (product.getSalePrice () < 0) {
-				product.setSalePrice (null);
-			}
-
-			//Error thrown if the sale price is higher than the normal price.
-			if (product.getPrice () < product.getSalePrice ()) {
-				throw new InvalidValueException ("Sale price cannot be higher than normal price.");
-			}
-		}
-
-		//Error thrown if the price is negative.
-		if (product.getPrice () < 0) {
-			throw new InvalidValueException ("Price cannot be negative.");
-		}
-
 		// sets default image if none given
 		if (file == null) {
 			product.setImageUrl (defaultImageUrl);

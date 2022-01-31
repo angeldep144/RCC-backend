@@ -107,6 +107,23 @@ public class ProductService {
 		if (product.getDescription () == null) {
 			throw new InvalidValueException ("No product description");
 		}
+
+		if (product.getSalePrice() != null) {
+			product.setSalePrice (product.getSalePrice());
+			if (product.getSalePrice () < 0) {
+				product.setSalePrice (null);
+			}
+
+			//Error thrown if the sale price is higher than the normal price.
+			if (product.getPrice () < product.getSalePrice ()) {
+				throw new InvalidValueException ("Sale price cannot be higher than normal price.");
+			}
+		}
+
+		//Error thrown if the price is negative.
+		if (product.getPrice () < 0) {
+			throw new InvalidValueException ("Price cannot be negative.");
+		}
 		
 		if (file != null) {
 			product.setImageUrl (this.fileUtil.uploadToS3 (product, file));
