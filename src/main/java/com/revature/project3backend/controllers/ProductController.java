@@ -104,7 +104,6 @@ public class ProductController {
 														@RequestParam (value = "imageUrl", required = false) String imageUrl,
 														HttpSession httpSession) throws InvalidValueException, UnauthorizedException {
 		User user = (User) httpSession.getAttribute ("user");
-		System.out.println(user);
 		
 		if (user == null) {
 			throw new UnauthorizedException ();
