@@ -1,14 +1,19 @@
 package com.revature.project3backend.controllers;
 
 import com.revature.project3backend.exceptions.InvalidValueException;
+import com.revature.project3backend.exceptions.UnauthorizedException;
 import com.revature.project3backend.jsonmodels.JsonResponse;
 import com.revature.project3backend.models.Product;
+import com.revature.project3backend.models.User;
+import com.revature.project3backend.models.UserRole;
 import com.revature.project3backend.services.ProductService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProductControllerTest {
 	private final ProductController productController;
 	private final ProductService productService = Mockito.mock (ProductService.class);
+	private final HttpSession httpSession = Mockito.mock(HttpSession.class);
 	
 	public ProductControllerTest () {
 		this.productController = new ProductController (productService);
@@ -87,19 +93,48 @@ class ProductControllerTest {
 	
 	@Test
 	void updateProductWhenNotLoggedIn () {
-		fail ();
+		String expectedResult = "Error! Unauthorized";
+		String actualResult = "";
+
+		Mockito.when(httpSession.getAttribute("user")).thenReturn(null);
+
+		try{
+			productController.updateProduct("product", "description", 13.0f, 11.0f, 1, Mockito.any(), null, "url.com", httpSession);
+		} catch (UnauthorizedException | InvalidValueException e) {
+			actualResult = e.getMessage();
+		}
+
+		assertEquals(expectedResult, actualResult);
 	}
 	
 	@Test
 	void updateProductWhenNotAnAdmin () {
-		fail ();
+		User user = new User("fname", "lname", "email@email.com", "username", "password");
+
+		UserRole role = new UserRole();
+		role.setRole("USER");
+		user.setRole(role);
+
+		String expectedResult = "Error! Unauthorized";
+		String actualResult = "";
+
+		Mockito.when(httpSession.getAttribute("user")).thenReturn(user);
+
+		try{
+			productController.updateProduct("product", "description", 13.0f, 11.0f, 1, Mockito.any(), null, "url.com", httpSession);
+		} catch (UnauthorizedException | InvalidValueException e) {
+			actualResult = e.getMessage();
+		}
+
+		assertEquals(expectedResult, actualResult);
 	}
-	
+
+
 	@Test
 	void updateProductWhenSalePriceIsNegative () {
 		fail ();
 	}
-	
+
 	@Test
 	void updateProductWhenSalePriceIsHigherThanPrice () throws InvalidValueException {
 		//todo call productController.updateProduct with sale price negative
