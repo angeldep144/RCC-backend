@@ -80,12 +80,13 @@ public class FileUtilIT {
     }
 
 
-    @Test
-    void uploadToS3() {
-
-        String expectedValue = "https://jwa-p2.s3.us-east-2.amazonaws.com/" + "RCC/" + "products/" + product.getId().toString() + "-" + multipartFile.getOriginalFilename();
-        String actualValue =  fileUtil.uploadToS3(product, multipartFile);
-        assertEquals(expectedValue, actualValue);
-    }
+//    todo
+//    @Test
+//    void uploadToS3() {
+//
+//        String expectedValue = "https://jwa-p2.s3.us-east-2.amazonaws.com/" + "RCC/" + "products/" + product.getId().toString() + "-" + multipartFile.getOriginalFilename();
+//        String actualValue =  fileUtil.uploadToS3(product, multipartFile);
+//        assertEquals(expectedValue, actualValue);
+//    }
 }
 
