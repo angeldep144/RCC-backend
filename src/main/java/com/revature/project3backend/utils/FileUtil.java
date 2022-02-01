@@ -44,12 +44,10 @@ public class FileUtil {
 		 * */
 		AmazonS3 s3Client = AmazonS3ClientBuilder.standard ().withRegion (Regions.fromName (region)).withCredentials (new AWSStaticCredentialsProvider (awsCredentials)).build ();
 		
-		String imageURL = "RCC/" + "products/" + product.getId ().toString () + "-" + multipartFile.getOriginalFilename ();
+		String imageURL = "RCC/" + "products/" + product.getId ().toString () + "-" + multipartFile.getName().replaceAll("[\n\r\t]", "_");
 		imageURL = imageURL.replace (' ', '+');
 		try {
 			s3Client.putObject (new PutObjectRequest (bucketName, imageURL, multipartFile.getInputStream (), new ObjectMetadata ()));
-			//prevents the filename from containing line characters
-			multipartFile.getName().replaceAll("[\n\r\t]", "_");
 		} catch (Exception e) {
 			log.error (e);
 		}
