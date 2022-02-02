@@ -2,8 +2,17 @@ INSERT INTO user_roles VALUES (DEFAULT, 'USER');
 
 INSERT INTO user_roles VALUES (DEFAULT, 'ADMIN');
 
+ALTER SEQUENCE USERS_ID_seq RESTART WITH 1;
+ALTER SEQUENCE PRODUCT_ID_seq RESTART WITH 1;
+
+SELECT * FROM USERS;
+SELECT * FROM PRODUCT;
+
+DELETE FROM PRODUCT;
+
+DELETE FROM USERS;
+
 INSERT INTO USERS (FIRST_NAME, LAST_NAME, EMAIL, USERNAME, PASSWORD, ROLE_ID) VALUES ('Admin', 'Istrator', 'adminUser@email.com', 'admin', '$2a$10$UCoYxwBAux02BsqnhaNRDeBAqcVsWWZTKB/lV3Qm8i8StQpXi62wi', 2);
---password is pass1234 encrypted
 
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Java I', 'Do you want to learn about Java? Start from the basics in this course for absolute Java beginners', 55.99, 10, 'https://i.ytimg.com/vi/r59xYe3Vyks/hqdefault.jpg');
 
@@ -54,18 +63,3 @@ INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VAL
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Rust', 'Learn Rust language', 13.99, 30, 'https://www.rust-lang.org/static/images/rust-social-wide.jpg');
 
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Ruby on Rails 101', 'Basics of Ruby on Rails', 11.13, 3, 'https://res.cloudinary.com/practicaldev/image/fetch/s--jvDLhx0b--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/i/cpcr5w0kgl6j94tss7n9.png');
-INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('The Waterfall Method', 'Step by step', 0.03, 7, 'https://www.umsl.edu/~hugheyd/is6840/images/Waterfall_model.png')
-
-INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Microservices', 'Services, but micro', 100.00, 5, 'https://www.qentelli.com/sites/default/files/2021-06/guide%20to%20microservices-new.png')
-
-INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VALUES ('HTML and CSS', 'Structured and styled', 56.99, 51.99, 19, 'https://miro.medium.com/max/1200/1*g_ZNK7Gnle7eg2lVk_jWnw.jpeg')
-
-INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('HTML and CSS Part 2', 'New tags and attributes', 57.99, 98, 'https://www.filepicker.io/api/file/5LVT41q4QGWKXAvJVLGv')
-
-INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('HTML and CSS Part 3', 'More structure and more styling', 59.99, 23, 'https://i.ytimg.com/vi/1rbo_HHt5nw/maxresdefault.jpg')
-
-INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VALUES ('NodeJS', 'Use JavaScript outside the browser', 78.99, 45.99, 30, 'https://i.ytimg.com/vi/RLtyhwFtXQA/maxresdefault.jpg')
-
-INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Rust', 'Learn Rust language', 13.99, 30, 'https://www.rust-lang.org/static/images/rust-social-wide.jpg')
-
-INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Ruby on Rails 101', 'Basics of Ruby on Rails', 11.13, 3, 'https://res.cloudinary.com/practicaldev/image/fetch/s--jvDLhx0b--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/i/cpcr5w0kgl6j94tss7n9.png')
