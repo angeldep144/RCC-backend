@@ -27,7 +27,7 @@ INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VAL
 
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('JavaScript Fundamentals', 'Learn the basics of JavaScript (which has nothing to do with Java!)', 59.99, 5, 'https://handsontable.com/blog/wp-content/uploads/2018/07/best-resources-to-learn-javascript.png');
 
-INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Jason''s Guide to JSON', 'Learn JSON from Jason', 9999.99, 49, 'https://st.depositphotos.com/2398521/2608/i/950/depositphotos_26089317-stock-photo-cute-small-dog.jpg');
+INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Jason''s Guide to JSON', 'Learn JSON from Jason', 9999.99, 0, 'https://st.depositphotos.com/2398521/2608/i/950/depositphotos_26089317-stock-photo-cute-small-dog.jpg');
 
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('TypeScript for Beginners', 'Want to learn TypeScript?', 0.01, 18, 'https://tutorialzine.com/media/2016/07/learn-typescript-in-30.png');
 
@@ -35,7 +35,7 @@ INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VAL
 
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('Intermediate Python', 'Python for intermediate users', 24.99, 999, 'https://assets.datacamp.com/production/course_799/shields/original/shield_image_course_799_20200228-1-119xpm0?1582886778');
 
-INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VALUES ('Advanced Python', 'Python for advanced users', 39.99, 39.98, 0, 'https://media.geeksforgeeks.org/wp-content/cdn-uploads/20210917204112/Top-10-Advance-Python-Concepts-That-You-Must-Know.png');
+INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, SALE_PRICE, STOCK, IMAGE_URL) VALUES ('Advanced Python', 'Python for advanced users', 39.99, 39.98, 8, 'https://media.geeksforgeeks.org/wp-content/cdn-uploads/20210917204112/Top-10-Advance-Python-Concepts-That-You-Must-Know.png');
 
 INSERT INTO PRODUCT (NAME, DESCRIPTION, PRICE, STOCK, IMAGE_URL) VALUES ('The Agile Method', 'User stories, backlogs, etc.', 0.02, 2, 'https://lh4.googleusercontent.com/nW_yFs4Hu2IfSEEokyas2_gFESgctL2nWzQEJ2Vc8dr39HsbmppAmAqHlHK2F_mtsEsn4HQEVP8EH9A0mqFDQjU2KiVPldOAIH0u343jbBwm78MLPJw1tCk3DMyy606Y8bqUDq4');
 
