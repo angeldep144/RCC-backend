@@ -1,17 +1,13 @@
 package com.revature.project3backend.repositories;
 
 import com.revature.project3backend.models.Product;
-import com.revature.project3backend.models.User;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-
-import javax.persistence.Column;
 
 import java.util.ArrayList;
 import java.util.List;

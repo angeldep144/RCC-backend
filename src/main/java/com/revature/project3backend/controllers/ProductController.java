@@ -6,7 +6,6 @@ import com.revature.project3backend.jsonmodels.JsonResponse;
 import com.revature.project3backend.models.Product;
 import com.revature.project3backend.models.User;
 import com.revature.project3backend.services.ProductService;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +29,7 @@ public class ProductController {
 	/**
 	 * The default image to use when uploading a product
 	 */
-	private String defaultImageUrl = "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png";
+	private final String defaultImageUrl = "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png";
 	
 	/**
 	 * This constructor is automatically called by Spring

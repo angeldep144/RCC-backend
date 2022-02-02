@@ -16,10 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserServiceTest {
-	UserService userService;
-	UserRepo userRepo = Mockito.mock (UserRepo.class);
-	CartItemRepo cartItemRepo = Mockito.mock (CartItemRepo.class);
-	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder ();
+	final UserService userService;
+	final UserRepo userRepo = Mockito.mock (UserRepo.class);
+	final CartItemRepo cartItemRepo = Mockito.mock (CartItemRepo.class);
+	final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder ();
 	
 	public UserServiceTest () {
 		userService = new UserService (userRepo, cartItemRepo);
@@ -97,7 +97,7 @@ class UserServiceTest {
 	}
 	
 	@Test
-	void createUserWhenUsernameIsTaken () throws InvalidValueException {
+	void createUserWhenUsernameIsTaken () {
 		User user = new User (1, "first", "last", "email", "username", "password", null, null, new UserRole (2, "USER"));
 		
 		Mockito.when (this.userRepo.findByUsername (user.getUsername ())).thenReturn (user);

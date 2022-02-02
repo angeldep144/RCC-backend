@@ -12,7 +12,6 @@ import com.revature.project3backend.services.ProductService;
 import com.revature.project3backend.services.TransactionService;
 import com.revature.project3backend.services.UserService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpSession;
@@ -68,7 +67,7 @@ class TransactionControllerTest {
 	}
 	
 	@Test
-	void createTransactionWhenNotLoggedIn () throws JsonProcessingException, InvalidValueException, UnauthorizedException {
+	void createTransactionWhenNotLoggedIn () throws JsonProcessingException, InvalidValueException {
 		MockHttpSession mockHttpSession = new MockHttpSession ();
 		
 		UnauthorizedException exception = assertThrows (UnauthorizedException.class, () -> this.transactionController.createTransaction (mockHttpSession));
@@ -82,7 +81,7 @@ class TransactionControllerTest {
 	}
 	
 	@Test
-	void createTransactionWhenCartIsEmpty () throws JsonProcessingException, InvalidValueException, UnauthorizedException {
+	void createTransactionWhenCartIsEmpty () throws JsonProcessingException, InvalidValueException {
 		User user = new User ("first", "last", "email", "username", "password");
 		
 		MockHttpSession mockHttpSession = new MockHttpSession ();
@@ -101,7 +100,7 @@ class TransactionControllerTest {
 	}
 	
 	@Test
-	void getTransaction () throws JsonProcessingException, InvalidValueException, UnauthorizedException {
+	void getTransaction () throws InvalidValueException, UnauthorizedException {
 		User user = new User ("first", "last", "email", "username", "password");
 		User user0 = new User ("first", "last", "email", "username", "password");
 		
@@ -134,7 +133,7 @@ class TransactionControllerTest {
 	}
 	
 	@Test
-	void getTransactionWhenNotLoggedIn () throws InvalidValueException, UnauthorizedException, JsonProcessingException {
+	void getTransactionWhenNotLoggedIn () throws InvalidValueException {
 		MockHttpSession mockHttpSession = new MockHttpSession ();
 		
 		UnauthorizedException exception = assertThrows (UnauthorizedException.class, () -> this.transactionController.getTransaction (1, mockHttpSession));
@@ -145,7 +144,7 @@ class TransactionControllerTest {
 	}
 	
 	@Test
-	void getTransactionWhenTransactionWasMadeByOtherUser () throws InvalidValueException, UnauthorizedException {
+	void getTransactionWhenTransactionWasMadeByOtherUser () throws InvalidValueException {
 		int transactionId = 1;
 		
 		User user = new User ("first", "last", "email", "username", "password");

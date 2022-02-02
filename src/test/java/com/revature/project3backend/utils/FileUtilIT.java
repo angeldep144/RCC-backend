@@ -1,24 +1,10 @@
 package com.revature.project3backend.utils;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.revature.project3backend.models.Product;
 import com.revature.project3backend.utils.FileUtil;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.event.annotation.PrepareTestInstance;
 import org.springframework.web.multipart.MultipartFile;
 import org.apache.log4j.Logger;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +12,7 @@ import java.io.InputStream;
 
 
 public class FileUtilIT {
-    private static Logger log = Logger.getLogger(FileUtil.class);
+    private static final Logger log = Logger.getLogger(FileUtil.class);
 
     private MultipartFile multipartFile;
     private Product product;
@@ -62,17 +48,17 @@ public class FileUtilIT {
             }
 
             @Override
-            public byte[] getBytes() throws IOException {
+            public byte[] getBytes() {
                 return new byte[0];
             }
 
             @Override
-            public InputStream getInputStream() throws IOException {
+            public InputStream getInputStream() {
                 return null;
             }
 
             @Override
-            public void transferTo(File dest) throws IOException, IllegalStateException {
+            public void transferTo(File dest) throws IllegalStateException {
 
             }
         };

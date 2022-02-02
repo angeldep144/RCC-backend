@@ -305,7 +305,7 @@ class CartItemControllerIT {
 		UpdateCartItemBody body = new UpdateCartItemBody ();
 		body.setQuantity (3);
 		MockHttpSession httpSession = new MockHttpSession ();
-		mvc.perform (MockMvcRequestBuilders.put ("/cartitem/" + String.valueOf (cartItemId)).contentType (MediaType.APPLICATION_JSON).session (httpSession).content (json.writeValueAsString (body))).andExpect (MockMvcResultMatchers.status ().is4xxClientError ()) //isBadRequest ())
+		mvc.perform (MockMvcRequestBuilders.put ("/cartitem/" + cartItemId).contentType (MediaType.APPLICATION_JSON).session (httpSession).content (json.writeValueAsString (body))).andExpect (MockMvcResultMatchers.status ().is4xxClientError ()) //isBadRequest ())
 			.andExpect (MockMvcResultMatchers.content ().json (json.writeValueAsString (new JsonResponse (new UnauthorizedException (), "/login"))));
 		
 		Mockito.verify (cartItemService, Mockito.never ()).updateCartItem (Mockito.any (), Mockito.any ());

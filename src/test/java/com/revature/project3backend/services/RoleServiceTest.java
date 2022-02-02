@@ -10,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RoleServiceTest {
 
-    UserRoleRepo roleRepo = Mockito.mock(UserRoleRepo.class);
-    RoleService roleService;
+    final UserRoleRepo roleRepo = Mockito.mock(UserRoleRepo.class);
+    final RoleService roleService;
 
     @Autowired
     public RoleServiceTest(){

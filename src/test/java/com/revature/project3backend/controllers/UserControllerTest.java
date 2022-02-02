@@ -4,11 +4,8 @@ import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.jsonmodels.JsonResponse;
 import com.revature.project3backend.modeldtos.UserDTO;
 import com.revature.project3backend.models.User;
-import com.revature.project3backend.models.UserRole;
 import com.revature.project3backend.services.RoleService;
 import com.revature.project3backend.services.UserService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserControllerTest {
 	private final UserController userController;

@@ -4,7 +4,6 @@ import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.jsonmodels.JsonResponse;
 import com.revature.project3backend.modeldtos.UserDTO;
 import com.revature.project3backend.models.User;
-import com.revature.project3backend.models.UserRole;
 import com.revature.project3backend.services.RoleService;
 import com.revature.project3backend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

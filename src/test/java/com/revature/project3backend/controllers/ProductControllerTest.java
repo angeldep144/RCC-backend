@@ -47,7 +47,7 @@ class ProductControllerTest {
 	}
 	
 	@Test
-	void getProductsWhenSearchQueryIsNull () throws InvalidValueException {
+	void getProductsWhenSearchQueryIsNull () {
 		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> this.productController.getProducts (null, 1));
 		
 		assertEquals ("Error! Invalid search query", exception.getMessage ());
@@ -186,6 +186,23 @@ class ProductControllerTest {
 		assertEquals ("Error! Sale price cannot negative.", exception.getMessage ());
 		
 		Mockito.verify (this.productService, Mockito.never ()).updateProduct (Mockito.any (), Mockito.any ());
+	}
+	
+	@Test
+	void updateProduct () throws InvalidValueException, UnauthorizedException {
+		Product product = new Product (1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 13);
+		Product updatedProduct = new Product (1, "new name", "new description.", (float) 1.25, "https://s3-alpha.figma.com/hub/file/948140848/1f4dng", 11);
+		
+		MultipartFile file = null;
+		User user = new User (1, "User", "1", "email1", "username13123", "password", new ArrayList <> (), new ArrayList <> (), new UserRole (2, "ADMIN"));
+		MockHttpSession httpSession = new MockHttpSession ();
+		httpSession.setAttribute ("user", user);
+		
+		Mockito.when (productService.updateProduct (Mockito.any (Product.class), Mockito.eq (null))).thenReturn (updatedProduct);
+		
+		ResponseEntity <JsonResponse> expectedResult = ResponseEntity.ok (new JsonResponse ("Product updated ok.", true, updatedProduct, "/product/" + product.getId ()));
+		
+		assertEquals (expectedResult, productController.updateProduct (updatedProduct.getName (), updatedProduct.getDescription (), updatedProduct.getPrice (), updatedProduct.getSalePrice (), product.getId (), file, updatedProduct.getStock (), updatedProduct.getImageUrl (), httpSession));
 	}
 	
 	@Test

@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class FileUtil {
 	
-	private Logger log = Logger.getLogger (FileUtil.class);
+	private final Logger log = Logger.getLogger (FileUtil.class);
 	
 	/**
 	 * Uploads a file to the S3 bucket for the user.

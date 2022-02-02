@@ -22,8 +22,8 @@ class CartItemServiceTest {
 	private final CartItemRepo cartItemRepo = Mockito.mock (CartItemRepo.class);
 	private final CartItemService cartItemService;
 	
-	List <Product> products = new ArrayList <> ();
-	List <User> users = new ArrayList <> ();
+	final List <Product> products = new ArrayList <> ();
+	final List <User> users = new ArrayList <> ();
 	
 	public CartItemServiceTest () {
 		cartItemService = new CartItemService (cartItemRepo);

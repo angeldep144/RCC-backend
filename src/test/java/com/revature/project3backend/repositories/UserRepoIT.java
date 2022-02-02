@@ -2,7 +2,6 @@ package com.revature.project3backend.repositories;
 
 import com.revature.project3backend.models.User;
 import com.revature.project3backend.models.UserRole;
-import org.aspectj.lang.annotation.After;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

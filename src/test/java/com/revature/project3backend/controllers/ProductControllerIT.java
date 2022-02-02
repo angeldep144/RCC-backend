@@ -1,10 +1,8 @@
 package com.revature.project3backend.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.exceptions.UnauthorizedException;
-import com.revature.project3backend.jsonmodels.CreateSessionBody;
 import com.revature.project3backend.jsonmodels.JsonResponse;
 import com.revature.project3backend.models.*;
 import com.revature.project3backend.services.ProductService;
@@ -13,9 +11,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -25,8 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @WebMvcTest(ProductController.class)
 public class ProductControllerIT {

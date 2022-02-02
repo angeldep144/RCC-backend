@@ -4,7 +4,6 @@ import com.revature.project3backend.exceptions.InvalidValueException;
 import com.revature.project3backend.models.Product;
 import com.revature.project3backend.repositories.ProductRepo;
 import com.revature.project3backend.utils.FileUtil;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -24,16 +23,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ProductServiceTest {
-	ProductRepo productRepo = Mockito.mock (ProductRepo.class);
-	ProductService productService;
+	final ProductRepo productRepo = Mockito.mock (ProductRepo.class);
+	final ProductService productService;
 	MultipartFile mf = null;
-	FileUtil fileUtil = Mockito.mock (FileUtil.class);
-	List <Product> products = new ArrayList <> ();
-	
-	@BeforeAll
-	static void beforeAll () {
-		
-	}
+	final FileUtil fileUtil = Mockito.mock (FileUtil.class);
+	final List <Product> products = new ArrayList <> ();
 	
 	@BeforeEach
 	void beforeEach () {
@@ -64,17 +58,17 @@ class ProductServiceTest {
 			}
 			
 			@Override
-			public byte[] getBytes () throws IOException {
+			public byte[] getBytes () {
 				return new byte[0];
 			}
 			
 			@Override
-			public InputStream getInputStream () throws IOException {
+			public InputStream getInputStream () {
 				return null;
 			}
 			
 			@Override
-			public void transferTo (File dest) throws IOException, IllegalStateException {
+			public void transferTo (File dest) throws IllegalStateException {
 				
 			}
 		};
@@ -109,7 +103,7 @@ class ProductServiceTest {
 	}
 	
 	@Test
-	void getProductWhenNotFound () throws InvalidValueException {
+	void getProductWhenNotFound () {
 		int id = 1;
 		
 		Mockito.when (productRepo.findById (id)).thenReturn (Optional.empty ());
@@ -135,7 +129,7 @@ class ProductServiceTest {
 	}
 	
 	@Test
-	void reduceStockWhenStockWouldBeBelowZero () throws InvalidValueException {
+	void reduceStockWhenStockWouldBeBelowZero () {
 		int stock = 2;
 		
 		Product product = new Product (3, "name", "description", 10F, "", null, stock);
@@ -174,7 +168,7 @@ class ProductServiceTest {
 	}
 	
 	@Test
-	void updateProductWhenNameIsNull () throws InvalidValueException {
+	void updateProductWhenNameIsNull () {
 		Product product = new Product (1, null, "description", 10F, null, null, 10);
 		
 		Mockito.when (fileUtil.uploadToS3 (product, null)).thenReturn ("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
@@ -194,7 +188,7 @@ class ProductServiceTest {
 	}
 	
 	@Test
-	void updateProductWhenDescriptionIsNull () throws InvalidValueException {
+	void updateProductWhenDescriptionIsNull () {
 		Product product = new Product (1, "name", null, 10F, null, null, 10);
 		
 		Mockito.when (fileUtil.uploadToS3 (product, null)).thenReturn ("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
@@ -261,7 +255,7 @@ class ProductServiceTest {
 	}
 	
 	@Test
-	void createProductWithNegativeSalePrice () throws InvalidValueException {
+	void createProductWithNegativeSalePrice () {
 		Product product = new Product (1, "name", "description", 10F, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", -(10F), 10);
 		
 		String expectedResult = "Error! Sale price cannot be less than 0";
@@ -279,7 +273,7 @@ class ProductServiceTest {
 	}
 	
 	@Test
-	void createProductWithSalePriceGreaterThanPrice () throws InvalidValueException {
+	void createProductWithSalePriceGreaterThanPrice () {
 		Product product = new Product (1, "name", "description", 10F, "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", 40F, 10);
 		
 		String expectedResult = "Error! Sales price cannot be greater than original price";
@@ -297,7 +291,7 @@ class ProductServiceTest {
 	}
 	
 	@Test
-	void createProductWithNegativePrice () throws InvalidValueException {
+	void createProductWithNegativePrice () {
 		Product product = new Product (1, "name", "description", -(10F), "https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png", null, 10);
 		
 		String expectedResult = "Error! Price cannot be less than 0";

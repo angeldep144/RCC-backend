@@ -1,6 +1,5 @@
 package com.revature.project3backend.modeldtos;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.revature.project3backend.models.CartItem;
 import com.revature.project3backend.models.Transaction;
 import com.revature.project3backend.models.User;
@@ -9,9 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import java.util.List;
 
 @NoArgsConstructor

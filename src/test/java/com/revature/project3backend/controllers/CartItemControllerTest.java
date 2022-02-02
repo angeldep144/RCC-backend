@@ -39,7 +39,7 @@ class  CartItemControllerTest {
     private final ProductService productService;
     private final UserService userService;
 
-    private CartItemController cartItemController;
+    private final CartItemController cartItemController;
 
     private final List<Product> products = new ArrayList<>();
     private final List<User> users = new ArrayList<>();

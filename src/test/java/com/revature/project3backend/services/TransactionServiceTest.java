@@ -15,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TransactionServiceTest {
-	TransactionService transactionService;
-	TransactionRepo transactionRepo = Mockito.mock (TransactionRepo.class);
+	final TransactionService transactionService;
+	final TransactionRepo transactionRepo = Mockito.mock (TransactionRepo.class);
 	
 	public TransactionServiceTest () {
 		this.transactionService = new TransactionService (transactionRepo);

@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
-@Service
-@Transactional
 /**
  * This service deals with user roles, such as ADMIN or USER.
- */ public class RoleService {
-	
-	private UserRoleRepo roleRepo;
+ */
+@Service
+@Transactional
+public class RoleService {
+	private final UserRoleRepo roleRepo;
 	
 	@Autowired
 	public RoleService (UserRoleRepo roleRepo) {
