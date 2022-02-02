@@ -53,6 +53,7 @@ public class Product {
 	/**
 	 * The stock of the product
 	 */
+	@Column (nullable = false)
 	private Integer stock;
 	
 	/**

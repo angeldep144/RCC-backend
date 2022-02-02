@@ -152,6 +152,28 @@ class ProductServiceTest {
 	}
 	
 	@Test
+	void updateProductWhenStockIsNull () {
+		Product product = new Product (1, "name", "description", 10F, null, null, null);
+		
+		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> productService.updateProduct (product, this.mf));
+		
+		assertEquals ("Error! Invalid stock", exception.getMessage ());
+		
+		Mockito.verify (productRepo, Mockito.never ()).save (Mockito.any ());
+	}
+	
+	@Test
+	void updateProductWhenStockIsNegative () {
+		Product product = new Product (1, "name", "description", 10F, null, null, -5);
+		
+		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> productService.updateProduct (product, this.mf));
+		
+		assertEquals ("Error! Invalid stock", exception.getMessage ());
+		
+		Mockito.verify (productRepo, Mockito.never ()).save (Mockito.any ());
+	}
+	
+	@Test
 	void updateProductWhenNameIsNull () throws InvalidValueException {
 		Product product = new Product (1, null, "description", 10F, null, null, 10);
 		
@@ -193,7 +215,7 @@ class ProductServiceTest {
 	
 	@Test
 	void updateProductWithImage () throws InvalidValueException {
-		Product product = new Product (1, "name", "description", 10F, null, null, null);
+		Product product = new Product (1, "name", "description", 10F, null, null, 1);
 		
 		Mockito.when (fileUtil.uploadToS3 (product, this.mf)).thenReturn ("https://s3-alpha.figma.com/hub/file/948140848/1f4d8ea7-e9d9-48b7-b70c-819482fb10fb-cover.png");
 		Mockito.when (productRepo.save (product)).thenReturn (product);
@@ -215,18 +237,27 @@ class ProductServiceTest {
 		
 		assertEquals (product, actualResult);
 	}
-
+	
 	@Test
-	void updateProductNegativeStock() throws InvalidValueException {
-		MultipartFile file = null;
-		Product product = new Product (1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, -13);
-
-		Mockito.when(productRepo.save(product)).thenReturn(product);
-
-		Product actual = productService.updateProduct(product, null);
-		product.setStock(null);
-
-		assertEquals(product, actual);
+	void createProductWhenStockIsNull () {
+		Product product = new Product (1, "name", "description", 10F, null, null, null);
+		
+		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> productService.createProduct (product, this.mf));
+		
+		assertEquals ("Error! Invalid stock", exception.getMessage ());
+		
+		Mockito.verify (productRepo, Mockito.never ()).save (Mockito.any ());
+	}
+	
+	@Test
+	void createProductWhenStockIsNegative () {
+		Product product = new Product (1, "name", "description", 10F, null, null, -5);
+		
+		InvalidValueException exception = assertThrows (InvalidValueException.class, () -> productService.createProduct (product, this.mf));
+		
+		assertEquals ("Error! Invalid stock", exception.getMessage ());
+		
+		Mockito.verify (productRepo, Mockito.never ()).save (Mockito.any ());
 	}
 	
 	@Test
@@ -303,19 +334,5 @@ class ProductServiceTest {
 		Product actualResult = productService.createProduct (product, null);
 		
 		assertEquals (product, actualResult);
-	}
-
-
-	@Test
-	void createProductNegativeStock() throws InvalidValueException {
-		MultipartFile file = null;
-		Product product = new Product (1, "Dog Tricks", "Teach your dog new tricks.", (float) 1.15, null, -13);
-
-		Mockito.when(productRepo.save(product)).thenReturn(product);
-
-		Product actual = productService.createProduct(product, null);
-		product.setStock(null);
-
-		assertEquals(product, actual);
 	}
 }
